@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "inf122_tmge"
+version = "0.0.1"
+description = "Implementation of a generic tile matching game env"
+readme = "README.md"
+requires-python = ">=3.10"
+
