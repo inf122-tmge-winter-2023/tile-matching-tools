@@ -6,5 +6,22 @@
 
 from abc import ABC
 
+from inf122_tmge.model.tiles.tile import Tile
+
 class GameBoard(ABC):
-    pass
+    def __init__(self,width, height):
+        self.__init_board(width, height)
+
+    @property
+    def board(self):
+        return self._board
+
+    def __init_board(self, width, height):
+        self._board = []
+        # Fancy Python one liner
+        # self._board = [[Tile() for j in range(height)] for i in range(width)]
+        for _ in range(width):
+            row = []
+            for _ in range(height):
+                row.append(Tile())
+            self._board.append(row)
