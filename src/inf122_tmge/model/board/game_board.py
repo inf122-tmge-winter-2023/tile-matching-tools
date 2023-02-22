@@ -6,7 +6,7 @@
 
 from abc import ABC
 
-from inf122_tmge.model.tiles.tile import Tile
+from ..tiles.tile import Tile
 
 class GameBoard(ABC):
     def __init__(self,width, height):
