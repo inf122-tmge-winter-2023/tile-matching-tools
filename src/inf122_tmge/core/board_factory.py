@@ -6,5 +6,8 @@
 
 from abc import ABC
 
+from ..model.board.game_board import GameBoard
+
 class BoardFactory(ABC):
-    pass
+    def create_board(type: str, width, height) -> GameBoard:
+        return GameBoard(width, height)
