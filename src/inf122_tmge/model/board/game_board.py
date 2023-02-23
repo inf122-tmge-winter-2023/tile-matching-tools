@@ -17,11 +17,14 @@ class GameBoard(ABC):
         return self._board
 
     def __init_board(self, width, height):
-        self._board = []
+        self._board = [
+                [Tile(x, y) for y in range(1, height + 1)]
+                for x in range(1, width + 1)
+                ]
         # Fancy Python one liner
         # self._board = [[Tile() for j in range(height)] for i in range(width)]
-        for _ in range(width):
-            row = []
-            for _ in range(height):
-                row.append(Tile())
-            self._board.append(row)
+        # for _ in range(width):
+        #   row = []
+        #   for _ in range(height):
+        #       row.append(Tile())
+        #   self._board.append(row)
