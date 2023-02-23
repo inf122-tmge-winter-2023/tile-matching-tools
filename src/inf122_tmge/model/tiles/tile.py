@@ -1,11 +1,13 @@
 """
     :module_name: tile
     :module_summary: a class that represents the base tile
-    :module_author: Matthew Isayan
+    :module_author: Matthew Isayan, Nathan Mendoza
 """
 
 from abc import ABC
 from dataclasses import dataclass
+
+from ..exceptions import MissingTilePropertyException
 
 @dataclass
 class Position:
@@ -20,11 +22,15 @@ class Tile(ABC):
         A class the represents a tile in a tile-matching game
     """
 
-    def __init__(self, x, y):
-        self._position = Position(x, y)
+    def __init__(self, **properties):
+        if not properties.get('position'):
+            raise MissingTilePropertyException(
+                    f"{type(self)} requires a `position` property but was not present"
+                    )
+        self._position = Position(*properties.get('position'))
 
     @property
-    def position(self) -> (int, int):
+    def position(self) -> Position:
         """
             Return the position of this tile
             :returns: an snapshot of the tile's current position
