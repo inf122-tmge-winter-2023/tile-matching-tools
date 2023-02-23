@@ -7,4 +7,5 @@
 from abc import ABC
 
 class Tile(ABC):
-    pass
+    def __init__(self, color='#D3D3D3'):
+        self.color = color
