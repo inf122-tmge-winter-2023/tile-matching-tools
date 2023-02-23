@@ -17,7 +17,7 @@ def test_launch_view():
 def test_update_tile():
     """Manual integration test to see if a tile is drawn"""
     game_board = BoardFactory.create_board('default', 10, 24)
-    game_board.update_tile(3, 3, Tile('red'))
+    game_board.update_tile(3, 3, Tile(3,3,'red'))
     view = View(game_board) 
 
     view.launch_view()
