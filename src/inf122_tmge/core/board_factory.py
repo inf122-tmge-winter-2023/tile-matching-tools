@@ -9,5 +9,18 @@ from abc import ABC
 from ..model.board.game_board import GameBoard
 
 class BoardFactory(ABC):
-    def create_board(type: str, width, height) -> GameBoard:
+
+    @staticmethod 
+    def create_board(board_type: str, width: int, height: int) -> GameBoard:
+        """
+            Simple factory method for generating a new game board
+            :arg board_type: the name of the type of board
+            :arg width: the number of columns the board should have
+            :arg height: the number of rows the board should have
+            :arg type: str
+            :arg type: int
+            :arg type: int
+            :return: a new game board object
+            :rtype: GameBoard
+        """
         return GameBoard(width, height)
