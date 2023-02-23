@@ -10,11 +10,21 @@ from ..tiles.tile import Tile
 
 class GameBoard(ABC):
     def __init__(self,width, height):
+        self._width = width
+        self._height = height
         self.__init_board(width, height)
 
     @property
     def board(self):
         return self._board
+
+    @property
+    def width(self):
+        return self._width
+    
+    @property
+    def height(self):
+        return self._height
 
     def __init_board(self, width, height):
         self._board = []
@@ -25,3 +35,6 @@ class GameBoard(ABC):
             for _ in range(height):
                 row.append(Tile())
             self._board.append(row)
+    
+    def update_tile(self, row, col, tile):
+        self.board[row][col] = tile
