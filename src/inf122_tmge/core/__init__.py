@@ -6,5 +6,5 @@
 
 from .game_engine import GameEngine
 from .game_state import GameState
-from .tile_factory import TileFactory
+from .tile_builder import TileBuilder
 from .board_factory import BoardFactory
