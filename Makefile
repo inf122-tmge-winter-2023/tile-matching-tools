@@ -33,7 +33,10 @@ activate: ## Activate the virtual environment for bootstrapping (does NOT activa
 
 .PHONY: test
 test: ## Run unittests on the source directory
-	pytest --cov=inf122_tmge
+	pytest --cov=inf122_tmge -k "not integration"
+
+test-int: ## Run unittests on tests marked integration
+	pytest -v -m integration --cache-clear
 
 .PHONY: lint
 lint: ## Run lint checks on the source directory

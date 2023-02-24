@@ -18,6 +18,14 @@ class GameBoard(ABC):
     @property
     def board(self):
         return self._board
+        
+    @property
+    def num_rows(self):
+        return self._num_rows
+
+    @property
+    def num_cols(self):
+        return self._num_cols
 
     def __init_board(self) -> None:
         """
