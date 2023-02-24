@@ -9,6 +9,4 @@ from abc import ABC
 from .tile_shape import TileShape
 from .tile_appearance import TileAppearance
 from .movement_rule import MovementRule
-
-class Tile(ABC):
-    pass
+from .tile import Tile
