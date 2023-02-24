@@ -28,6 +28,7 @@ class Tile(ABC):
                     f"{type(self)} requires a `position` property but was not present"
                     )
         self._position = Position(*properties.get('position'))
+        self._color = properties.get('color')
 
     @property
     def position(self) -> Position:
@@ -49,3 +50,7 @@ class Tile(ABC):
         """
         self._position.x = new_pos[0]
         self._position.y = new_pos[1]
+
+    @property
+    def color(self):
+        return self._color
