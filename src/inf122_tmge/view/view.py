@@ -26,8 +26,8 @@ class View:
         self.root = tkinter.Tk()
         score_container_width = 150
         padding = 10
-        screen_width = self.game_board.width * self.tile_width + score_container_width + padding
-        screen_height = self.game_board.height * self.tile_width + padding
+        screen_width = self.game_board.num_cols * self.tile_width + score_container_width + padding
+        screen_height = self.game_board.num_rows * self.tile_width + padding
 
         # Setting window size: Needs to be in this format '600x800'
         self.root.geometry('%dx%d' % (screen_width, screen_height))
@@ -58,8 +58,8 @@ class View:
 
     def _draw_board(self):
         """Draws the entire board"""
-        for i in range(self.game_board.width):
-            for j in range(self.game_board.height):
+        for i in range(self.game_board.num_cols):
+            for j in range(self.game_board.num_rows):
                 self._draw_tile(i, j, self.game_board.board[i][j].color) # #D3D3D3 is light gray
 
     def set_board(self, board: GameBoard):
