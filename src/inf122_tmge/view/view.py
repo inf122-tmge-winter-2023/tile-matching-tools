@@ -65,7 +65,11 @@ class View:
     def set_board(self, board: GameBoard):
         self.game_board = board
 
-    def update_board(self, board: GameBoard):
-        self.set_board(self, board)
-        self.board_canvas.delete('all')
-        self._draw_board()
+    def update_board(self, new_board: GameBoard):
+        for i in range(self.game_board.num_cols):
+            for j in range(self.game_board.num_rows):
+                if new_board.board[i][j].color != self.game_board.board[i][j].color:
+                    # if the tile color has changed, redraw it
+                    self._draw_tile(i, j, new_board.board[i][j].color)
+                    # update the previous board state
+                    self.game_board.board[i][j] = new_board.board[i][j]
