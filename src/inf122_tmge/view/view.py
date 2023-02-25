@@ -4,7 +4,9 @@
     :module_author: Matthew Isayan
 """
 from copy import deepcopy
+from threading import Thread
 import tkinter
+import types
 
 from ..model import GameBoard
 
@@ -18,7 +20,11 @@ class View:
         self._init_screen()
         self._draw_board()
 
-    def launch_view(self):
+    def launch_view(self, func_name: types.FunctionType=None):
+        """Launches window and a thread of func_name 500 ms later"""
+        if func_name:
+            thread = Thread(target=func_name, daemon=True)
+            self.root.after(500, thread.start())
         self.root.mainloop()
     
     def _init_screen(self):
