@@ -34,7 +34,7 @@ class GameBoard(ABC):
             :rtype: None
         """
         self._board = [ # positions will be represented as positve cartesian coordinates
-                [ Tile(**{'position': (x, y)}) for y in range(1, self._num_rows + 1)]
+                [ Tile(**{'position': (x, y),'color':'#D3D3D3'}) for y in range(1, self._num_rows + 1)]
                 for x in range(1, self._num_cols + 1)
                 ]
 
