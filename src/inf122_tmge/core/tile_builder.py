@@ -29,6 +29,17 @@ class TileBuilder(ABC):
         """
         self._tile_attrs['position'] = (x, y)
         return self
+    
+    def add_color(self, color: str):
+            """
+                Specify the position of the tile to create
+                :arg color: color of the tile
+                :arg type: str
+                :returns: updated tile builder
+                :rtype: TileBuilder
+            """
+            self._tile_attrs['color'] = color
+            return self
 
     def construct(self, tile_type = Tile) -> Tile:
         """
