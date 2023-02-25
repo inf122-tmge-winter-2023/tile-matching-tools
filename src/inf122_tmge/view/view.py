@@ -4,6 +4,7 @@
     :module_author: Matthew Isayan
 """
 from copy import deepcopy
+import queue
 from threading import Thread
 import tkinter
 import types
@@ -19,6 +20,7 @@ class View:
 
         self._init_screen()
         self._draw_board()
+        self.events = queue.Queue()
 
     def launch_view(self, func_name: types.FunctionType=None):
         """Launches window and a thread of func_name 500 ms later"""
@@ -57,7 +59,6 @@ class View:
             Draws a singular tile with said board coordinates and color
             1-based indexing
         """
-        
         row = row - 1
         col = col - 1 
         padding = 5
@@ -87,4 +88,8 @@ class View:
                     
         self._set_board(updated_board)
 
-        
+    def add_keybind(self, event_name: str):
+        self.root.bind('<%s>' % event_name, self.event_handler)
+
+    def event_handler(self, event):
+        self.events.put(event.char)
