@@ -30,5 +30,8 @@ class TileShape(IntEnum):
 
 @dataclass
 class TileAppearance(ABC):
+    """
+        Class that stores appearance information of a tile
+    """
     color: TileColor
     shape: TileShape
