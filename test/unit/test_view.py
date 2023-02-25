@@ -32,10 +32,6 @@ def test_threading_fill_board():
     game_board = BoardFactory.create_board('default', 10, 24)
     view = View(game_board) 
 
-    def worker_thread():
-        t1=Thread(target=place_tiles, daemon=True)
-        t1.start()
-  
     def place_tiles():
         for i in range(1,11):
             for j in range(1,25):
@@ -45,6 +41,4 @@ def test_threading_fill_board():
                 view.update_board_view(game_board)
                 time.sleep(.0165)
 
-    # After 1000 ms execute the worker thread
-    view.root.after(1000, worker_thread)
-    view.launch_view()
+    view.launch_view(place_tiles)
