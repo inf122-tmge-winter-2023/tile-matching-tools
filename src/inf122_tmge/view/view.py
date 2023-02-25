@@ -46,32 +46,38 @@ class View:
         self.board_canvas.pack()    
     
     # Maybe pass in TileAppearance instead of color
-    def _draw_tile(self, board_x, board_y, color):
-        """Draws a singular tile with said board coordinates and color"""
+    def _draw_tile(self, row, col, color):
+        """
+            Draws a singular tile with said board coordinates and color
+            1-based indexing
+        """
+        
+        row = row - 1
+        col = col - 1 
         padding = 5
-        tile_start_x = board_x * self.tile_width + padding
-        tile_end_x = board_x * self.tile_width + padding + self.tile_width
+        tile_start_x = row * self.tile_width + padding
+        tile_end_x = row * self.tile_width + padding + self.tile_width
 
-        tile_start_y = board_y * self.tile_width + padding
-        tile_end_y = board_y * self.tile_width + padding + self.tile_width
+        tile_start_y = col * self.tile_width + padding
+        tile_end_y = col * self.tile_width + padding + self.tile_width
 
         self.board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, tile_end_y, fill=color, outline='gray', width=2)
 
     def _draw_board(self):
         """Draws the entire board"""
-        for i in range(self.game_board.num_cols):
-            for j in range(self.game_board.num_rows):
-                self._draw_tile(i, j, self.game_board.board[i][j].color) # #D3D3D3 is light gray
+        for row in range(1, self.game_board.num_cols + 1):
+            for col in range(1, self.game_board.num_rows + 1):
+                self._draw_tile(row, col, self.game_board.tile_at(row, col).color) # #D3D3D3 is light gray
 
     def _set_board(self, board: GameBoard):
         self.game_board = deepcopy(board)
 
     def update_board_view(self, updated_board:GameBoard):
-        for i in range(self.game_board.num_cols):
-            for j in range(self.game_board.num_rows):
-                if self.game_board.board[i][j].color != updated_board.board[i][j].color:
+        for row in range(1, self.game_board.num_cols + 1):
+            for col in range(1, self.game_board.num_rows + 1):
+                if self.game_board.tile_at(row, col).color != updated_board.tile_at(row, col).color:
                     # if the tile color has changed, redraw it
-                    self._draw_tile(i, j, updated_board.board[i][j].color)
+                    self._draw_tile(row, col, updated_board.tile_at(row, col).color)
                     
         self._set_board(updated_board)
 
