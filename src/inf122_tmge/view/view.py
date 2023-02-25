@@ -3,13 +3,14 @@
     :module_summary: a class that is responsible for displaying the Tile Game
     :module_author: Matthew Isayan
 """
+from copy import deepcopy
 import tkinter
 
 from ..model import GameBoard
 
 class View:
     def __init__(self, game_board: GameBoard):
-        self.game_board = game_board
+        self.game_board = deepcopy(game_board)
         self.score = 0
         # tile_width will need to be passed in as well as appearance
         self.tile_width = 30
@@ -62,14 +63,16 @@ class View:
             for j in range(self.game_board.num_rows):
                 self._draw_tile(i, j, self.game_board.board[i][j].color) # #D3D3D3 is light gray
 
-    def set_board(self, board: GameBoard):
-        self.game_board = board
+    def _set_board(self, board: GameBoard):
+        self.game_board = deepcopy(board)
 
-    def update_board(self, new_board: GameBoard):
+    def update_board_view(self, updated_board:GameBoard):
         for i in range(self.game_board.num_cols):
             for j in range(self.game_board.num_rows):
-                if new_board.board[i][j].color != self.game_board.board[i][j].color:
+                if self.game_board.board[i][j].color != updated_board.board[i][j].color:
                     # if the tile color has changed, redraw it
-                    self._draw_tile(i, j, new_board.board[i][j].color)
-                    # update the previous board state
-                    self.game_board.board[i][j] = new_board.board[i][j]
+                    self._draw_tile(i, j, updated_board.board[i][j].color)
+                    
+        self._set_board(updated_board)
+
+        
