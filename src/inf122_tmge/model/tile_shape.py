@@ -4,7 +4,9 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
-from abc import ABC
+from enum import IntEnum
 
-class TileShape(ABC):
-    pass
+class TileShape(IntEnum):
+    SQUARE = 1
+    DIAMOND = 2
+    CIRCULAR = 3
