@@ -4,7 +4,9 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
-from ..model.tiles import Tile
+from ..model import Tile
+from ..model.tile_color import TileColor
+from ..model.tile_shape import TileShape
 
 from abc import ABC
 from typing import Self
@@ -30,7 +32,7 @@ class TileBuilder(ABC):
         self._tile_attrs['position'] = (x, y)
         return self
     
-    def add_color(self, color: str):
+    def add_color(self, color: TileColor):
             """
                 Specify the position of the tile to create
                 :arg color: color of the tile
@@ -40,6 +42,17 @@ class TileBuilder(ABC):
             """
             self._tile_attrs['color'] = color
             return self
+
+    def add_shape(self, shape: TileShape):
+        """
+            Specify the shape of the tile to create
+            :arg shape: shape of the tile
+            :arg type: str
+            :returns: updated tile builder
+            :rtype: TileBuilder
+        """
+        self._tile_attrs['shape'] = shape
+        return self
 
     def construct(self, tile_type = Tile) -> Tile:
         """

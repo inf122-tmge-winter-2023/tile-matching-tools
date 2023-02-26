@@ -8,6 +8,9 @@ from abc import ABC
 from dataclasses import dataclass
 
 from ..exceptions import MissingTilePropertyException
+from .tile_appearance import TileAppearance
+from ..tile_shape import TileShape 
+from ..tile_color import TileColor
 
 @dataclass
 class Position:
@@ -28,7 +31,10 @@ class Tile(ABC):
                     f"{type(self)} requires a `position` property but was not present"
                     )
         self._position = Position(*properties.get('position'))
-        self._color = properties.get('color')
+        self._appearance = TileAppearance(
+                    properties.get('color', TileColor.RED),
+                    properties.get('shape', TileShape.SQUARE)
+                )
 
     @property
     def position(self) -> Position:
@@ -53,4 +59,8 @@ class Tile(ABC):
 
     @property
     def color(self):
-        return self._color
+        return self._appearance.color
+
+    @property
+    def shape(self):
+        return self._appearance.shape
