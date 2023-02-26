@@ -4,9 +4,6 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
-from abc import ABC
-
-from .tile_shape import TileShape
 from .tile_appearance import TileAppearance
 from .movement_rule import MovementRule
 from .tile import Tile

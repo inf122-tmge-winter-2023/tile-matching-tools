@@ -8,7 +8,9 @@ from abc import ABC
 from dataclasses import dataclass
 
 from ..exceptions import MissingTilePropertyException
-from .tile_appearance import TileAppearance, TileShape, TileColor
+from .tile_appearance import TileAppearance
+from ..tile_shape import TileShape 
+from ..tile_color import TileColor
 
 @dataclass
 class Position:
