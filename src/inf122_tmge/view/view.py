@@ -16,10 +16,10 @@ class View:
         A class that represents the view of the TMGE
     """
     def __init__(self, game_board: GameBoard):
-        self.game_board = deepcopy(game_board)
-        self.score = 0
+        self._game_board = deepcopy(game_board)
+        self._score = 0
         # tile_width will need to be passed in as well as appearance
-        self.tile_width = 30
+        self._tile_width = 30
 
         self.__init_screen()
         self.__draw_board()
@@ -35,8 +35,8 @@ class View:
         """
         if func_name:
             thread = Thread(target=func_name, daemon=True)
-            self.root.after(500, thread.start())
-        self.root.mainloop()
+            self._root.after(500, thread.start())
+        self._root.mainloop()
     
     def __init_screen(self):
         """
@@ -45,39 +45,39 @@ class View:
             :rtype: None
         """
         # Initialize empty window
-        self.root = tkinter.Tk()
+        self._root = tkinter.Tk()
         score_container_width = 200
         padding = 10
-        screen_width = self.game_board.num_cols * self.tile_width + score_container_width + padding
-        screen_height = self.game_board.num_rows * self.tile_width + padding
+        screen_width = self._game_board.num_cols * self._tile_width + score_container_width + padding
+        screen_height = self._game_board.num_rows * self._tile_width + padding
 
         # Setting window size: Needs to be in this format '600x800'
-        self.root.geometry('%dx%d' % (screen_width, screen_height))
-        self.root.title('TMGE GUI')
-        self.root.resizable(False, False)
+        self._root.geometry('%dx%d' % (screen_width, screen_height))
+        self._root.title('TMGE GUI')
+        self._root.resizable(False, False)
 
         # Init main container
-        self.main_container = tkinter.Frame(self.root)
-        self.main_container.pack(side="left", fill="both")
+        self._main_container = tkinter.Frame(self._root)
+        self._main_container.pack(side="left", fill="both")
         
         # Init canvas for board
         canvas_padding = 5
         canvas_width = screen_width + canvas_padding - score_container_width
         canvas_height = screen_height + canvas_padding
-        self.board_canvas = tkinter.Canvas(self.main_container, width=canvas_width, height=canvas_height)
-        self.board_canvas.pack(side="left", fill="y")    
+        self._board_canvas = tkinter.Canvas(self._main_container, width=canvas_width, height=canvas_height)
+        self._board_canvas.pack(side="left", fill="y")    
 
         # Init container for score
-        self.score_container = tkinter.Frame(self.main_container, width=score_container_width, height=screen_height,padx=60)
-        self.score_container.pack(side="left", fill="both")
+        score_container = tkinter.Frame(self._main_container, width=score_container_width, height=screen_height,padx=60)
+        score_container.pack(side="left", fill="both")
 
         # Add label to display score
         score_label = tkinter.Label(self.score_container, text="Score", font=("Roboto", 16))
         score_label.pack(side="top")
         
         # Add label to display score number
-        self.score_label = tkinter.Label(self.score_container, text="0", font=("Roboto", 14))
-        self.score_label.pack(side="top")
+        self._score_label = tkinter.Label(self.score_container, text="0", font=("Roboto", 14))
+        self._score_label.pack(side="top")
     def __draw_tile(self, row: int, col: int, color: str):
         """
             Draws a singular tile on the board by converting the row + col to x + y coords of the view
@@ -93,13 +93,13 @@ class View:
         row = row - 1
         col = col - 1 
         padding = 5
-        tile_start_x = row * self.tile_width + padding
-        tile_end_x = row * self.tile_width + padding + self.tile_width
+        tile_start_x = row * self._tile_width + padding
+        tile_end_x = row * self._tile_width + padding + self._tile_width
 
-        tile_start_y = col * self.tile_width + padding
-        tile_end_y = col * self.tile_width + padding + self.tile_width
+        tile_start_y = col * self._tile_width + padding
+        tile_end_y = col * self._tile_width + padding + self._tile_width
 
-        self.board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, tile_end_y, fill=color, outline='gray', width=2)
+        self._board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, tile_end_y, fill=color, outline='gray', width=2)
 
     def __draw_board(self):
         """
@@ -107,9 +107,9 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        for row in range(1, self.game_board.num_cols + 1):
-            for col in range(1, self.game_board.num_rows + 1):
-                self.__draw_tile(row, col, self.game_board.tile_at(row, col).color) # #D3D3D3 is light gray
+        for row in range(1, self._game_board.num_cols + 1):
+            for col in range(1, self._game_board.num_rows + 1):
+                self.__draw_tile(row, col, self._game_board.tile_at(row, col).color) # #D3D3D3 is light gray
 
     def __set_board(self, board: GameBoard):
         """
@@ -119,7 +119,7 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        self.game_board = deepcopy(board)
+        self._game_board = deepcopy(board)
 
     def update_board_view(self, updated_board:GameBoard):
         """
@@ -129,9 +129,9 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        for row in range(1, self.game_board.num_cols + 1):
-            for col in range(1, self.game_board.num_rows + 1):
-                if self.game_board.tile_at(row, col).color != updated_board.tile_at(row, col).color:
+        for row in range(1, self._game_board.num_cols + 1):
+            for col in range(1, self._game_board.num_rows + 1):
+                if self._game_board.tile_at(row, col).color != updated_board.tile_at(row, col).color:
                     self.__draw_tile(row, col, updated_board.tile_at(row, col).color)
                     
         self.__set_board(updated_board)
@@ -145,7 +145,7 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        self.root.bind('<%s>' % event_name, self.__event_handler)
+        self._root.bind('<%s>' % event_name, self.__event_handler)
 
     def __event_handler(self, event: tkinter.Event):
         """
@@ -172,4 +172,4 @@ class View:
             :returns:  Returns the queue of events storing the latest event at the first position
             :rtype: queue.Queue
         """
-        self.score_label.config(text=f"{score}")
+        self._score_label.config(text=f"{score}")
