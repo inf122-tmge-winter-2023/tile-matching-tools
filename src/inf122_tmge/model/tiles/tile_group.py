@@ -56,6 +56,15 @@ class TileGroup:
         """
         return self._disbanded
 
+    @property
+    def size(self) -> int:
+        """
+            Returns the number of tiles in this group
+            :returns: the tile count
+            :rtype: int
+        """
+        return len(self._tiles)
+
     def disband(self) -> None:
         """
             Updates the disbanded property of this tile group to true. Forbids further modification
