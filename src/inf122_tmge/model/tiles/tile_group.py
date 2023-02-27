@@ -4,8 +4,9 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
-from ..exceptions import TileGroupPositionOccupiedError \
-                         TileGroupDisbandedException
+from ..exceptions import TileGroupPositionOccupiedError, \
+                         TileGroupDisbandedException 
+
 from .tile import Tile, Position
 
 from dataclasses import dataclass
