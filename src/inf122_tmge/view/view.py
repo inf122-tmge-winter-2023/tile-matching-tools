@@ -46,7 +46,7 @@ class View:
         """
         # Initialize empty window
         self.root = tkinter.Tk()
-        score_container_width = 150
+        score_container_width = 200
         padding = 10
         screen_width = self.game_board.num_cols * self.tile_width + score_container_width + padding
         screen_height = self.game_board.num_rows * self.tile_width + padding
@@ -54,6 +54,7 @@ class View:
         # Setting window size: Needs to be in this format '600x800'
         self.root.geometry('%dx%d' % (screen_width, screen_height))
         self.root.title('TMGE GUI')
+        self.root.resizable(False, False)
 
         # Init main container
         self.main_container = tkinter.Frame(self.root)
@@ -61,11 +62,22 @@ class View:
         
         # Init canvas for board
         canvas_padding = 5
-        canvas_width = screen_width+canvas_padding
-        canvas_height = screen_height+canvas_padding
+        canvas_width = screen_width + canvas_padding - score_container_width
+        canvas_height = screen_height + canvas_padding
         self.board_canvas = tkinter.Canvas(self.main_container, width=canvas_width, height=canvas_height)
-        self.board_canvas.pack()    
-    
+        self.board_canvas.pack(side="left", fill="y")    
+
+        # Init container for score
+        self.score_container = tkinter.Frame(self.main_container, width=score_container_width, height=screen_height,padx=60)
+        self.score_container.pack(side="left", fill="both")
+
+        # Add label to display score
+        score_label = tkinter.Label(self.score_container, text="Score", font=("Roboto", 16))
+        score_label.pack(side="top")
+        
+        # Add label to display score number
+        self.score_label = tkinter.Label(self.score_container, text="0", font=("Roboto", 14))
+        self.score_label.pack(side="top")
     def __draw_tile(self, row: int, col: int, color: str):
         """
             Draws a singular tile on the board by converting the row + col to x + y coords of the view
@@ -153,3 +165,11 @@ class View:
             :rtype: queue.Queue
         """
         return self._events
+
+    def update_score(self, score: int):
+        """
+            Updates the Score label
+            :returns:  Returns the queue of events storing the latest event at the first position
+            :rtype: queue.Queue
+        """
+        self.score_label.config(text=f"{score}")
