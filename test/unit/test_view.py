@@ -61,6 +61,7 @@ def test_user_input():
         game_board.place_tile(moving_tile, moving_tile.position.x, moving_tile.position.y)
 
     def gameloop():
+        score = 0
         while True:
             try:
                 if view.events.get(block=False) == 's':
@@ -69,6 +70,8 @@ def test_user_input():
                 pass
     
             view.update_board_view(game_board)
+            view.update_score(score)
+            score += 1
             time.sleep(.0165)
 
     view.launch_view(gameloop)
