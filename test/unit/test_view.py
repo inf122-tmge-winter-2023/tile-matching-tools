@@ -10,7 +10,7 @@ from inf122_tmge.view.view import View
 
 
 # Mark test as integration to avoid executing with test suite
-@pytest.mark.integration
+@pytest.mark.skip
 def test_launch_view():
     """Manual integration test to visually inspect the board"""
     game_board = BoardFactory.create_board('default', 10, 24)
@@ -18,7 +18,7 @@ def test_launch_view():
     view.launch_view()
 
 
-@pytest.mark.integration
+@pytest.mark.skip
 def test_update_tile():
     """Manual integration test to see if a tile is drawn"""
     game_board = BoardFactory.create_board('default', 10, 24)
@@ -27,7 +27,7 @@ def test_update_tile():
     view = View(game_board) 
     view.launch_view()
 
-@pytest.mark.integration
+@pytest.mark.skip
 def test_threading_fill_board():
     """Manual integration test to see board is filled one by one"""
     game_board = BoardFactory.create_board('default', 10, 24)
