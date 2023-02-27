@@ -53,7 +53,7 @@ def test_user_input():
     moving_tile = TileBuilder().add_position(5,1).add_color('red').construct()
     game_board.place_tile(moving_tile, moving_tile.position.x, moving_tile.position.y)
 
-    view.add_keybind('KeyPress')
+    view.add_event_listener('KeyRelease')
     def move_down():
         clear_tile = TileBuilder().add_position(moving_tile.position.x, moving_tile.position.y).add_color('#D3D3D3').construct()
         game_board.place_tile(clear_tile, moving_tile.position.x, moving_tile.position.y)
