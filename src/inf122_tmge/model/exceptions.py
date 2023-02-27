@@ -15,3 +15,9 @@ class InvalidBoardPositionError(BaseInf122tmgeModelException):
 
 class IllegalBoardContentException(BaseInf122tmgeModelException):
     """Exception raised when attempting to place something other than a subtype of Tile in a game board"""
+
+class TileGroupDisbandedException(BaseInf122tmgeModelException):
+    """Exception raised when performing actions on a tile group that has disbanded"""
+
+class TileGroupPositionOccupiedError(BaseInf122tmgeModelException):
+    """Exception raised when attempting to add a tile with invalid relative position"""
