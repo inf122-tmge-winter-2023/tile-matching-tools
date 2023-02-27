@@ -7,3 +7,4 @@
 from .tile_appearance import TileAppearance
 from .movement_rule import MovementRule
 from .tile import Tile
+from .tile_group import TileGroup
