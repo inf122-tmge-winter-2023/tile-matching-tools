@@ -10,7 +10,7 @@ from inf122_tmge.view.view import View
 
 
 # Mark test as integration to avoid executing with test suite
-@pytest.mark.integration
+@pytest.mark.skip
 def test_launch_view():
     """Manual integration test to visually inspect the board"""
     game_board = BoardFactory.create_board('default', 10, 24)
@@ -18,7 +18,7 @@ def test_launch_view():
     view.launch_view()
 
 
-@pytest.mark.integration
+@pytest.mark.skip
 def test_update_tile():
     """Manual integration test to see if a tile is drawn"""
     game_board = BoardFactory.create_board('default', 10, 24)
@@ -27,7 +27,7 @@ def test_update_tile():
     view = View(game_board) 
     view.launch_view()
 
-@pytest.mark.integration
+@pytest.mark.skip
 def test_threading_fill_board():
     """Manual integration test to see board is filled one by one"""
     game_board = BoardFactory.create_board('default', 10, 24)
@@ -53,7 +53,7 @@ def test_user_input():
     moving_tile = TileBuilder().add_position(5,1).add_color('red').construct()
     game_board.place_tile(moving_tile, moving_tile.position.x, moving_tile.position.y)
 
-    view.add_keybind('KeyPress')
+    view.add_event_listener('KeyRelease')
     def move_down():
         clear_tile = TileBuilder().add_position(moving_tile.position.x, moving_tile.position.y).add_color('#D3D3D3').construct()
         game_board.place_tile(clear_tile, moving_tile.position.x, moving_tile.position.y)
@@ -61,6 +61,7 @@ def test_user_input():
         game_board.place_tile(moving_tile, moving_tile.position.x, moving_tile.position.y)
 
     def gameloop():
+        score = 0
         while True:
             try:
                 if view.events.get(block=False) == 's':
@@ -69,6 +70,8 @@ def test_user_input():
                 pass
     
             view.update_board_view(game_board)
+            view.update_score(score)
+            score += 1
             time.sleep(.0165)
 
     view.launch_view(gameloop)

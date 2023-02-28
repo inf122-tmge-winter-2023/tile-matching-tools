@@ -12,84 +12,165 @@ import types
 from ..model import GameBoard
 
 class View:
+    """
+        A class that represents the view of the TMGE
+    """
     def __init__(self, game_board: GameBoard):
-        self.game_board = deepcopy(game_board)
-        self.score = 0
+        self._game_board = deepcopy(game_board)
+        self._score = 0
         # tile_width will need to be passed in as well as appearance
-        self.tile_width = 30
+        self._tile_width = 30
 
         self._init_screen()
         self._draw_board()
-        self.events = queue.Queue()
+        self._events = queue.Queue()
 
     def launch_view(self, func_name: types.FunctionType=None):
-        """Launches window and a thread of func_name 500 ms later"""
+        """
+            Launches window and a thread of func_name 500 ms later
+            :arg func_name: Name of the function to run side by side View
+            :arg type: FunctionType
+            :returns: nothing
+            :rtype: None
+        """
         if func_name:
             thread = Thread(target=func_name, daemon=True)
-            self.root.after(500, thread.start())
-        self.root.mainloop()
+            self._root.after(500, thread.start())
+        self._root.mainloop()
     
     def _init_screen(self):
-        """Initializes screen, main container and canvas for the board """
+        """
+            Initializes screen, main container and canvas for the board 
+            :returns: nothing
+            :rtype: None
+        """
         # Initialize empty window
-        self.root = tkinter.Tk()
-        score_container_width = 150
+        self._root = tkinter.Tk()
+        score_container_width = 200
         padding = 10
-        screen_width = self.game_board.num_cols * self.tile_width + score_container_width + padding
-        screen_height = self.game_board.num_rows * self.tile_width + padding
+        screen_width = self._game_board.num_cols * self._tile_width + score_container_width + padding
+        screen_height = self._game_board.num_rows * self._tile_width + padding
 
         # Setting window size: Needs to be in this format '600x800'
-        self.root.geometry('%dx%d' % (screen_width, screen_height))
-        self.root.title('TMGE GUI')
+        self._root.geometry('%dx%d' % (screen_width, screen_height))
+        self._root.title('TMGE GUI')
+        self._root.resizable(False, False)
 
         # Init main container
-        self.main_container = tkinter.Frame(self.root)
-        self.main_container.pack(side="left", fill="both")
+        self._main_container = tkinter.Frame(self._root)
+        self._main_container.pack(side="left", fill="both")
         
         # Init canvas for board
         canvas_padding = 5
-        canvas_width = screen_width+canvas_padding
-        canvas_height = screen_height+canvas_padding
-        self.board_canvas = tkinter.Canvas(self.main_container, width=canvas_width, height=canvas_height)
-        self.board_canvas.pack()    
-    
-    # Maybe pass in TileAppearance instead of color
-    def _draw_tile(self, row, col, color):
+        canvas_width = screen_width + canvas_padding - score_container_width
+        canvas_height = screen_height + canvas_padding
+        self._board_canvas = tkinter.Canvas(self._main_container, width=canvas_width, height=canvas_height)
+        self._board_canvas.pack(side="left", fill="y")    
+
+        # Init container for score
+        score_container = tkinter.Frame(self._main_container, width=score_container_width, height=screen_height,padx=60)
+        score_container.pack(side="left", fill="both")
+
+        # Add label to display score
+        score_label = tkinter.Label(score_container, text="Score", font=("Roboto", 16))
+        score_label.pack(side="top")
+        
+        # Add label to display score number
+        self._score_label = tkinter.Label(score_container, text="0", font=("Roboto", 14))
+        self._score_label.pack(side="top")
+        
+    def _draw_tile(self, row: int, col: int, color: str):
         """
-            Draws a singular tile with said board coordinates and color
-            1-based indexing
+            Draws a singular tile on the board by converting the row + col to x + y coords of the view
+            :arg row: Row number on the board (1-based)
+            :arg col: Column number on the board (1-based)
+            :arg color: color
+            :arg type: int
+            :arg type: int
+            :arg type: color
+            :returns: nothing
+            :rtype: None
         """
         row = row - 1
         col = col - 1 
         padding = 5
-        tile_start_x = row * self.tile_width + padding
-        tile_end_x = row * self.tile_width + padding + self.tile_width
+        tile_start_x = row * self._tile_width + padding
+        tile_end_x = row * self._tile_width + padding + self._tile_width
 
-        tile_start_y = col * self.tile_width + padding
-        tile_end_y = col * self.tile_width + padding + self.tile_width
+        tile_start_y = col * self._tile_width + padding
+        tile_end_y = col * self._tile_width + padding + self._tile_width
 
-        self.board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, tile_end_y, fill=color, outline='gray', width=2)
+        self._board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, tile_end_y, fill=color, outline='gray', width=2)
 
     def _draw_board(self):
-        """Draws the entire board"""
-        for row in range(1, self.game_board.num_cols + 1):
-            for col in range(1, self.game_board.num_rows + 1):
-                self._draw_tile(row, col, self.game_board.tile_at(row, col).color) # #D3D3D3 is light gray
+        """
+            Draws the entire board using the draw_tile method
+            :returns: nothing
+            :rtype: None
+        """
+        for row in range(1, self._game_board.num_cols + 1):
+            for col in range(1, self._game_board.num_rows + 1):
+                self._draw_tile(row, col, self._game_board.tile_at(row, col).color) # #D3D3D3 is light gray
 
     def _set_board(self, board: GameBoard):
-        self.game_board = deepcopy(board)
+        """
+            Sets the board
+            :arg board: Board model to set to view
+            :arg type: GameBoard 
+            :returns: nothing
+            :rtype: None
+        """
+        self._game_board = deepcopy(board)
 
     def update_board_view(self, updated_board:GameBoard):
-        for row in range(1, self.game_board.num_cols + 1):
-            for col in range(1, self.game_board.num_rows + 1):
-                if self.game_board.tile_at(row, col).color != updated_board.tile_at(row, col).color:
-                    # if the tile color has changed, redraw it
+        """
+            Updates the board view and sets the updated board
+            :arg updated_board: Board model to update the view
+            :arg type: GameBoard 
+            :returns: nothing
+            :rtype: None
+        """
+        for row in range(1, self._game_board.num_cols + 1):
+            for col in range(1, self._game_board.num_rows + 1):
+                if self._game_board.tile_at(row, col).color != updated_board.tile_at(row, col).color:
                     self._draw_tile(row, col, updated_board.tile_at(row, col).color)
                     
         self._set_board(updated_board)
 
-    def add_keybind(self, event_name: str):
-        self.root.bind('<%s>' % event_name, self.event_handler)
 
-    def event_handler(self, event):
-        self.events.put(event.char)
+    def add_event_listener(self, event_name: str):
+        """
+            Add's an event listener to the view
+            :arg event_name: The name of the event ex: KeyPress, KeyRelease, Key 
+            :arg type: str 
+            :returns: nothing
+            :rtype: None
+        """
+        self._root.bind('<%s>' % event_name, self._event_handler)
+
+    def _event_handler(self, event: tkinter.Event):
+        """
+            Add's an event listener to the view
+            :arg event_name: The name of the event ex: KeyPress, KeyRelease, Key 
+            :arg type: tkinter.Event 
+            :returns: nothing
+            :rtype: None
+        """
+        self._events.put(event.char)
+
+    @property
+    def events(self) -> queue.Queue:
+        """
+            Getter for the events queue
+            :returns:  Returns the queue of events storing the latest event at the first position
+            :rtype: queue.Queue
+        """
+        return self._events
+
+    def update_score(self, score: int):
+        """
+            Updates the Score label
+            :returns:  Returns the queue of events storing the latest event at the first position
+            :rtype: queue.Queue
+        """
+        self._score_label.config(text=f"{score}")
