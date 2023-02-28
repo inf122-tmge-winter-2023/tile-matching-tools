@@ -21,8 +21,8 @@ class View:
         # tile_width will need to be passed in as well as appearance
         self._tile_width = 30
 
-        self.__init_screen()
-        self.__draw_board()
+        self._init_screen()
+        self._draw_board()
         self._events = queue.Queue()
 
     def launch_view(self, func_name: types.FunctionType=None):
@@ -38,7 +38,7 @@ class View:
             self._root.after(500, thread.start())
         self._root.mainloop()
     
-    def __init_screen(self):
+    def _init_screen(self):
         """
             Initializes screen, main container and canvas for the board 
             :returns: nothing
@@ -72,13 +72,14 @@ class View:
         score_container.pack(side="left", fill="both")
 
         # Add label to display score
-        score_label = tkinter.Label(self.score_container, text="Score", font=("Roboto", 16))
+        score_label = tkinter.Label(score_container, text="Score", font=("Roboto", 16))
         score_label.pack(side="top")
         
         # Add label to display score number
-        self._score_label = tkinter.Label(self.score_container, text="0", font=("Roboto", 14))
+        self._score_label = tkinter.Label(score_container, text="0", font=("Roboto", 14))
         self._score_label.pack(side="top")
-    def __draw_tile(self, row: int, col: int, color: str):
+        
+    def _draw_tile(self, row: int, col: int, color: str):
         """
             Draws a singular tile on the board by converting the row + col to x + y coords of the view
             :arg row: Row number on the board (1-based)
@@ -101,7 +102,7 @@ class View:
 
         self._board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, tile_end_y, fill=color, outline='gray', width=2)
 
-    def __draw_board(self):
+    def _draw_board(self):
         """
             Draws the entire board using the draw_tile method
             :returns: nothing
@@ -109,9 +110,9 @@ class View:
         """
         for row in range(1, self._game_board.num_cols + 1):
             for col in range(1, self._game_board.num_rows + 1):
-                self.__draw_tile(row, col, self._game_board.tile_at(row, col).color) # #D3D3D3 is light gray
+                self._draw_tile(row, col, self._game_board.tile_at(row, col).color) # #D3D3D3 is light gray
 
-    def __set_board(self, board: GameBoard):
+    def _set_board(self, board: GameBoard):
         """
             Sets the board
             :arg board: Board model to set to view
@@ -132,9 +133,9 @@ class View:
         for row in range(1, self._game_board.num_cols + 1):
             for col in range(1, self._game_board.num_rows + 1):
                 if self._game_board.tile_at(row, col).color != updated_board.tile_at(row, col).color:
-                    self.__draw_tile(row, col, updated_board.tile_at(row, col).color)
+                    self._draw_tile(row, col, updated_board.tile_at(row, col).color)
                     
-        self.__set_board(updated_board)
+        self._set_board(updated_board)
 
 
     def add_event_listener(self, event_name: str):
@@ -145,9 +146,9 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        self._root.bind('<%s>' % event_name, self.__event_handler)
+        self._root.bind('<%s>' % event_name, self._event_handler)
 
-    def __event_handler(self, event: tkinter.Event):
+    def _event_handler(self, event: tkinter.Event):
         """
             Add's an event listener to the view
             :arg event_name: The name of the event ex: KeyPress, KeyRelease, Key 
