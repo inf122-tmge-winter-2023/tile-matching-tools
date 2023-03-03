@@ -4,7 +4,28 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
-from abc import ABC
+from abc import ABC, abstractmethod
 
 class MovementRule(ABC):
-    pass
+    """
+        Class that represents how a tile's position should adjust
+    """
+
+    def __init__(self, dx, dy):
+        self._dx = dx
+        self._dy = dy
+
+    @abstractmethod
+    def exec(self):
+        """
+            Provide information required to apply this movement rule
+        """
+        pass
+
+    @abstractmethod
+    def undo(self):
+        """
+            Provide information required to undo this movement rule
+        """
+        pass
+
