@@ -16,16 +16,29 @@ class MovementRule(ABC):
         self._dy = dy
 
     @abstractmethod
-    def exec(self):
+    def exec(self, x: int y: int) -> (int, int):
         """
             Provide information required to apply this movement rule
+            :arg x: current x position
+            :arg y: current y position
+            :arg type: int
+            :arg type: int
+            :returns: new position
+            :rtype: (int, int)
         """
         pass
+        
 
     @abstractmethod
-    def undo(self):
+    def undo(self, x: int, y: int):
         """
             Provide information required to undo this movement rule
+            :arg x: current x position
+            :arg y: current y position
+            :arg type: int
+            :arg type: int
+            :returns: new position
+            :rtype: (int, int)
         """
         pass
 
