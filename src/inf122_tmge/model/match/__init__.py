@@ -7,6 +7,7 @@
 from abc import ABC, abstractmethod
 
 from ..board import GameBoard
+from ..tiles import Tile
 
 class MatchCondition(ABC):
     """
@@ -15,9 +16,9 @@ class MatchCondition(ABC):
         :equality_rule: the function the determines if two tiles match
    """
     
-    def __init__(self, scan: tuple, equality_rule: callable):
+    def __init__(self, scan: tuple, equality_rule: callable = Tile.__eq__):
         self._eq = equality_rule
-        self._scanner = scan
+        self._scan_delta = scan
 
     @abstractmethod
     def check_match(self, board: GameBoard, start_x: int, start_y: int) -> bool:
