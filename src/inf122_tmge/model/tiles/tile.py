@@ -36,9 +36,9 @@ class Tile(ABC):
                     properties.get('shape', TileShape.SQUARE)
                 )
 
-    def __eq__(self, other: Tile):
+    def __eq__(self, other):
         """Allows for checking tile equality with =="""
-        if not isinstance(Tile, other):
+        if not isinstance(other, type(self)):
             return False
         return self.color == other.color and self.shape == other.shape
 
