@@ -46,7 +46,10 @@ class Tile(ABC):
             :returns: nothing
             :rtype: None
         """
-        self.position = rule.exec(self.position)
+        self.position = rule.exec(
+                self.position.x,
+                self.position.y
+                )
 
 
     @property
