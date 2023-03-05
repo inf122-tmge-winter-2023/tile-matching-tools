@@ -56,7 +56,7 @@ class TileGroup:
             :rtype: None
         """
         for tile in self._tiles.values():
-            tile.position = rule.exec()
+            tile.move(rule)
 
 
     @property
