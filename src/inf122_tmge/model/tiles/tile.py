@@ -7,7 +7,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from ..exceptions import MissingTilePropertyException
+from ..exceptions import MissingTilePropertyException, IllegalTileMovementException
 from .tile_appearance import TileAppearance
 from .movement_rule import MovementRule
 from ..tile_shape import TileShape 
@@ -46,6 +46,8 @@ class Tile(ABC):
             :returns: nothing
             :rtype: None
         """
+        if not self.mobile:
+            raise IllegalTileMovementException("Cann apply a movement to an inmovable tile")
         self.position = rule.exec(
                 self.position.x,
                 self.position.y

@@ -26,4 +26,4 @@ class MovementRule(ABC):
             :returns: new position
             :rtype: (int, int)
         """
-        pass
+        return (0, 0)
