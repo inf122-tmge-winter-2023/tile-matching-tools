@@ -27,18 +27,3 @@ class MovementRule(ABC):
             :rtype: (int, int)
         """
         pass
-        
-
-    @abstractmethod
-    def undo(self, x: int, y: int):
-        """
-            Provide information required to undo this movement rule
-            :arg x: current x position
-            :arg y: current y position
-            :arg type: int
-            :arg type: int
-            :returns: new position
-            :rtype: (int, int)
-        """
-        pass
-
