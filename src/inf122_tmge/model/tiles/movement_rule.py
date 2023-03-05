@@ -16,7 +16,7 @@ class MovementRule(ABC):
         self._dy = dy
 
     @abstractmethod
-    def exec(self, x: int y: int) -> (int, int):
+    def exec(self, x: int, y: int) -> (int, int):
         """
             Provide information required to apply this movement rule
             :arg x: current x position

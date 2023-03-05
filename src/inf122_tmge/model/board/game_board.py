@@ -6,8 +6,7 @@
 
 from abc import ABC
 
-from ..tiles import Tile
-from .movement_rule import MovementRule
+from ..tiles import Tile, MovementRule
 from ..exceptions import InvalidBoardPositionError, IllegalBoardContentException
 
 class GameBoard(ABC):
