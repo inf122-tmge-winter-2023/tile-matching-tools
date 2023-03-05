@@ -8,6 +8,7 @@ from ..exceptions import TileGroupPositionOccupiedError, \
                          TileGroupDisbandedException 
 
 from .tile import Tile, Position
+from .movement_rule import MovementRule
 
 from dataclasses import dataclass
 
@@ -46,6 +47,17 @@ class TileGroup:
                     )
         new_tile.position = (self._center.position.x + dx, self._center.position.y + dy)
         self._tiles[(dx, dy)] = new_tile
+
+    def move(self, rule: MovementRule) -> None:
+        """
+            Apply the given rule to the tile group by applying the rule to each tile in the group
+            :arg rule: the object describing the movement
+            :returns: nothing
+            :rtype: None
+        """
+        for tile in self._tiles.values():
+            tile.position = rule.exec()
+
 
     @property
     def disbanded(self) -> bool:
