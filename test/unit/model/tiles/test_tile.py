@@ -4,9 +4,17 @@ from itertools import product
 
 import pytest
 
-from inf122_tmge.model import Tile
+from inf122_tmge.model import Tile, MovementRule
 from inf122_tmge.model.tiles.tile_appearance import TileAppearance, TileShape, TileColor
 from inf122_tmge.model.exceptions import MissingTilePropertyException
+
+@pytest.fixture
+def simple_down_movement():
+    class MoveDown(MovementRule):
+        def exec(self, x, y):
+            return (x + self._dx, y + self._dy)
+
+    return MoveDown(0, -1)
 
 class TestTiles:
     test_positions = [
@@ -55,3 +63,11 @@ class TestTiles:
 
         assert the_tile.color == style[0]
         assert the_tile.shape == style[1]
+
+    @pytest.mark.parametrize("x, y", test_positions)
+    def test_movement_rule_updates_tiles_position(self, x, y, simple_down_movement):
+        the_tile = Tile(**{'position': (x, y)})
+
+        assert the_tile.position.x == x and the_tile.position.y == y
+        the_tile.move(simple_down_movement)
+        assert the_tile.position.x == x and the_tile.position.y == y -1
