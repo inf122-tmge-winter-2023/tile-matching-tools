@@ -54,6 +54,12 @@ class Tile(ABC):
                 )
 
 
+    def __eq__(self, other):
+        """Allows for checking tile equality with =="""
+        if not isinstance(other, type(self)):
+            return False
+        return self.color == other.color and self.shape == other.shape
+
     @property
     def position(self) -> Position:
         """
