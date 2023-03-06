@@ -47,7 +47,7 @@ class Tile(ABC):
             :rtype: None
         """
         if not self.mobile:
-            raise IllegalTileMovementException("Cann apply a movement to an inmovable tile")
+            raise IllegalTileMovementException("Can't apply a movement to an inmovable tile")
         self.position = rule.exec(
                 self.position.x,
                 self.position.y
