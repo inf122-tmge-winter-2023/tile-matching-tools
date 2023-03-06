@@ -133,7 +133,7 @@ class View:
         """
         for row in range(1, self._game_board.num_cols + 1):
             for col in range(1, self._game_board.num_rows + 1):
-                if self._game_board.tile_at(row, col).color != updated_board.tile_at(row, col).color:
+                if self._game_board.tile_at(row, col) != updated_board.tile_at(row, col):
                     self._draw_tile(row, col, updated_board.tile_at(row, col).color)
 
         self._set_board(updated_board)
