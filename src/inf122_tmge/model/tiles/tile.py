@@ -4,11 +4,12 @@
     :module_author: Matthew Isayan, Nathan Mendoza
 """
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from ..exceptions import MissingTilePropertyException
+from ..exceptions import MissingTilePropertyException, IllegalTileMovementException
 from .tile_appearance import TileAppearance
+from .movement_rule import MovementRule
 from ..tile_shape import TileShape 
 from ..tile_color import TileColor
 
@@ -35,6 +36,23 @@ class Tile(ABC):
                     properties.get('color', TileColor.RED),
                     properties.get('shape', TileShape.SQUARE)
                 )
+        self._movable = True
+
+    def move(self, rule: MovementRule):
+        """
+            Apply the given movement rule to this tile
+            :arg rule: the rule specifying how to modify position
+            :arg type: Movement rule
+            :returns: nothing
+            :rtype: None
+        """
+        if not self.mobile:
+            raise IllegalTileMovementException("Can't apply a movement to an inmovable tile")
+        self.position = rule.exec(
+                self.position.x,
+                self.position.y
+                )
+
 
     @property
     def position(self) -> Position:
@@ -44,6 +62,15 @@ class Tile(ABC):
             :rtype: Position
         """
         return self._position
+
+    @property
+    def mobile(self) -> bool:
+        """
+            Returns whether a tile can move
+            :returns: tile mobility
+            :rtype: bool
+        """
+        return self._movable
 
     @position.setter
     def position(self, new_pos: (int, int)) -> None:

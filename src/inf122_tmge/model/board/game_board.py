@@ -6,7 +6,7 @@
 
 from abc import ABC
 
-from ..tiles import Tile
+from ..tiles import Tile, MovementRule
 from ..exceptions import InvalidBoardPositionError, IllegalBoardContentException
 
 class GameBoard(ABC):
@@ -76,6 +76,8 @@ class GameBoard(ABC):
                     f"tile must be of type Tile, not {type(tile)}"
                     )
         self._board[x - 1][y - 1] = tile
+        tile.position = (x, y)
+            
 
     def __board_position_is_valid(self, x: int, y: int):
         """

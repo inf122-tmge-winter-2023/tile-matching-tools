@@ -21,3 +21,6 @@ class TileGroupDisbandedException(BaseInf122tmgeModelException):
 
 class TileGroupPositionOccupiedError(BaseInf122tmgeModelException):
     """Exception raised when attempting to add a tile with invalid relative position"""
+
+class IllegalTileMovementException(BaseInf122tmgeModelException):
+    """Exception raised when a movement is not applicable to a tile"""
