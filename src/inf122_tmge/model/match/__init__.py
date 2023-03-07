@@ -16,8 +16,9 @@ class MatchCondition(ABC):
         :equality_rule: the function the determines if two tiles match
    """
     
-    def __init__(self, scan: tuple, equality_rule: callable = Tile.__eq__):
+    def __init__(self, scan: tuple, value: int, equality_rule: callable = Tile.__eq__):
         self._eq = equality_rule
+        self._point_value = value
         self._scan_delta = scan
 
     @abstractmethod
@@ -35,3 +36,11 @@ class MatchCondition(ABC):
         """
         pass
             
+    @property
+    def point_value(self) -> int:
+        """
+            Read only view of the point value of this match condition
+            :returns: match condition's point value
+            :rtype: int
+        """
+        return self._point_value
