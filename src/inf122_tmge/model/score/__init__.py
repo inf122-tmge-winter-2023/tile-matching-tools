@@ -33,6 +33,10 @@ class Scoring(ABC):
         """
         return self._multiplier
 
+    @multiplier.setter
+    def multiplier(self, new_multiplier):
+        self._multiplier = new_multiplier
+
     @abstractmethod
     def award_for_match(self, match: MatchCondition):
         """
