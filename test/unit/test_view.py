@@ -1,3 +1,4 @@
+import queue
 import time
 import pytest
 
@@ -62,9 +63,9 @@ def test_user_input():
         score = 0
         while not view.quit:
             try:
-                if view.key_events.get(block=False) == 's':
+                if view.key_event == 's':
                     move_down()
-            except:
+            except queue.Empty:
                 pass
             view.update(game_board,score)
             score += 1
@@ -96,9 +97,9 @@ def test_mouse_input():
         while not view.quit:
             score += 1
             try:
-                clicked_on = view.mouse_events.get(block=False)
+                clicked_on = view.mouse_event
                 flip_tile(clicked_on[0], clicked_on[1])
-            except:
+            except queue.Empty:
                 pass
             view.update(game_board,score)
             time.sleep(.0165)

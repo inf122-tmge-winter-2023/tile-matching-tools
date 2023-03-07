@@ -5,7 +5,6 @@
 """
 from copy import deepcopy
 import math
-import queue
 from threading import Thread
 import tkinter
 import types
@@ -13,6 +12,7 @@ import typing
 
 from ..model import GameBoard
 from .view_constants import ViewConstants
+from .event_manager import EventManager
 
 class View:
     """
@@ -23,14 +23,9 @@ class View:
         ViewConstants.num_rows = game_board.num_rows
         ViewConstants.num_cols = game_board.num_cols
 
-        # tile_width will need to be passed in as well as appearance
-
+        self._event_manager = EventManager()
         self._init_screen()
         self._draw_board()
-        self._board_queue = queue.Queue()
-        self._score_queue = queue.Queue()
-        self._key_events = queue.Queue()
-        self._mouse_events = queue.Queue()
         self._quit = False
 
     def launch_view(self, func_name: types.FunctionType=None):
@@ -57,8 +52,8 @@ class View:
         self._root.protocol("WM_DELETE_WINDOW", on_close)
 
         while not self._quit:
-            self.update_board_view(self._board_queue.get())
-            self.update_score(self._score_queue.get())
+            self.update_board_view(self._event_manager.get_board())
+            self.update_score(self._event_manager.get_score())
             self._root.update()
 
     def _init_screen(self):
@@ -168,8 +163,8 @@ class View:
             updated_board (GameBoard): altered_board
             updated_score (int): altered score
         """
-        self._board_queue.put(updated_board)
-        self._score_queue.put(updated_score)
+        self._event_manager.put_board(updated_board)
+        self._event_manager.put_score(updated_score)
 
     def add_event_listener(self, event_name: str):
         """
@@ -186,33 +181,29 @@ class View:
 
     def _event_handler(self, event: tkinter.Event):
         """
-            Add's an event listener to the view
+            Add's an event to the _event_manager
             :arg event_name: The name of the event ex: KeyPress, KeyRelease, Key 
             :arg type: tkinter.Event 
-            :returns: nothing
-            :rtype: None
         """
         if event.type ==  tkinter.EventType.ButtonRelease:
-            self._mouse_events.put(self._map_mouse(event.x, event.y))
+            self._event_manager.put_mouse_event(self._map_mouse(event.x, event.y))
         else:
-            self._key_events.put(event.char)
+            self._event_manager.put_key_event(event.char)
 
     @property
-    def key_events(self) -> queue.Queue:
+    def key_event(self) -> str:
         """
-            Getter for the events queue
-            :returns:  Returns the queue of events storing the latest event at the first position
-            :rtype: queue.Queue
+            Returns the earliest key event 
+            rtype: char
         """
-        return self._key_events
+        return self._event_manager.get_key_event()
     @property
-    def mouse_events(self) -> queue.Queue:
+    def mouse_event(self) -> typing.Tuple:
         """
-            Getter for the events queue
-            :returns:  Returns the queue of events storing the latest event at the first position
-            :rtype: queue.Queue
+            Returns the earliest mouse event
+            rtype: (x,y)
         """
-        return self._mouse_events
+        return self._event_manager.get_mouse_event()
 
     def update_score(self, score: int):
         """
