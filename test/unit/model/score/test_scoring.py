@@ -41,3 +41,9 @@ class TestScoring:
         simple_score.award_for_match(simple_match)
         assert simple_score.score == 4
         assert simple_score.multiplier == 1
+
+    def test_award_is_multiplied_with_large_multiplier(self, simple_score, simple_match):
+        simple_score.multiplier = 4
+        simple_score.award_for_match(simple_match)
+        assert simple_score.score == 16
+        assert simple_score.multiplier == 4
