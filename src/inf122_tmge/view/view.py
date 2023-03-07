@@ -12,6 +12,7 @@ import types
 import typing
 
 from ..model import GameBoard
+from .view_constants import ViewConstants
 
 class View:
     """
@@ -19,8 +20,10 @@ class View:
     """
     def __init__(self, game_board: GameBoard):
         self._game_board = deepcopy(game_board)
+        ViewConstants.num_rows = game_board.num_rows
+        ViewConstants.num_cols = game_board.num_cols
+
         # tile_width will need to be passed in as well as appearance
-        self._tile_width = 30
 
         self._init_screen()
         self._draw_board()
@@ -66,31 +69,30 @@ class View:
         """
         # Initialize empty window
         self._root = tkinter.Tk()
-        score_container_width = 200
-        padding = 10
-        screen_width = self._game_board.num_cols * self._tile_width \
-              + score_container_width + padding
-        screen_height = self._game_board.num_rows * self._tile_width + padding
 
         # Setting window size: Needs to be in this format '600x800'
-        self._root.geometry(f"{screen_width}x{screen_height}")
-        self._root.title('TMGE GUI')
+        print(f"{ViewConstants.window_width()}x{ViewConstants.window_height()}")
+        self._root.geometry(f"{ViewConstants.window_width()}x{ViewConstants.window_height()}")
+        self._root.title(ViewConstants.window_title)
         self._root.resizable(False, False)
 
         # Init main container
-        self._main_container = tkinter.Frame(self._root)
-        self._main_container.pack(side="left", fill="both")
+        main_container = tkinter.Frame(self._root)
+        main_container.pack(side="left", fill="both")
+
         # Init canvas for board
-        canvas_padding = 5
-        canvas_width = screen_width + canvas_padding - score_container_width
-        canvas_height = screen_height + canvas_padding
-        self._board_canvas = tkinter.Canvas(self._main_container, \
-                                            width=canvas_width, height=canvas_height)
+        self._board_canvas = tkinter.Canvas(main_container, \
+                                            width=ViewConstants.board_width(), \
+                                            height=ViewConstants.board_height())
         self._board_canvas.pack(side="left", fill="y")
+
         # Init container for score
-        score_container = tkinter.Frame(self._main_container, width=score_container_width,\
-                                         height=screen_height,padx=60)
-        score_container.pack(side="left", fill="both")
+        score_container = tkinter.Frame(main_container, \
+                                        width=ViewConstants.score_container_width, \
+                                        height=ViewConstants.window_height(), \
+                                        padx=ViewConstants.score_padding)
+        
+        score_container.pack(side="left", fill="y")
 
         # Add label to display score
         score_label = tkinter.Label(score_container, text="Score", font=("Roboto", 16))
@@ -114,12 +116,11 @@ class View:
         """
         row = row - 1
         col = col - 1
-        padding = 5
-        tile_start_x = row * self._tile_width + padding
-        tile_end_x = row * self._tile_width + padding + self._tile_width
+        tile_start_x = row * ViewConstants.tile_size + ViewConstants.board_padding
+        tile_end_x = row *  ViewConstants.tile_size + ViewConstants.board_padding +  ViewConstants.tile_size
 
-        tile_start_y = col * self._tile_width + padding
-        tile_end_y = col * self._tile_width + padding + self._tile_width
+        tile_start_y = col *  ViewConstants.tile_size + ViewConstants.board_padding
+        tile_end_y = col *  ViewConstants.tile_size + ViewConstants.board_padding +  ViewConstants.tile_size
 
         self._board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, \
                                              tile_end_y, fill=color, outline='gray', width=2)
@@ -160,6 +161,12 @@ class View:
         self._set_board(updated_board)
 
     def update(self, updated_board: GameBoard, updated_score: int):
+        """Puts board and score to queues for the main_loop() to read
+
+        Args:
+            updated_board (GameBoard): altered_board
+            updated_score (int): altered score
+        """
         self._board_queue.put(updated_board)
         self._score_queue.put(updated_score)
 
