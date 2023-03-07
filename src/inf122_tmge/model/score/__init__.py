@@ -16,7 +16,7 @@ class Scoring(ABC):
         self._multiplier = 1
 
     @property
-    def score(self):
+    def score(self) -> int:
         """
             read only view of current score
             :returns: snapshot of score value
@@ -25,7 +25,7 @@ class Scoring(ABC):
         return self._points
 
     @property
-    def multiplier(self):
+    def multiplier(self) -> int:
         """
             read only view of score multiplier
             :returns: current score multiplier
@@ -34,11 +34,17 @@ class Scoring(ABC):
         return self._multiplier
 
     @multiplier.setter
-    def multiplier(self, new_multiplier):
+    def multiplier(self, new_multiplier) -> None:
+        """
+            write only view of score multiplier
+            :arg new_multiplier: the new muliplier value (can be 0)
+            :returns: Nothing
+            :rtype: None
+        """
         self._multiplier = new_multiplier
 
     @abstractmethod
-    def award_for_match(self, match: MatchCondition):
+    def award_for_match(self, match: MatchCondition) -> None:
         """
             award the points specified by a given match condition to the score
             :arg match: the match condition awarding points
