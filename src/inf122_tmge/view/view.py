@@ -4,10 +4,12 @@
     :module_author: Matthew Isayan
 """
 from copy import deepcopy
+import math
 import queue
 from threading import Thread
 import tkinter
 import types
+import typing
 
 from ..model import GameBoard
 
@@ -22,7 +24,11 @@ class View:
 
         self._init_screen()
         self._draw_board()
-        self._events = queue.Queue()
+        self._board_queue = queue.Queue()
+        self._score_queue = queue.Queue()
+        self._key_events = queue.Queue()
+        self._mouse_events = queue.Queue()
+        self._quit = False
 
     def launch_view(self, func_name: types.FunctionType=None):
         """
@@ -32,11 +38,26 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        if func_name:
-            thread = Thread(target=func_name, daemon=True)
-            self._root.after(500, thread.start())
-        self._root.mainloop()
+        thread = None  # Initialize thread variable
 
+        if func_name:
+            thread = Thread(target=func_name)
+            self._root.after(500, thread.start())
+
+        def on_close():
+            self._quit = True
+            if thread is not None:
+                thread.join()  # Wait for thread to finish
+            self._root.destroy()
+
+        # Close on exit
+        self._root.protocol("WM_DELETE_WINDOW", on_close)
+
+        while not self._quit:
+            self.update_board_view(self._board_queue.get())
+            self.update_score(self._score_queue.get())
+            self._root.update()
+ 
     def _init_screen(self):
         """
             Initializes screen, main container and canvas for the board 
@@ -138,6 +159,10 @@ class View:
 
         self._set_board(updated_board)
 
+    def update(self, updated_board: GameBoard, updated_score: int):
+        self._board_queue.put(updated_board)
+        self._score_queue.put(updated_score)
+
     def add_event_listener(self, event_name: str):
         """
             Add's an event listener to the view
@@ -146,7 +171,10 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        self._root.bind(f"<{event_name}>", self._event_handler)
+        if("Key" in event_name):
+            self._root.bind(f"<{event_name}>", self._event_handler)
+        else:
+            self._board_canvas.bind(f"<{event_name}>", self._event_handler)
 
     def _event_handler(self, event: tkinter.Event):
         """
@@ -156,17 +184,28 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        self._events.put(event.char)
+        if(event.type ==  tkinter.EventType.ButtonRelease):
+            self._mouse_events.put(self._map_mouse(event.x, event.y))
+        else:
+            self._key_events.put(event.char)
 
     @property
-    def events(self) -> queue.Queue:
+    def key_events(self) -> queue.Queue:
         """
             Getter for the events queue
             :returns:  Returns the queue of events storing the latest event at the first position
             :rtype: queue.Queue
         """
-        return self._events
-
+        return self._key_events
+    @property
+    def mouse_events(self) -> queue.Queue:
+        """
+            Getter for the events queue
+            :returns:  Returns the queue of events storing the latest event at the first position
+            :rtype: queue.Queue
+        """
+        return self._mouse_events
+    
     def update_score(self, score: int):
         """
             Updates the Score label
@@ -174,3 +213,15 @@ class View:
             :rtype: queue.Queue
         """
         self._score_label.config(text=f"{score}")
+
+    # TODO Implement via constants
+    def _map_mouse(self, x_coord: int, y_coord: int) -> typing.Tuple:
+        """Maps Event Coordinates to Board Coordinates"""
+
+        row = math.floor(((x_coord - 5) / 30) + 1)
+        col =  math.floor(((y_coord - 5) / 30) + 1)
+        return (row, col)
+    
+    @property
+    def quit(self):
+        return self._quit
