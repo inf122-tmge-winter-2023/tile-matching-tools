@@ -60,7 +60,7 @@ class View:
             self.update_board_view(self._board_queue.get())
             self.update_score(self._score_queue.get())
             self._root.update()
- 
+
     def _init_screen(self):
         """
             Initializes screen, main container and canvas for the board 
@@ -71,7 +71,6 @@ class View:
         self._root = tkinter.Tk()
 
         # Setting window size: Needs to be in this format '600x800'
-        print(f"{ViewConstants.window_width()}x{ViewConstants.window_height()}")
         self._root.geometry(f"{ViewConstants.window_width()}x{ViewConstants.window_height()}")
         self._root.title(ViewConstants.window_title)
         self._root.resizable(False, False)
@@ -91,7 +90,6 @@ class View:
                                         width=ViewConstants.score_container_width, \
                                         height=ViewConstants.window_height(), \
                                         padx=ViewConstants.score_padding)
-        
         score_container.pack(side="left", fill="y")
 
         # Add label to display score
@@ -117,11 +115,14 @@ class View:
         row = row - 1
         col = col - 1
         tile_start_x = row * ViewConstants.tile_size + ViewConstants.board_padding
-        tile_end_x = row *  ViewConstants.tile_size + ViewConstants.board_padding +  ViewConstants.tile_size
+        tile_end_x = row *  ViewConstants.tile_size + \
+                            ViewConstants.board_padding + \
+                            ViewConstants.tile_size
 
         tile_start_y = col *  ViewConstants.tile_size + ViewConstants.board_padding
-        tile_end_y = col *  ViewConstants.tile_size + ViewConstants.board_padding +  ViewConstants.tile_size
-
+        tile_end_y = col *  ViewConstants.tile_size + \
+                            ViewConstants.board_padding + \
+                            ViewConstants.tile_size
         self._board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, \
                                              tile_end_y, fill=color, outline='gray', width=2)
 
@@ -178,7 +179,7 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        if("Key" in event_name):
+        if "Key" in event_name:
             self._root.bind(f"<{event_name}>", self._event_handler)
         else:
             self._board_canvas.bind(f"<{event_name}>", self._event_handler)
@@ -191,7 +192,7 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        if(event.type ==  tkinter.EventType.ButtonRelease):
+        if event.type ==  tkinter.EventType.ButtonRelease:
             self._mouse_events.put(self._map_mouse(event.x, event.y))
         else:
             self._key_events.put(event.char)
@@ -212,7 +213,7 @@ class View:
             :rtype: queue.Queue
         """
         return self._mouse_events
-    
+
     def update_score(self, score: int):
         """
             Updates the Score label
@@ -221,14 +222,21 @@ class View:
         """
         self._score_label.config(text=f"{score}")
 
-    # TODO Implement via constants
     def _map_mouse(self, x_coord: int, y_coord: int) -> typing.Tuple:
         """Maps Event Coordinates to Board Coordinates"""
 
-        row = math.floor(((x_coord - 5) / 30) + 1)
-        col =  math.floor(((y_coord - 5) / 30) + 1)
+        # + 1 is for one-based
+        row = math.floor(((x_coord - ViewConstants.window_padding) / ViewConstants.tile_size) + 1)
+        col =  math.floor(((y_coord - ViewConstants.window_padding) / ViewConstants.tile_size) + 1)
         return (row, col)
-    
+
     @property
     def quit(self):
+        """ Keeps track of Tkinter Window protocol
+        
+        Returns:
+            _bool_: Returns True if window's been closed
+
+        """
         return self._quit
+    
