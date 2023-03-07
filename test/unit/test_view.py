@@ -62,16 +62,47 @@ def test_user_input():
 
     def gameloop():
         score = 0
-        while True:
+        while not view.quit:
             try:
-                if view.events.get(block=False) == 's':
+                if view.key_events.get(block=False) == 's':
                     move_down()
             except:
                 pass
-    
-            view.update_board_view(game_board)
-            view.update_score(score)
+            view.update(game_board,score)
             score += 1
+            time.sleep(.0165)
+
+    view.launch_view(gameloop)
+    print("still running")
+
+
+@pytest.mark.integration
+def test_mouse_input():
+    """Manual integration testing a user input"""
+    game_board = BoardFactory.create_board('default', 15, 15)
+    view = View(game_board) 
+
+    def flip_tile(row, col):
+        if(game_board.tile_at(row, col).color == 'red'):
+            color = '#D3D3D3'
+        else:
+            color = 'red'
+        tile_to_flip = TileBuilder().add_position(row,col).add_color(color).construct()
+        game_board.place_tile(tile_to_flip, tile_to_flip.position.x, tile_to_flip.position.y)
+
+    view.add_event_listener('ButtonRelease')
+    
+    
+    def gameloop():
+        score = 0
+        while not view.quit:
+            score += 1
+            try:
+                clicked_on = view.mouse_events.get(block=False)
+                flip_tile(clicked_on[0], clicked_on[1])
+            except:
+                pass
+            view.update(game_board,score)
             time.sleep(.0165)
 
     view.launch_view(gameloop)
