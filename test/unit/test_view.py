@@ -1,10 +1,8 @@
-from threading import Thread
 import time
 import pytest
 
 from inf122_tmge.core.board_factory import BoardFactory
 from inf122_tmge.core.tile_builder import TileBuilder
-from inf122_tmge.model.tiles.tile import Tile
 from inf122_tmge.view.view import View
 
 
