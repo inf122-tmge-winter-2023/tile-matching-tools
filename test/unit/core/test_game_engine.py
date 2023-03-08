@@ -1,12 +1,12 @@
 import pytest
-from inf122_tmge.core import GameEngine
-from inf122_tmge.core import BoardFactory
-from inf122_tmge.core.tile_builder import TileBuilder
-from inf122_tmge.model import GameBoard
-from inf122_tmge.model import Scoring
-from inf122_tmge.model import MovementRule
-from inf122_tmge.model.match import MatchCondition
-from inf122_tmge.model.tile_color import TileColor
+from tilematch_tools.core import GameEngine
+from tilematch_tools.core import BoardFactory
+from tilematch_tools.core.tile_builder import TileBuilder
+from tilematch_tools.model import GameBoard
+from tilematch_tools.model import Scoring
+from tilematch_tools.model import MovementRule
+from tilematch_tools.model.match import MatchCondition
+from tilematch_tools.model.tile_color import TileColor
 
 @pytest.fixture
 def simple_down_movement():
@@ -56,4 +56,4 @@ class TestGameEngine:
         tile_2 = TileBuilder().add_position(1,2).add_color(TileColor.RED).construct()
         game_engine.place_tile(tile_1, tile_1.position.x, tile_2.position.y)
         game_engine.match_tiles(1,2,simple_match)
-        assert game_engine.game_state.game_score.score == 4
+        assert game_engine.score == 4
