@@ -13,7 +13,6 @@ from inf122_tmge.model import Scoring
 from inf122_tmge.model import MatchCondition
 
 from inf122_tmge.model import MovementRule
-from inf122_tmge.model import Tile
 
 class GameEngine(ABC):
     def __init__(self, board: GameBoard, score : Scoring):
@@ -22,7 +21,8 @@ class GameEngine(ABC):
     # TODO: Replace with updated place_tile
     # TODO: Handle exceptions, possibly chain exceptions
     def move_tile(self, row: int, col: int, rule: MovementRule):
-        tile_to_move: Tile = self.game_state.game_board.tile_at(row, col).move(rule)
+        tile_to_move = self.game_state.game_board.tile_at(row, col)
+        tile_to_move.move(rule)
         self.game_state.game_board.place_tile(tile_to_move, tile_to_move.position.x, tile_to_move.position.y)
 
     # TODO Implement aftermath of a match
