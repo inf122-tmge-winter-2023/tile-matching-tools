@@ -1,10 +1,9 @@
-from threading import Thread
+import queue
 import time
 import pytest
 
 from inf122_tmge.core.board_factory import BoardFactory
 from inf122_tmge.core.tile_builder import TileBuilder
-from inf122_tmge.model.tiles.tile import Tile
 from inf122_tmge.view.view import View
 
 
@@ -39,7 +38,7 @@ def test_threading_fill_board():
                 tile_to_place = TileBuilder().add_position(i,j).add_color('red').construct()
 
                 game_board.place_tile(tile_to_place, i, j)
-                view.update_board_view(game_board)
+                view._update_board_view(game_board)
                 time.sleep(.0165)
 
     view.launch_view(place_tiles)
@@ -62,16 +61,47 @@ def test_user_input():
 
     def gameloop():
         score = 0
-        while True:
+        while not view.quit:
             try:
-                if view.events.get(block=False) == 's':
+                if view.key_event == 's':
                     move_down()
-            except:
+            except queue.Empty:
                 pass
-    
-            view.update_board_view(game_board)
-            view.update_score(score)
+            view.update(game_board,score)
             score += 1
+            time.sleep(.0165)
+
+    view.launch_view(gameloop)
+    print("still running")
+
+
+@pytest.mark.integration
+def test_mouse_input():
+    """Manual integration testing a user input"""
+    game_board = BoardFactory.create_board('default', 15, 15)
+    view = View(game_board) 
+
+    def flip_tile(row, col):
+        if(game_board.tile_at(row, col).color == 'red'):
+            color = '#D3D3D3'
+        else:
+            color = 'red'
+        tile_to_flip = TileBuilder().add_position(row,col).add_color(color).construct()
+        game_board.place_tile(tile_to_flip, tile_to_flip.position.x, tile_to_flip.position.y)
+
+    view.add_event_listener('ButtonRelease')
+    
+    
+    def gameloop():
+        score = 0
+        while not view.quit:
+            score += 1
+            try:
+                clicked_on = view.mouse_event
+                flip_tile(clicked_on[0], clicked_on[1])
+            except queue.Empty:
+                pass
+            view.update(game_board,score)
             time.sleep(.0165)
 
     view.launch_view(gameloop)
