@@ -3,11 +3,11 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "inf122_tmge"
+name = "tilematch_tools"
 version = "0.0.1"
-description = "Implementation of a generic tile matching game env"
+description = "Utilities that define the interface of a general tile matching game"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
 markers = "integration: For integration tests"

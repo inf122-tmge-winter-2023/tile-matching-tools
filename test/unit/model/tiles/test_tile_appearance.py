@@ -4,7 +4,7 @@ from itertools import product
 
 import pytest
 
-from inf122_tmge.model.tiles.tile_appearance import TileAppearance, TileShape, TileColor
+from tilematch_tools.model.tiles.tile_appearance import TileAppearance, TileShape, TileColor
 
 @pytest.mark.parametrize("color, shape", product(TileColor, TileShape))
 def test_appearance_dataclass(color, shape):

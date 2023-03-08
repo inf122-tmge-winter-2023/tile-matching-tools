@@ -2,8 +2,8 @@
 
 import pytest
 
-from inf122_tmge.core import BoardFactory
-from inf122_tmge.model.board import GameBoard
+from tilematch_tools.core import BoardFactory
+from tilematch_tools.model.board import GameBoard
 
 class TestBoardFactory:
     width = 10

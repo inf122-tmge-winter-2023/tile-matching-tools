@@ -1,6 +1,6 @@
 """
     :module_name: exceptions
-    :module_summary: exception classes for inf122_tmge.model
+    :module_summary: exception classes for tilematch_tools.model
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 

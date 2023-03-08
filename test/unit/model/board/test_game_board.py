@@ -1,8 +1,8 @@
 import pytest
 
-from inf122_tmge.model.exceptions import InvalidBoardPositionError, IllegalBoardContentException
-from inf122_tmge.model.board.game_board import GameBoard
-from inf122_tmge.model.tiles.tile import Tile
+from tilematch_tools.model.exceptions import InvalidBoardPositionError, IllegalBoardContentException
+from tilematch_tools.model.board.game_board import GameBoard
+from tilematch_tools.model.tiles.tile import Tile
 
 width = 10
 height = 24

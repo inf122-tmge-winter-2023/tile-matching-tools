@@ -1,6 +1,6 @@
 import pytest
 
-from inf122_tmge import gimme_five
+from tilematch_tools import gimme_five
 
 def test_vacuous():
     """A test the passes vacuously"""

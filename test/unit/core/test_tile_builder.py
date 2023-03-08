@@ -4,11 +4,11 @@ from itertools import product
 
 import pytest
 
-from inf122_tmge.core import TileBuilder
-from inf122_tmge.model.tiles import Tile
-from inf122_tmge.model.exceptions import MissingTilePropertyException
-from inf122_tmge.model.tile_color import TileColor
-from inf122_tmge.model.tile_shape import TileShape
+from tilematch_tools.core import TileBuilder
+from tilematch_tools.model.tiles import Tile
+from tilematch_tools.model.exceptions import MissingTilePropertyException
+from tilematch_tools.model.tile_color import TileColor
+from tilematch_tools.model.tile_shape import TileShape
 
 class TestTileBuilder:
 
