@@ -2,8 +2,8 @@
 
 import pytest
 
-from inf122_tmge.model.score import Scoring
-from inf122_tmge.model.match import MatchCondition
+from tilematch_tools.model.score import Scoring
+from tilematch_tools.model.match import MatchCondition
 
 @pytest.fixture
 def simple_match():

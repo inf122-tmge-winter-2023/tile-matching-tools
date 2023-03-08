@@ -2,10 +2,10 @@
 
 import pytest
 
-from inf122_tmge.model import TileGroup, MovementRule
-from inf122_tmge.model.exceptions import TileGroupPositionOccupiedError, \
+from tilematch_tools.model import TileGroup, MovementRule
+from tilematch_tools.model.exceptions import TileGroupPositionOccupiedError, \
                                          TileGroupDisbandedException
-from inf122_tmge.core import TileBuilder
+from tilematch_tools.core import TileBuilder
 
 class TestTileGroup:
     def setup_method(self):

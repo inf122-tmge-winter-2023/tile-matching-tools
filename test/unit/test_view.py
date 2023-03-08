@@ -2,9 +2,9 @@ import queue
 import time
 import pytest
 
-from inf122_tmge.core.board_factory import BoardFactory
-from inf122_tmge.core.tile_builder import TileBuilder
-from inf122_tmge.view.view import View
+from tilematch_tools.core.board_factory import BoardFactory
+from tilematch_tools.core.tile_builder import TileBuilder
+from tilematch_tools.view.view import View
 
 
 
