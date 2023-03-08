@@ -38,7 +38,7 @@ def test_threading_fill_board():
                 tile_to_place = TileBuilder().add_position(i,j).add_color('red').construct()
 
                 game_board.place_tile(tile_to_place, i, j)
-                view.update_board_view(game_board)
+                view._update_board_view(game_board)
                 time.sleep(.0165)
 
     view.launch_view(place_tiles)
