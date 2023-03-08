@@ -15,4 +15,4 @@ class GameState:
         Class responsible for holding the gameboard and score 
     """
     game_board: GameBoard
-    score: Scoring
+    game_score: Scoring
