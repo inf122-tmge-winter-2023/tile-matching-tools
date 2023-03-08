@@ -1,11 +1,11 @@
-# Makefile for INF122-TMGE 
+# Makefile for tile matching tools package 
 
 help:
 	@echo "Makefile for IN4MATX 122 final project. Available targets:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'	
 
 venv: ## Setup a virtual environment
-	[ -d .venv ] || python3 -m venv .venv --prompt=inf122-tmge
+	[ -d .venv ] || python3 -m venv .venv --prompt=tilematch_tools
 
 clean-venv: ## Destroy the virtual environment if it exists
 	[ ! -d .venv ] || rm -rf .venv
@@ -33,7 +33,8 @@ activate: ## Activate the virtual environment for bootstrapping (does NOT activa
 
 .PHONY: test
 test: ## Run unittests on the source directory
-	pytest --cov=inf122_tmge -k "not integration"
+	pytest --cov=tilematch_tools -k "not integration"
+	coverage report -m
 
 test-int: ## Run unittests on tests marked integration
 	pytest -v -m integration --cache-clear
