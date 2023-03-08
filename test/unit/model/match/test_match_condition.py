@@ -2,10 +2,10 @@
 
 import pytest
 
-from inf122_tmge.model.match import MatchCondition
-from inf122_tmge.model import GameBoard
-from inf122_tmge.model.exceptions import InvalidBoardPositionError
-from inf122_tmge.model.tiles import Tile
+from tilematch_tools.model.match import MatchCondition
+from tilematch_tools.model import GameBoard
+from tilematch_tools.model.exceptions import InvalidBoardPositionError
+from tilematch_tools.model.tiles import Tile
 
 @pytest.fixture
 def two_match():

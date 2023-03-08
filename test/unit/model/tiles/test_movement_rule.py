@@ -2,7 +2,7 @@
 
 import pytest
 
-from inf122_tmge.model.tiles import MovementRule
+from tilematch_tools.model.tiles import MovementRule
 
 def test_cannot_instantiate_movement_rule():
     with pytest.raises(TypeError):
