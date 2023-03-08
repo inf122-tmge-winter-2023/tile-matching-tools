@@ -54,5 +54,5 @@ bootstrap: venv ## Bootstrap the virtual environment
 
 .PHONY: uml ## Auto-generates UML, requires Graphviz
 uml:
-	mkdir ./uml
+	mkdir -p ./uml
 	pyreverse ./src/inf122_tmge -d ./uml -o png -p TMGE 
