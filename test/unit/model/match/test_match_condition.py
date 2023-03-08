@@ -21,7 +21,7 @@ def two_match():
                     )
             except InvalidBoardPositionError:
                 return False
-    return TwoMatch((0, -1))
+    return TwoMatch((0, -1), 4)
 
 
 def test_match_condition_must_implement_the_match_interface():
@@ -46,3 +46,6 @@ class TestMatchOnBoard:
 
     def test_can_detect_a_nonmatch(self, two_match):
         assert not two_match.check_match(self._board, 2, 2)
+
+    def test_can_read_match_conditions_point_value_as_property(self, two_match):
+        assert two_match.point_value == 4
