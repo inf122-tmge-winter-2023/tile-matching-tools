@@ -6,14 +6,14 @@
 
 from abc import ABC
 
-from inf122_tmge.core.game_state import GameState
+from ..core.game_state import GameState
 
-from inf122_tmge.model import GameBoard
-from inf122_tmge.model import Scoring
-from inf122_tmge.model import MatchCondition
+from ..model import GameBoard
+from ..model import Scoring
+from ..model import MatchCondition
 
-from inf122_tmge.model import MovementRule
-from inf122_tmge.model import Tile
+from ..model import MovementRule
+from ..model import Tile
 
 class GameEngine(ABC):
     def __init__(self, board: GameBoard, score : Scoring):
