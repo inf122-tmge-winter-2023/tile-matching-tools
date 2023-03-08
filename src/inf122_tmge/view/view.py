@@ -51,10 +51,11 @@ class View:
         # Close on exit
         self._root.protocol("WM_DELETE_WINDOW", on_close)
 
+        # self._root.mainloop()
         while not self._quit:
-            self.update_board_view(self._event_manager.get_board())
-            self.update_score(self._event_manager.get_score())
-            self._root.update()
+            self._update_board_view(self._event_manager.get_board())
+            self._update_score(self._event_manager.get_score())
+            self._board_canvas.update()
 
     def _init_screen(self):
         """
@@ -71,17 +72,17 @@ class View:
         self._root.resizable(False, False)
 
         # Init main container
-        main_container = tkinter.Frame(self._root)
-        main_container.pack(side="left", fill="both")
+        self.main_container = tkinter.Frame(self._root)
+        self.main_container.pack(side="left", fill="both")
 
         # Init canvas for board
-        self._board_canvas = tkinter.Canvas(main_container, \
+        self._board_canvas = tkinter.Canvas(self.main_container, \
                                             width=ViewConstants.board_width(), \
                                             height=ViewConstants.board_height())
         self._board_canvas.pack(side="left", fill="y")
 
         # Init container for score
-        score_container = tkinter.Frame(main_container, \
+        score_container = tkinter.Frame(self.main_container, \
                                         width=ViewConstants.score_container_width, \
                                         height=ViewConstants.window_height(), \
                                         padx=ViewConstants.score_padding)
@@ -141,7 +142,7 @@ class View:
         """
         self._game_board = deepcopy(board)
 
-    def update_board_view(self, updated_board:GameBoard):
+    def _update_board_view(self, updated_board:GameBoard):
         """
             Updates the board view and sets the updated board
             :arg updated_board: Board model to update the view
@@ -175,7 +176,7 @@ class View:
             :rtype: None
         """
         if "Key" in event_name:
-            self._root.bind(f"<{event_name}>", self._event_handler)
+            self.main_container.bind_all(f"<{event_name}>", self._event_handler)
         else:
             self._board_canvas.bind(f"<{event_name}>", self._event_handler)
 
@@ -205,7 +206,7 @@ class View:
         """
         return self._event_manager.get_mouse_event()
 
-    def update_score(self, score: int):
+    def _update_score(self, score: int):
         """
             Updates the Score label
             :returns:  Returns the queue of events storing the latest event at the first position
@@ -230,4 +231,6 @@ class View:
 
         """
         return self._quit
-    
+    @quit.setter
+    def quit(self, quit_status: bool):
+        self.quit = quit_status
