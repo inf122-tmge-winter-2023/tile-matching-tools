@@ -6,8 +6,8 @@
 
 from dataclasses import dataclass
 
-from inf122_tmge.model.board.game_board import GameBoard
-from inf122_tmge.model.score import Scoring
+from inf122_tmge.model import GameBoard
+from inf122_tmge.model import Scoring
 
 @dataclass
 class GameState:

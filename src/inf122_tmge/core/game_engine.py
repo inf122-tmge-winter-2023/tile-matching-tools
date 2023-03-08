@@ -8,12 +8,12 @@ from abc import ABC
 
 from inf122_tmge.core.game_state import GameState
 
-from inf122_tmge.model.board.game_board import GameBoard
-from inf122_tmge.model.score import Scoring
-from inf122_tmge.model.match import MatchCondition
+from inf122_tmge.model import GameBoard
+from inf122_tmge.model import Scoring
+from inf122_tmge.model import MatchCondition
 
-from inf122_tmge.model.tiles.movement_rule import MovementRule
-from inf122_tmge.model.tiles.tile import Tile
+from inf122_tmge.model import MovementRule
+from inf122_tmge.model import Tile
 
 class GameEngine(ABC):
     def __init__(self, board: GameBoard, score : Scoring):
