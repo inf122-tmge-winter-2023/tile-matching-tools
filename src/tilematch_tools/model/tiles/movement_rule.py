@@ -4,7 +4,10 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+import logging
 from abc import ABC, abstractmethod
+
+LOGGER = logging.getLogger(__name__)
 
 class MovementRule(ABC):
     """
@@ -26,4 +29,5 @@ class MovementRule(ABC):
             :returns: new position
             :rtype: (int, int)
         """
+        LOGGER.warning('Using default implementation. This is meant to be overridden!')
         return (0, 0)
