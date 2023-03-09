@@ -2,7 +2,7 @@
 
 import pytest
 
-from tilematch_tools.model.match import MatchCondition
+from tilematch_tools.model.match import MatchCondition, ScanDelta
 from tilematch_tools.model import GameBoard
 from tilematch_tools.model.exceptions import InvalidBoardPositionError
 from tilematch_tools.model.tiles import Tile
@@ -26,13 +26,13 @@ def two_match():
 
 def test_match_condition_must_implement_the_match_interface():
     with pytest.raises(TypeError):
-        m = MatchCondition((0, 1), lambda: False)
+        m = MatchCondition(ScanDelta.UP, lambda: False)
 
     with pytest.raises(TypeError):
         class TestCondition(MatchCondition):
             def i_dont_implement_the_match_interface():
                 pass
-        m = TestCondition((0, 1), lambda: False)
+        m = TestCondition(ScanDelta.UP, lambda: False)
 
 class TestMatchOnBoard:
     def setup_method(self):
