@@ -4,6 +4,7 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+import logging
 from abc import ABC, abstractmethod
 
 from ..board import GameBoard
@@ -34,6 +35,7 @@ class MatchCondition(ABC):
             :returns: True if a match is detected, False otherwise
             :rtype: bool
         """
+        LOGGER.warning('Using default implementation. This is meant to be overridden!')
         pass
             
     @property
@@ -43,4 +45,5 @@ class MatchCondition(ABC):
             :returns: match condition's point value
             :rtype: int
         """
+        LOGGER.debug('Match condition is worth: %d points', self._point_value)
         return self._point_value
