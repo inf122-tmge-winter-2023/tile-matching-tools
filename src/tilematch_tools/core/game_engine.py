@@ -4,6 +4,7 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+import logging
 from abc import ABC
 
 from ..core.game_state import GameState
@@ -14,6 +15,8 @@ from ..model import MatchCondition
 
 from ..model import MovementRule
 from ..model import Tile
+
+LOGGER=logging.getLogger(__name__)
 
 class GameEngine(ABC):
     def __init__(self, board: GameBoard, score : Scoring):
