@@ -12,7 +12,7 @@ def simple_match():
             super().__init__((1, 0), 4)
 
         def check_match(self, board, start_x, start_y):
-            return True
+            return MatchCondition.MatchFound(self.point_value, [])
     
     return SimpleMatch()
 
@@ -38,12 +38,12 @@ class TestScoring:
         assert simple_score.multiplier == 1
 
     def test_award_on_match_adds_points_to_score(self, simple_score, simple_match):
-        simple_score.award_for_match(simple_match)
+        simple_score.award_for_match(simple_match.check_match('a board', 1, 1))
         assert simple_score.score == 4
         assert simple_score.multiplier == 1
 
     def test_award_is_multiplied_with_large_multiplier(self, simple_score, simple_match):
         simple_score.multiplier = 4
-        simple_score.award_for_match(simple_match)
+        simple_score.award_for_match(simple_match.check_match('a board', 1, 1))
         assert simple_score.score == 16
         assert simple_score.multiplier == 4
