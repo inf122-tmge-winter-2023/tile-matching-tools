@@ -41,7 +41,7 @@ test-int: ## Run unittests on tests marked integration
 
 .PHONY: lint
 lint: ## Run lint checks on the source directory
-	pylint src/inf122_tmge 
+	pylint src/tilematch_tools 
 
 bootstrap: venv ## Bootstrap the virtual environment
 	@( \
@@ -53,3 +53,7 @@ bootstrap: venv ## Bootstrap the virtual environment
 	)
 	@$(MAKE) activate
 
+.PHONY: uml ## Auto-generates UML, requires Graphviz
+uml:
+	mkdir -p ./uml
+	pyreverse ./src/tilematch_tools -d ./uml -o png -p tilematch_tools 
