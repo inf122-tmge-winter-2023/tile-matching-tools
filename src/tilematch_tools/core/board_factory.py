@@ -4,9 +4,12 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+import logging
 from abc import ABC
 
 from ..model.board.game_board import GameBoard
+
+LOGGER = logging.getLogger(__name__)
 
 class BoardFactory(ABC):
 
@@ -23,4 +26,5 @@ class BoardFactory(ABC):
             :return: a new game board object
             :rtype: GameBoard
         """
+        LOGGER.info('Board factory churning board of size %sx%s', str(width), str(height))
         return GameBoard(width, height)
