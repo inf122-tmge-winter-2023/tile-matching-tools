@@ -4,14 +4,15 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+import logging
+from dataclasses import dataclass
+
 from ..exceptions import TileGroupPositionOccupiedError, \
                          TileGroupDisbandedException 
-
 from .tile import Tile, Position
 from .movement_rule import MovementRule
 
-from dataclasses import dataclass
-
+LOGGER = logging.getLogger(__name__)
 
 class TileGroup:
     """
@@ -40,11 +41,14 @@ class TileGroup:
             :raises: TileGroupDisbandedException if this tile group has disbanded
         """
         if self.disbanded:
+            LOGGER.error('Attempted to add a sibling to a disbanded group')
             raise TileGroupDisbandedException("Cannot add a sibling Tile to a disbanded TileGroup")
         if self._tiles.get((dx, dy)):
+            LOGGER.error('Attempted to add a sibling to a relative position that is already occupied')
             raise TileGroupPositionOccupiedError(
                     f"Relative position ({dx}, {dy}) is occupied by another tile"
                     )
+        LOGGER.info('Adding sibling tile (%d, %d) offset from center', dx, dy)
         new_tile.position = (self._center.position.x + dx, self._center.position.y + dy)
         self._tiles[(dx, dy)] = new_tile
 
@@ -55,6 +59,7 @@ class TileGroup:
             :returns: nothing
             :rtype: None
         """
+        LOGGER.info('Applying a movement rule to a tile group')
         for tile in self._tiles.values():
             tile.move(rule)
 
@@ -66,6 +71,7 @@ class TileGroup:
             :returns: read-only version of disbanded property
             :rtype: bool
         """
+        LOGGER.debug('Requested read of disbanded property is: %s', str(self._disbanded))
         return self._disbanded
 
     @property
@@ -75,6 +81,7 @@ class TileGroup:
             :returns: the tile count
             :rtype: int
         """
+        LOGGER.debug('Requested read of size property is: %d', len(self._tiles))
         return len(self._tiles)
 
     def disband(self) -> None:
@@ -83,4 +90,5 @@ class TileGroup:
             :returns: nothing
             :rtype: None
         """
+        LOGGER.info('Marking this tile group as disbanded. Mutator operations are now disallowed')
         self._disbanded = True
