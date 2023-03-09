@@ -4,9 +4,12 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+import logging
 from abc import ABC, abstractmethod
 
 from ..match import MatchCondition
+
+LOGGER = logging.getLogger(__name__)
 
 class Scoring(ABC):
     """ a class that tracks the score of a game"""
@@ -22,6 +25,7 @@ class Scoring(ABC):
             :returns: snapshot of score value
             :rtype: int
         """
+        LOGGER.debug('Request read of score with value: %d', self._points)
         return self._points
 
     @property
@@ -31,6 +35,7 @@ class Scoring(ABC):
             :returns: current score multiplier
             :rtype: int
         """
+        LOGGER.debug('Request read of multiplier with value: %d', self._multiplier)
         return self._multiplier
 
     @multiplier.setter
@@ -41,6 +46,7 @@ class Scoring(ABC):
             :returns: Nothing
             :rtype: None
         """
+        LOGGER.debug('Updated multiplier value: %d -> %d', self._multiplier, new_multiplier)
         self._multiplier = new_multiplier
 
     @abstractmethod
@@ -52,4 +58,6 @@ class Scoring(ABC):
             :returns: nothing
             :rtype: None
         """
+        LOGGER.warning('Using default implementation. This is meant to be overriden!')
+        LOGGER.debug('Adjusting score by %d', self._multiplier * match.point_value)
         self._points += (self._multiplier * match.point_value)
