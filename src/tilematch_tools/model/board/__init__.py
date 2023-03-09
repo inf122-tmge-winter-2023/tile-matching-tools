@@ -5,4 +5,3 @@
 """
 
 from .game_board import GameBoard
-from .board_appearance import BoardAppearance
