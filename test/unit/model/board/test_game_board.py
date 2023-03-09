@@ -44,13 +44,13 @@ class TestGameBoard:
     def test_tile_placement_with_tile_like_object(self):
         class SomeTile(Tile):
             pass
-        self.board.place_tile(SomeTile(**{'position': (2, 2)}), 2, 2)
+        self.board.place_tile(SomeTile(**{'position': (2, 2)}))
         assert type(self.board.tile_at(2, 2)) == SomeTile
 
     @pytest.mark.parametrize("o", [int, str, list, tuple, dict, set])
     def test_tile_placement_with_non_tile_object(self, o):
         with pytest.raises(IllegalBoardContentException):
-            self.board.place_tile(o(), 2, 2)
+            self.board.place_tile(o())
 
     @pytest.mark.parametrize("x, y", [
             (0, 0),
@@ -63,4 +63,4 @@ class TestGameBoard:
         class SomeTile(Tile):
             pass
         with pytest.raises(InvalidBoardPositionError):
-            self.board.place_tile(SomeTile(**{'position': (x, y)}), x, y)
+            self.board.place_tile(SomeTile(**{'position': (x, y)}))
