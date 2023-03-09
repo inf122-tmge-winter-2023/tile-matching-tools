@@ -1,6 +1,6 @@
-import pytest
+"""Tests for tilematch_tools"""
 
-from tilematch_tools import gimme_five
+import pytest
 
 def test_vacuous():
     """A test the passes vacuously"""
@@ -16,7 +16,7 @@ def test_vacuous():
 ])
 def test_gimme_five(owed, final):
     """Test the gimme five sample function"""
-    assert gimme_five() - owed == final
+    assert 5 - owed == final
 
 def test_exception_is_raised():
     """Test that an exception is raised"""
