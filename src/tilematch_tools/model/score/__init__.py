@@ -44,12 +44,13 @@ class Scoring(ABC):
         self._multiplier = new_multiplier
 
     @abstractmethod
-    def award_for_match(self, match: MatchCondition) -> None:
+    def award_for_match(self, match: MatchCondition.MatchFound) -> None:
         """
             award the points specified by a given match condition to the score
             :arg match: the match condition awarding points
-            :arg type: MatchCondition
+            :arg type: MatchFound
             :returns: nothing
             :rtype: None
         """
-        self._points += (self._multiplier * match.point_value)
+        if match:
+            self._points += (self._multiplier * match.value)
