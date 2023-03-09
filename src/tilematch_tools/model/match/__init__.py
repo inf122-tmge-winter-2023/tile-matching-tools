@@ -4,6 +4,7 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
@@ -23,6 +24,8 @@ class ScanDelta(Enum):
     UPANDLEFT = (-1, 1)
     DOWNANDRIGHT = (1, -1)
     DOWNANDLEFT = (-1, -1)
+
+LOGGER = logging.getLogger(__name__)
 
 class MatchCondition(ABC):
     """
@@ -58,6 +61,7 @@ class MatchCondition(ABC):
             :returns: A object describing the match if one was found, None otherwise
             :rtype: MatchFound or None
         """
+        LOGGER.warning('Using default implementation. This is meant to be overridden!')
         pass
             
     @property
@@ -67,4 +71,5 @@ class MatchCondition(ABC):
             :returns: match condition's point value
             :rtype: int
         """
+        LOGGER.debug('Match condition is worth: %d points', self._point_value)
         return self._point_value

@@ -3,13 +3,15 @@
     :module_summary: a builder class capable of creating tile classes for a tile-matching game
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
+import logging
+from abc import ABC
+from typing import Self
 
 from ..model import Tile
 from ..model.tile_color import TileColor
 from ..model.tile_shape import TileShape
 
-from abc import ABC
-from typing import Self
+LOGGER = logging.getLogger(__name__)
 
 class TileBuilder(ABC):
     """
@@ -29,19 +31,21 @@ class TileBuilder(ABC):
             :returns: updated tile builder
             :rtype: TileBuilder
         """
+        LOGGER.debug('Adding %s as the position property to tile attributes', str((x, y)))
         self._tile_attrs['position'] = (x, y)
         return self
     
     def add_color(self, color: TileColor):
-            """
-                Specify the position of the tile to create
-                :arg color: color of the tile
-                :arg type: str
-                :returns: updated tile builder
-                :rtype: TileBuilder
-            """
-            self._tile_attrs['color'] = color
-            return self
+        """
+            Specify the position of the tile to create
+            :arg color: color of the tile
+            :arg type: str
+            :returns: updated tile builder
+            :rtype: TileBuilder
+        """
+        LOGGER.debug('Adding %s as the color property to tile attributes', str(color))
+        self._tile_attrs['color'] = color
+        return self
 
     def add_shape(self, shape: TileShape):
         """
@@ -51,6 +55,7 @@ class TileBuilder(ABC):
             :returns: updated tile builder
             :rtype: TileBuilder
         """
+        LOGGER.debug('Adding %s as the shape property to tile attributes', str(shape))
         self._tile_attrs['shape'] = shape
         return self
 
@@ -62,5 +67,9 @@ class TileBuilder(ABC):
             :returns: a new tile_type object
             :rtype: Tile
         """
+        LOGGER.info('Constructing the tile object with %s', str(tile_type))
+        LOGGER.debug('Properties used: {')
+        for propkey, propval in self._tile_attrs.items():
+            LOGGER.debug('\t%s -> %s', str(propkey), str(propval))
         return tile_type(**self._tile_attrs)
     

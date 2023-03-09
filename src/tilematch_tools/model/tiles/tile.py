@@ -4,6 +4,7 @@
     :module_author: Matthew Isayan, Nathan Mendoza
 """
 
+import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
@@ -12,6 +13,8 @@ from .tile_appearance import TileAppearance
 from .movement_rule import MovementRule
 from ..tile_shape import TileShape 
 from ..tile_color import TileColor
+
+LOGGER = logging.getLogger(__name__)
 
 @dataclass
 class Position:
@@ -28,6 +31,7 @@ class Tile(ABC):
 
     def __init__(self, **properties):
         if not properties.get('position'):
+            LOGGER.error('All tiles require a position property')
             raise MissingTilePropertyException(
                     f"{type(self)} requires a `position` property but was not present"
                     )
@@ -47,6 +51,7 @@ class Tile(ABC):
             :rtype: None
         """
         if not self.mobile:
+            LOGGER.error('Attempted to move an immovable tile')
             raise IllegalTileMovementException("Can't apply a movement to an inmovable tile")
         self.position = rule.exec(
                 self.position.x,
@@ -57,6 +62,7 @@ class Tile(ABC):
     def __eq__(self, other):
         """Allows for checking tile equality with =="""
         if not isinstance(other, type(self)):
+            LOGGER.debug('Other is not an instance of tile, assuming unequal')
             return False
         return self.color == other.color and self.shape == other.shape
 
@@ -67,6 +73,7 @@ class Tile(ABC):
             :returns: an snapshot of the tile's current position
             :rtype: Position
         """
+        LOGGER.debug('Requested read of position is: %s', str(self._position))
         return self._position
 
     @property
@@ -76,6 +83,7 @@ class Tile(ABC):
             :returns: tile mobility
             :rtype: bool
         """
+        LOGGER.debug('Requested read of mobility is: %s', str(self._movable))
         return self._movable
 
     @position.setter
@@ -87,13 +95,21 @@ class Tile(ABC):
             :returns: nothing
             :rtype: None
         """
+        LOGGER.debug('Updating position: (%d, %d) -> (%d, %d)',
+                     self._position.x,
+                     self._position.y,
+                     new_pos[0],
+                     new_pos[1]
+                     )
         self._position.x = new_pos[0]
         self._position.y = new_pos[1]
 
     @property
     def color(self):
+        LOGGER.debug('Requested read of tile color is: %s', str(self._appearance.color))
         return self._appearance.color
 
     @property
     def shape(self):
+        LOGGER.debug('Requested read of tile shape is: %s', str(self._appearance.shape))
         return self._appearance.shape

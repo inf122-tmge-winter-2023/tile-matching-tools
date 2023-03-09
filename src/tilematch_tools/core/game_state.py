@@ -4,10 +4,13 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu), Matthew Isayan
 """
 
+import logging
 from dataclasses import dataclass
 
 from ..model import GameBoard
 from ..model import Scoring
+
+LOGGER = logging.getLogger(__name__)
 
 @dataclass
 class GameState:

@@ -4,10 +4,13 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+import logging
 from abc import ABC
 
 from ..tiles import Tile, MovementRule
 from ..exceptions import InvalidBoardPositionError, IllegalBoardContentException
+
+LOGGER = logging.getLogger(__name__)
 
 class GameBoard(ABC):
     def __init__(self,width, height):
@@ -47,7 +50,9 @@ class GameBoard(ABC):
            :rtype: Tile
            :throws: InvalidBoardPositionError if the specified position is invalid
         """
+        LOGGER.info('Looking at tile located at (%d, %d)', x, y)
         if not self.__board_position_is_valid(x, y):
+            LOGGER.error('(%d, %d) is out of bounds', x, y)
             raise InvalidBoardPositionError(
                 f"The position ({x}, {y}) is invalid for the given board"
                     )
@@ -70,10 +75,16 @@ class GameBoard(ABC):
         x = tile.position.x
         y = tile.position.y
         if not self.__board_position_is_valid(x, y):
+            LOGGER.error('(%d, %d) is out of bounds', x, y)
             raise InvalidBoardPositionError(
                     f"The position ({x}, {y}) is invalid for the given board"
                     )
        #TODO: add check to ensure board position is available
+        if not isinstance(tile, Tile):
+            LOGGER.error('Attempted to place a non-tile type on the board')
+            raise IllegalBoardContentException(
+                    f"tile must be of type Tile, not {type(tile)}"
+                    )
         self._board[x - 1][y - 1] = tile
             
 
@@ -88,5 +99,3 @@ class GameBoard(ABC):
             :rtype: bool
         """
         return 1 <= x <= self._num_cols and 1 <= y <= self._num_rows
-    
-
