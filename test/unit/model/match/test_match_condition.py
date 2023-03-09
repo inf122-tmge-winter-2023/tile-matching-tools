@@ -12,15 +12,24 @@ def two_match():
     class TwoMatch(MatchCondition):
         def check_match(self, board, start_x, start_y):
             try:
-                return self._eq(
+                if self._eq(
                     board.tile_at(start_x, start_y),
                     board.tile_at(
                         start_x + self._scan_delta[0],
                         start_y + self._scan_delta[1]
                             )
+                    ):
+                    return self.MatchFound(self.point_value, [
+                        board.tile_at(start_x, start_y),
+                        board.tile_at(
+                            start_x + self._scan_delta[0],
+                            start_y + self._scan_delta[1]
+                            )        
+                        ]
                     )
+                return None
             except InvalidBoardPositionError:
-                return False
+                return None
     return TwoMatch((0, -1), 4)
 
 

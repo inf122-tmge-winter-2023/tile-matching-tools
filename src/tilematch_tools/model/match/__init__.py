@@ -5,6 +5,7 @@
 """
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from ..board import GameBoard
 from ..tiles import Tile
@@ -14,7 +15,16 @@ class MatchCondition(ABC):
         Class that specifies the interface for match rules
         :scan: the 2-unit vector direction to scan a match for
         :equality_rule: the function the determines if two tiles match
-   """
+    """
+
+    @dataclass
+    class MatchFound:
+        """
+            Class representing a discovered match and its point value
+        """
+        value: int
+        matching_tiles: [Tile]
+
     
     def __init__(self, scan: tuple, value: int, equality_rule: callable = Tile.__eq__):
         self._eq = equality_rule
@@ -22,7 +32,7 @@ class MatchCondition(ABC):
         self._scan_delta = scan
 
     @abstractmethod
-    def check_match(self, board: GameBoard, start_x: int, start_y: int) -> bool:
+    def check_match(self, board: GameBoard, start_x: int, start_y: int) -> MatchFound or None:
         """
             Check for a match on the given board starting at the specified position
             :arg board: the board to check a match for
@@ -31,8 +41,8 @@ class MatchCondition(ABC):
             :arg type: GameBoard
             :arg type: int
             :arg type: int
-            :returns: True if a match is detected, False otherwise
-            :rtype: bool
+            :returns: A object describing the match if one was found, None otherwise
+            :rtype: MatchFound or None
         """
         pass
             
