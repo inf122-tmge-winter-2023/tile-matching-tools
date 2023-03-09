@@ -53,20 +53,18 @@ class GameBoard(ABC):
                     )
         return self._board[x - 1][y - 1] # Adjust from cartesian coordinates to valid indices
 
-    def place_tile(self, tile: Tile, x: int, y: int) -> None:
+    def place_tile(self, tile: Tile) -> None:
         """
-            place the given tile at the specified location forcefully
+            place the given tile at its declared position
             :arg tile: tile to place
-            :arg x: the x value of the location
-            :arg y: the y value of the location
             :arg type: Tile
-            :arg type: int
-            :arg type: int
             :returns: nothing
             :rtype: None
             :throws InvalidBoardPositionError if the specified position is invalid
             :throws IllegalBoardContentException if the given tile is not a Tile
         """
+        x = tile.position.x
+        y = tile.position.y
         if not self.__board_position_is_valid(x, y):
             raise InvalidBoardPositionError(
                     f"The position ({x}, {y}) is invalid for the given board"
@@ -75,8 +73,8 @@ class GameBoard(ABC):
             raise IllegalBoardContentException(
                     f"tile must be of type Tile, not {type(tile)}"
                     )
+        #TODO: add check to ensure board position is available
         self._board[x - 1][y - 1] = tile
-        tile.position = (x, y)
             
 
     def __board_position_is_valid(self, x: int, y: int):
