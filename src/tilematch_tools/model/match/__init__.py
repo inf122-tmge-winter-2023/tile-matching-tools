@@ -5,9 +5,23 @@
 """
 
 from abc import ABC, abstractmethod
+from enum import Enum
 
 from ..board import GameBoard
 from ..tiles import Tile
+
+class ScanDelta(Enum):
+    """
+        Enumeration representing the 8 directional unit vectors on a 2d-plan
+    """
+    UP = (0, 1)
+    DOWN = (0, -1)
+    RIGHT = (1, 0)
+    LEFT = (-1, 0)
+    UPANDRIGHT = (1, 1)
+    UPANDLEFT = (-1, 1)
+    DOWNANDRIGHT = (1, -1)
+    DOWNANDLEFT = (-1, -1)
 
 class MatchCondition(ABC):
     """
@@ -16,7 +30,7 @@ class MatchCondition(ABC):
         :equality_rule: the function the determines if two tiles match
    """
     
-    def __init__(self, scan: tuple, value: int, equality_rule: callable = Tile.__eq__):
+    def __init__(self, scan: ScanDelta, value: int, equality_rule: callable = Tile.__eq__):
         self._eq = equality_rule
         self._point_value = value
         self._scan_delta = scan
