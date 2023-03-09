@@ -37,9 +37,9 @@ def test_match_condition_must_implement_the_match_interface():
 class TestMatchOnBoard:
     def setup_method(self):
         self._board = GameBoard(3, 3)
-        self._board.place_tile(Tile(**{'position': (1, 1)}), 1, 1)
-        self._board.place_tile(Tile(**{'position': (1, 2)}), 1, 2)
-        self._board.place_tile(Tile(**{'position': (2, 2)}), 2, 2)
+        self._board.place_tile(Tile(**{'position': (1, 1)}))
+        self._board.place_tile(Tile(**{'position': (1, 2)}))
+        self._board.place_tile(Tile(**{'position': (2, 2)}))
 
     def test_can_detect_a_match(self, two_match):
         assert two_match.check_match(self._board, 1, 2)
