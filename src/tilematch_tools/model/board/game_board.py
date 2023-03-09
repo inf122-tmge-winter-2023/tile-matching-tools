@@ -63,17 +63,17 @@ class GameBoard(ABC):
             :throws InvalidBoardPositionError if the specified position is invalid
             :throws IllegalBoardContentException if the given tile is not a Tile
         """
+        if not isinstance(tile, Tile):
+            raise IllegalBoardContentException(
+                    f"tile must be of type Tile, not {type(tile)}"
+                )
         x = tile.position.x
         y = tile.position.y
         if not self.__board_position_is_valid(x, y):
             raise InvalidBoardPositionError(
                     f"The position ({x}, {y}) is invalid for the given board"
                     )
-        if not isinstance(tile, Tile):
-            raise IllegalBoardContentException(
-                    f"tile must be of type Tile, not {type(tile)}"
-                    )
-        #TODO: add check to ensure board position is available
+       #TODO: add check to ensure board position is available
         self._board[x - 1][y - 1] = tile
             
 
