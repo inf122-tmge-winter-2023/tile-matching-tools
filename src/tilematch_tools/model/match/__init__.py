@@ -10,6 +10,8 @@ from abc import ABC, abstractmethod
 from ..board import GameBoard
 from ..tiles import Tile
 
+LOGGER = logging.getLogger(__name__)
+
 class MatchCondition(ABC):
     """
         Class that specifies the interface for match rules
