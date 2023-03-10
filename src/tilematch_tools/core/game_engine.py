@@ -22,9 +22,8 @@ class GameEngine(ABC):
     def __init__(self, board: GameBoard, score : Scoring):
         self.game_state = GameState(game_board=board, game_score=score)
 
-    # TODO: Replace with updated place_tile
     # TODO: Handle exceptions, possibly chain exceptions
-    def move_tile(self, row: int, col: int, rule: MovementRule):
+    def move_tile(self, tile_to_move: Tile, rule: MovementRule):
         """Applies movement rule to tile at (row, col)
 
         Args:
@@ -32,9 +31,8 @@ class GameEngine(ABC):
             col (int): col of tile
             rule (MovementRule): Concrete MovementRule
         """
-        tile_to_move = self.tile_at(row, col)
         tile_to_move.move(rule)
-        self.place_tile(tile_to_move, tile_to_move.position.x, tile_to_move.position.y)
+        self.place_tile(tile_to_move)
 
     # TODO Implement aftermath of a match
     def match_tiles(self, start_x: int, start_y: int, match_condition: MatchCondition):
@@ -45,11 +43,11 @@ class GameEngine(ABC):
             start_y (int): the y position the match scans for
             match_condition (MatchCondition): the match condition that awards points
         """
-        if match_condition.check_match(self.game_state.game_board,start_x, start_y):
-            self.game_state.game_score.award_for_match(match_condition)
+        match_found = match_condition.check_match(self.game_state.game_board,start_x, start_y)
+        if match_found is not None:
+            self.game_state.game_score.award_for_match(match_found)
     
-    # TODO: Replace with updated place_tile
-    def place_tile(self, tile: Tile, row: int, col: int):
+    def place_tile(self, tile: Tile):
         """Propogated place_tile from game_board 
 
         Args:
@@ -57,7 +55,7 @@ class GameEngine(ABC):
             row (int): row of the tile
             col (int): col of the tile
         """
-        self.game_state.game_board.place_tile(tile, row, col)
+        self.game_state.game_board.place_tile(tile)
 
     def tile_at(self, row: int, col: int) -> Tile:
         """Propogated tile_at from game_board 
