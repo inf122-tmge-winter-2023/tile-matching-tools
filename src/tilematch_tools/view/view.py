@@ -10,7 +10,10 @@ import tkinter
 import types
 import typing
 
+from ..core.game_state import GameState
+
 from ..model import GameBoard
+from ..model import Scoring
 from .view_constants import ViewConstants
 from .event_manager import EventManager
 
@@ -18,10 +21,10 @@ class View:
     """
         A class that represents the view of the TMGE
     """
-    def __init__(self, game_board: GameBoard):
-        self._game_board = deepcopy(game_board)
-        ViewConstants.num_rows = game_board.num_rows
-        ViewConstants.num_cols = game_board.num_cols
+    def __init__(self, game_state: GameState):
+        self._game_board = deepcopy(game_state.game_board)
+        ViewConstants.num_rows = self._game_board.num_rows
+        ViewConstants.num_cols = self._game_board.num_cols
 
         self._event_manager = EventManager()
         self._init_screen()
@@ -53,9 +56,18 @@ class View:
 
         # self._root.mainloop()
         while not self._quit:
-            self._update_board_view(self._event_manager.get_board())
-            self._update_score(self._event_manager.get_score())
+            updated_game_state = self._event_manager.get_game_state()
+            self._update_board_view(updated_game_state.game_board)
+            self._update_score_view(updated_game_state.game_score)
             self._board_canvas.update()
+
+    def update(self, updated_game_state: GameState):
+        """Puts gamestate to queues for the main_loop() to read
+
+        Args:
+            updated_game_state (GameBoard): altered_board
+        """
+        self._event_manager.put_game_state(updated_game_state)
 
     def _init_screen(self):
         """
@@ -153,15 +165,7 @@ class View:
 
         self._set_board(updated_board)
 
-    def update(self, updated_board: GameBoard, updated_score: int):
-        """Puts board and score to queues for the main_loop() to read
-
-        Args:
-            updated_board (GameBoard): altered_board
-            updated_score (int): altered score
-        """
-        self._event_manager.put_board(updated_board)
-        self._event_manager.put_score(updated_score)
+    
 
     def add_event_listener(self, event_name: str):
         """
@@ -202,13 +206,13 @@ class View:
         """
         return self._event_manager.get_mouse_event()
 
-    def _update_score(self, score: int):
+    def _update_score_view(self, score: Scoring):
         """
             Updates the Score label
             :returns:  Returns the queue of events storing the latest event at the first position
             :rtype: queue.Queue
         """
-        self._score_label.config(text=f"{score}")
+        self._score_label.config(text=f"{score.score}")
 
     def _map_mouse(self, x_coord: int, y_coord: int) -> typing.Tuple:
         """Maps Event Coordinates to Board Coordinates"""

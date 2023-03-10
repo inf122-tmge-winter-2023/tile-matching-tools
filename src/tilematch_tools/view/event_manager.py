@@ -3,12 +3,13 @@
 
 import queue
 
+from ..core.game_state import GameState
+
 
 class EventManager:
     """EventManager Class"""
     def __init__(self):
-        self._board_queue = queue.Queue()
-        self._score_queue = queue.Queue()
+        self._game_state_queue = queue.Queue()
         self._key_events = queue.Queue()
         self._mouse_events = queue.Queue()
 
@@ -18,11 +19,8 @@ class EventManager:
     def put_key_event(self, event):
         self._key_events.put(event)
     
-    def put_board(self, game_board):
-        self._board_queue.put(game_board)
-    
-    def put_score(self, game_score):
-        self._score_queue.put(game_score)
+    def put_game_state(self, game_state: GameState):
+        self._game_state_queue.put(game_state)
 
     def get_mouse_event(self):
         """Gets mouse event
@@ -46,7 +44,7 @@ class EventManager:
         """
         return self._key_events.get_nowait()
     
-    def get_board(self):
+    def get_game_state(self) -> GameState:
         """_summary_
 
         Returns:
@@ -55,16 +53,5 @@ class EventManager:
         Warning:
             Blocks thread
         """
-        return self._board_queue.get()
+        return self._game_state_queue.get()
     
-    def get_score(self):
-        """_summary_
-
-        Returns:
-            score : returns score
-        
-        Warning:
-            Blocks thread
-        """
-        return self._score_queue.get()
-
