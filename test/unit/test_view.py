@@ -5,8 +5,15 @@ import pytest
 from tilematch_tools.core.board_factory import BoardFactory
 from tilematch_tools.core.tile_builder import TileBuilder
 from tilematch_tools.view.view import View
+from tilematch_tools import LOG_HANDLER
+from tilematch_tools import LOGGER
+import logging
 
-
+@pytest.mark.integration
+def setup_function():
+    # Disable logger for Integration Tests
+    LOG_HANDLER.setLevel(51)
+    LOGGER.setLevel(51)
 
 # Mark test as integration to avoid executing with test suite
 @pytest.mark.skip
@@ -63,7 +70,7 @@ def test_user_input():
         score = 0
         while not view.quit:
             try:
-                if view.key_event == 's':
+                if view.key_event == 'w':
                     move_down()
             except queue.Empty:
                 pass
@@ -72,13 +79,12 @@ def test_user_input():
             time.sleep(.0165)
 
     view.launch_view(gameloop)
-    print("still running")
 
 
 @pytest.mark.integration
 def test_mouse_input():
     """Manual integration testing a user input"""
-    game_board = BoardFactory.create_board('default', 15, 15)
+    game_board = BoardFactory.create_board('default', 12, 12)
     view = View(game_board) 
 
     def flip_tile(row, col):
