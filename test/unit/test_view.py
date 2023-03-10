@@ -7,7 +7,6 @@ from tilematch_tools.core.tile_builder import TileBuilder
 from tilematch_tools.view.view import View
 from tilematch_tools import LOG_HANDLER
 from tilematch_tools import LOGGER
-import logging
 
 @pytest.mark.integration
 def setup_function():
