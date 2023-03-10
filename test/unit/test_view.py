@@ -22,7 +22,7 @@ def test_update_tile():
     """Manual integration test to see if a tile is drawn"""
     game_board = BoardFactory.create_board('default', 10, 24)
     tile_to_place = TileBuilder().add_position(3,3).add_color('red').construct()
-    game_board.place_tile(tile_to_place, 3, 3)
+    game_board.place_tile(tile_to_place)
     view = View(game_board) 
     view.launch_view()
 
@@ -37,7 +37,7 @@ def test_threading_fill_board():
             for j in range(1,25):
                 tile_to_place = TileBuilder().add_position(i,j).add_color('red').construct()
 
-                game_board.place_tile(tile_to_place, i, j)
+                game_board.place_tile(tile_to_place)
                 view._update_board_view(game_board)
                 time.sleep(.0165)
 
@@ -50,14 +50,14 @@ def test_user_input():
     view = View(game_board) 
 
     moving_tile = TileBuilder().add_position(5,1).add_color('red').construct()
-    game_board.place_tile(moving_tile, moving_tile.position.x, moving_tile.position.y)
+    game_board.place_tile(moving_tile)
 
     view.add_event_listener('KeyRelease')
     def move_down():
         clear_tile = TileBuilder().add_position(moving_tile.position.x, moving_tile.position.y).add_color('#D3D3D3').construct()
-        game_board.place_tile(clear_tile, moving_tile.position.x, moving_tile.position.y)
+        game_board.place_tile(clear_tile)
         moving_tile.position.y += 1
-        game_board.place_tile(moving_tile, moving_tile.position.x, moving_tile.position.y)
+        game_board.place_tile(moving_tile)
 
     def gameloop():
         score = 0
@@ -87,7 +87,7 @@ def test_mouse_input():
         else:
             color = 'red'
         tile_to_flip = TileBuilder().add_position(row,col).add_color(color).construct()
-        game_board.place_tile(tile_to_flip, tile_to_flip.position.x, tile_to_flip.position.y)
+        game_board.place_tile(tile_to_flip)
 
     view.add_event_listener('ButtonRelease')
     

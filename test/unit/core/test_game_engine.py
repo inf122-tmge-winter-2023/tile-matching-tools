@@ -23,7 +23,7 @@ def simple_match():
             super().__init__((1, 0), 4)
 
         def check_match(self, board, start_x, start_y):
-            return True
+            return super().MatchFound(4, matching_tiles=[])
     
     return SimpleMatch()
 
@@ -43,8 +43,8 @@ class TestGameEngine:
         game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
 
         test_tile = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
-        game_engine.game_state.game_board.place_tile(test_tile, test_tile.position.x, test_tile.position.y)
-        game_engine.move_tile(1,3, simple_down_movement)
+        game_engine.game_state.game_board.place_tile(test_tile)
+        game_engine.move_tile(test_tile, simple_down_movement)
         assert game_engine.game_state.game_board.tile_at(1,4) == test_tile
     
     def test_match_tiles(self, simple_score, simple_match):
@@ -54,6 +54,7 @@ class TestGameEngine:
         game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
         tile_1 = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
         tile_2 = TileBuilder().add_position(1,2).add_color(TileColor.RED).construct()
-        game_engine.place_tile(tile_1, tile_1.position.x, tile_2.position.y)
+        game_engine.place_tile(tile_1)
+        game_engine.place_tile(tile_2)
         game_engine.match_tiles(1,2,simple_match)
         assert game_engine.score == 4
