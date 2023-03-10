@@ -61,4 +61,4 @@ class Scoring(ABC):
         LOGGER.warning('Using default implementation. This is meant to be overriden!')
         if match:
             self._points += (self._multiplier * match.value)
-            LOGGER.debug('Adjusting score by %d', self._multiplier * match.point_value)
+            LOGGER.debug('Adjusting score by %d', self._multiplier * match.value)
