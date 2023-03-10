@@ -96,7 +96,7 @@ class View:
         self._score_label = tkinter.Label(score_container, text="0", font=("Roboto", 14))
         self._score_label.pack(side="top")
 
-    def _draw_tile(self, row: int, col: int, color: str):
+    def _draw_tile(self, x: int, y: int, color: str):
         """
             Draws a singular tile on the board
             :arg row: Row number on the board (1-based)
@@ -108,29 +108,25 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        row = row - 1
-        col = col - 1
-        tile_start_x = row * ViewConstants.tile_size + ViewConstants.board_padding
-        tile_end_x = row *  ViewConstants.tile_size + \
-                            ViewConstants.board_padding + \
-                            ViewConstants.tile_size
+        x =  x -1
+        y = y - 1
+        tile_start_x = x * ViewConstants.tile_size + ViewConstants.board_padding
+        tile_end_x = tile_start_x + ViewConstants.tile_size
 
-        tile_start_y = col *  ViewConstants.tile_size + ViewConstants.board_padding
-        tile_end_y = col *  ViewConstants.tile_size + \
-                            ViewConstants.board_padding + \
-                            ViewConstants.tile_size
+        tile_start_y = y *  ViewConstants.tile_size + ViewConstants.board_padding
+        tile_end_y = tile_start_y + ViewConstants.tile_size
         self._board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, \
                                              tile_end_y, fill=color, outline='gray', width=2)
-
+        
     def _draw_board(self):
         """
             Draws the entire board using the draw_tile method
             :returns: nothing
             :rtype: None
         """
-        for row in range(1, self._game_board.num_cols + 1):
-            for col in range(1, self._game_board.num_rows + 1):
-                self._draw_tile(row, col, self._game_board.tile_at(row, col).color)
+        for x in range(1, self._game_board.num_cols + 1):
+            for y in range(1,self._game_board.num_rows + 1):
+                self._draw_tile(x, self._game_board.num_rows - y + 1, self._game_board.tile_at(x, y).color)
 
     def _set_board(self, board: GameBoard):
         """
@@ -153,7 +149,7 @@ class View:
         for row in range(1, self._game_board.num_cols + 1):
             for col in range(1, self._game_board.num_rows + 1):
                 if self._game_board.tile_at(row, col) != updated_board.tile_at(row, col):
-                    self._draw_tile(row, col, updated_board.tile_at(row, col).color)
+                    self._draw_tile(row, self._game_board.num_rows - col + 1, updated_board.tile_at(row, col).color)
 
         self._set_board(updated_board)
 
@@ -218,9 +214,9 @@ class View:
         """Maps Event Coordinates to Board Coordinates"""
 
         # + 1 is for one-based
-        row = math.floor(((x_coord - ViewConstants.window_padding) / ViewConstants.tile_size) + 1)
-        col =  math.floor(((y_coord - ViewConstants.window_padding) / ViewConstants.tile_size) + 1)
-        return (row, col)
+        x = math.floor(((x_coord - ViewConstants.window_padding) / ViewConstants.tile_size) + 1)
+        y = self._game_board.num_rows - math.floor(((y_coord - ViewConstants.window_padding) / ViewConstants.tile_size) )
+        return (x, y)
 
     @property
     def quit(self):
