@@ -7,7 +7,7 @@
 import logging
 from abc import ABC
 
-from ..tiles import Tile, MovementRule
+from ..tiles import Tile, NullTile, MovementRule
 from ..exceptions import InvalidBoardPositionError, IllegalBoardContentException
 
 LOGGER = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class GameBoard(ABC):
             :rtype: None
         """
         self._board = [ # positions will be represented as positve cartesian coordinates
-                [ Tile(**{'position': (x, y),'color':'#D3D3D3'}) for y in range(1, self._num_rows + 1)]
+                [ NullTile(**{'position': (x, y),'color':'#D3D3D3'}) for y in range(1, self._num_rows + 1)]
                 for x in range(1, self._num_cols + 1)
                 ]
 
@@ -79,7 +79,11 @@ class GameBoard(ABC):
             raise InvalidBoardPositionError(
                     f"The position ({x}, {y}) is invalid for the given board"
                     )
-       #TODO: add check to ensure board position is available
+        if not self.__board_position_is_available(x, y):
+            LOGGER.error('(%d, %d) is already occupied by another tile', x, y)
+            raise InvalidBoardPositionError(
+                    f"The position ({x}, {y}) is already occupied by another tile"
+                    )
         if not isinstance(tile, Tile):
             LOGGER.error('Attempted to place a non-tile type on the board')
             raise IllegalBoardContentException(
@@ -99,3 +103,15 @@ class GameBoard(ABC):
             :rtype: bool
         """
         return 1 <= x <= self._num_cols and 1 <= y <= self._num_rows
+
+    def __board_position_is_available(self, x: int, y: int):
+        """
+            Return true if the given (x, y) ordered pair has no tile in it. False otherwise
+            :arg x: the x value of the coordinate
+            :arg y: the y value of the coordinate
+            :arg type: int
+            :arg type: int
+            :returns: true for availability, false for unavailability
+            :rtype: bool
+        """
+        return self.__board_position_is_valid(x, y) and type(self._board[x - 1][y - 1]) == NullTile

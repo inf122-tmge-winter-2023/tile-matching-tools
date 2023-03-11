@@ -71,5 +71,6 @@ class TileBuilder(ABC):
         LOGGER.debug('Properties used: {')
         for propkey, propval in self._tile_attrs.items():
             LOGGER.debug('\t%s -> %s', str(propkey), str(propval))
+        LOGGER.debug('}')
         return tile_type(**self._tile_attrs)
     

@@ -113,3 +113,11 @@ class Tile(ABC):
     def shape(self):
         LOGGER.debug('Requested read of tile shape is: %s', str(self._appearance.shape))
         return self._appearance.shape
+
+class NullTile(Tile):
+    """
+        A class that represents the absence of a tile
+    """
+    def __init__(self, **properties):
+        super().__init__(**properties)
+        self._movable = False
