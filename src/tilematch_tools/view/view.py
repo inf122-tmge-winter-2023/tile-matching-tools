@@ -21,8 +21,9 @@ class View:
     """
         A class that represents the view of the TMGE
     """
-    def __init__(self, game_state: GameState):
+    def __init__(self, game_state: GameState, root: tkinter.Tk):
         self._game_board = deepcopy(game_state.game_board)
+        self._root = root
         ViewConstants.num_rows = self._game_board.num_rows
         ViewConstants.num_cols = self._game_board.num_cols
 
@@ -31,7 +32,7 @@ class View:
         self._draw_board()
         self._quit = False
 
-    def launch_view(self, func_name: types.FunctionType=None):
+    def launch_container(self, func_name: types.FunctionType=None):
         """
             Launches window and a thread of func_name 500 ms later
             :arg func_name: Name of the function to run side by side View
@@ -39,27 +40,16 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        thread = None  # Initialize thread variable
+   
+        while not self.quit:
+            self._update_container()
 
-        if func_name:
-            thread = Thread(target=func_name)
-            self._root.after(500, thread.start())
-
-        def on_close():
-            self._quit = True
-            if thread is not None:
-                thread.join()  # Wait for thread to finish
-            self._root.destroy()
-
-        # Close on exit
-        self._root.protocol("WM_DELETE_WINDOW", on_close)
-
-        # self._root.mainloop()
-        while not self._quit:
-            updated_game_state = self._event_manager.get_game_state()
-            self._update_board_view(updated_game_state.game_board)
-            self._update_score_view(updated_game_state.game_score)
-            self._board_canvas.update()
+    
+    def _update_container(self):
+        updated_game_state = self._event_manager.get_game_state()
+        self._update_board_view(updated_game_state.game_board)
+        self._update_score_view(updated_game_state.game_score)
+        self._board_canvas.update()
 
     def update(self, updated_game_state: GameState):
         """Puts gamestate to queues for the main_loop() to read
@@ -75,13 +65,7 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        # Initialize empty window
-        self._root = tkinter.Tk()
 
-        # Setting window size: Needs to be in this format '600x800'
-        self._root.geometry(f"{ViewConstants.window_width()}x{ViewConstants.window_height()}")
-        self._root.title(ViewConstants.window_title)
-        self._root.resizable(False, False)
 
         # Init main container
         self.main_container = tkinter.Frame(self._root)
