@@ -39,7 +39,7 @@ class TestGameEngine:
         test_tile = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
         game_engine.game_state.game_board.place_tile(test_tile)
         game_engine.move_tile(test_tile, simple_down_movement)
-        assert game_engine.game_state.game_board.tile_at(1,4) == test_tile
+        assert game_engine.tile_at(1,4) == test_tile
     
     def test_match_tiles(self, simple_score, simple_match):
         """
