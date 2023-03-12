@@ -9,10 +9,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from ..exceptions import MissingTilePropertyException, IllegalTileMovementException
-from .tile_appearance import TileAppearance
+from .tile_appearance import TileAppearance, TileShape, TileColor
 from .movement_rule import MovementRule
-from ..tile_shape import TileShape 
-from ..tile_color import TileColor
 
 LOGGER = logging.getLogger(__name__)
 

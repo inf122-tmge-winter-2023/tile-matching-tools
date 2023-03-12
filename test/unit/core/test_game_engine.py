@@ -1,12 +1,6 @@
 import pytest
-from tilematch_tools.core import GameEngine
-from tilematch_tools.core import BoardFactory
-from tilematch_tools.core.tile_builder import TileBuilder
-from tilematch_tools.model import GameBoard
-from tilematch_tools.model import Scoring
-from tilematch_tools.model import MovementRule
-from tilematch_tools.model.match import MatchCondition
-from tilematch_tools.model.tile_color import TileColor
+from tilematch_tools.core import GameEngine, BoardFactory, TileBuilder
+from tilematch_tools.model import GameBoard, Scoring, MovementRule, MatchCondition, TileColor
 
 @pytest.fixture
 def simple_down_movement():

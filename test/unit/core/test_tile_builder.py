@@ -5,10 +5,8 @@ from itertools import product
 import pytest
 
 from tilematch_tools.core import TileBuilder
-from tilematch_tools.model.tiles import Tile
+from tilematch_tools.model.tiles import Tile, TileColor, TileShape
 from tilematch_tools.model.exceptions import MissingTilePropertyException
-from tilematch_tools.model.tile_color import TileColor
-from tilematch_tools.model.tile_shape import TileShape
 
 class TestTileBuilder:
 

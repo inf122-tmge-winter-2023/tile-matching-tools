@@ -7,9 +7,7 @@ import logging
 from abc import ABC
 from typing import Self
 
-from ..model import Tile
-from ..model.tile_color import TileColor
-from ..model.tile_shape import TileShape
+from ..model import Tile, TileColor, TileShape
 
 LOGGER = logging.getLogger(__name__)
 
