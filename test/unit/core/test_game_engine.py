@@ -1,6 +1,8 @@
 import pytest
 from tilematch_tools.core import GameEngine, BoardFactory, TileBuilder
-from tilematch_tools.model import GameBoard, Scoring, MovementRule, MatchCondition, TileColor
+from tilematch_tools.model import Scoring, MovementRule, MatchCondition, TileColor
+from tilematch_tools.model.exceptions import InvalidBoardPositionError
+from tilematch_tools.model.tiles.tile import NullTile
 
 @pytest.fixture
 def simple_down_movement():
@@ -11,21 +13,39 @@ def simple_down_movement():
     return MoveDown(0, 1)
 
 @pytest.fixture
-def simple_match():
-    class SimpleMatch(MatchCondition):
-        def __init__(self):
-            super().__init__((1, 0), 4)
-
+def two_match():
+    class TwoMatch(MatchCondition):
         def check_match(self, board, start_x, start_y):
-            return super().MatchFound(4, matching_tiles=[])
-    
-    return SimpleMatch()
+            try:
+                if self._eq(
+                    board.tile_at(start_x, start_y),
+                    board.tile_at(
+                        start_x + self._scan_delta[0],
+                        start_y + self._scan_delta[1]
+                            )
+                    ):
+                    return self.MatchFound(self.point_value, [
+                        board.tile_at(start_x, start_y),
+                        board.tile_at(
+                            start_x + self._scan_delta[0],
+                            start_y + self._scan_delta[1]
+                            )        
+                        ]
+                    )
+                return None
+            except InvalidBoardPositionError:
+                return None
+    return TwoMatch((0, -1), 4)
+
 
 @pytest.fixture
 def simple_score():
     class SimpleScore(Scoring):
+        def __init__(self):
+            super().__init__()
+
         def award_for_match(self, match):
-            super().award_for_match(match)
+            self._points += 4
 
     return SimpleScore()
 
@@ -41,7 +61,7 @@ class TestGameEngine:
         game_engine.move_tile(test_tile, simple_down_movement)
         assert game_engine.tile_at(1,4) == test_tile
     
-    def test_match_tiles(self, simple_score, simple_match):
+    def test_match_tiles(self, simple_score, two_match):
         """
             Testing match tile updates score
         """
@@ -50,5 +70,8 @@ class TestGameEngine:
         tile_2 = TileBuilder().add_position(1,2).add_color(TileColor.RED).construct()
         game_engine.place_tile(tile_1)
         game_engine.place_tile(tile_2)
-        game_engine.match_tiles(1,2,simple_match)
+        game_engine.match_tiles(1,3,two_match)
         assert game_engine.score == 4
+        assert isinstance(game_engine.tile_at(1, 3), NullTile)
+        assert isinstance(game_engine.tile_at(1, 2), NullTile)
+

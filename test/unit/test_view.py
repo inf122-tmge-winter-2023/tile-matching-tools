@@ -1,4 +1,5 @@
 from copy import deepcopy
+import queue
 from threading import Thread
 import time
 import tkinter
@@ -12,6 +13,7 @@ from tilematch_tools.model.exceptions import InvalidBoardPositionError
 from tilematch_tools.model.match import MatchCondition
 from tilematch_tools.model.score import Scoring
 from tilematch_tools.model.tiles.movement_rule import MovementRule
+from tilematch_tools.model.tiles.tile import NullTile
 from tilematch_tools.view.view import View
 from tilematch_tools import LOG_HANDLER
 from tilematch_tools import LOGGER
@@ -56,36 +58,38 @@ def setup_function():
 @pytest.fixture
 def simple_score():
     class SimpleScore(Scoring):
+        def __init__(self):
+                super().__init__()
+
         def award_for_match(self, match):
-            super().award_for_match(match)
+            self._points += len(match.matching_tiles)
 
     return SimpleScore()
 
-# @pytest.mark.integration
-# @pytest.fixture
-# def two_match():
-#     class TwoMatch(MatchCondition):
-#         def check_match(self, board, start_x, start_y):
-#             try:
-#                 if self._eq(
-#                     board.tile_at(start_x, start_y),
-#                     board.tile_at(
-#                         start_x + self._scan_delta[0],
-#                         start_y + self._scan_delta[1]
-#                             )
-#                     ):
-#                     return self.MatchFound(self.point_value, [
-#                         board.tile_at(start_x, start_y),
-#                         board.tile_at(
-#                             start_x + self._scan_delta[0],
-#                             start_y + self._scan_delta[1]
-#                             )        
-#                         ]
-#                     )
-#                 return None
-#             except InvalidBoardPositionError:
-#                 return None
-#     return TwoMatch((0, -1), 4)
+@pytest.mark.integration
+@pytest.fixture
+def row_match():
+    class RowMatch(MatchCondition):
+        def check_match(self, board, start_x, start_y):
+            matching_tiles = []
+            try:
+                for x in range(start_x, start_x - 9, -1):
+                    if not isinstance(board.tile_at(x + self._scan_delta[0], start_y  + self._scan_delta[1]), NullTile) and \
+                        not isinstance(board.tile_at(x , start_y), NullTile):
+                        if board.tile_at(x, start_y) == board.tile_at(start_x + self._scan_delta[0], start_y + self._scan_delta[1]):
+                            matching_tiles.append(board.tile_at(x, start_y))
+                            matching_tiles.append(board.tile_at(x + self._scan_delta[0], start_y  + self._scan_delta[1]))
+                    else:
+                        matching_tiles = []
+                        break
+                if len(matching_tiles) == 0:
+                    return None
+                return self.MatchFound(self.point_value, 
+                    matching_tiles
+                )
+            except InvalidBoardPositionError:
+                return None
+    return RowMatch((-1, 0), 4)
 
 @pytest.fixture
 def simple_up_movement():
@@ -104,7 +108,7 @@ def simple_down_movement():
     return MoveDown(0, -1)
 
 @pytest.mark.integration
-def test_demo(simple_up_movement, simple_down_movement, simple_score):
+def test_demo(simple_up_movement, simple_down_movement, simple_score : Scoring, row_match : MatchCondition):
     """Demo test"""
     ex_env = ExecutionEnviornment()
     game_board = BoardFactory.create_board('default', 10, 24)
@@ -115,20 +119,36 @@ def test_demo(simple_up_movement, simple_down_movement, simple_score):
 
     view.add_event_listener("KeyRelease")
     game_engine = GameEngine(game_board,game_score)
-    moving_tile = TileBuilder().add_position(5,1).add_color('red').construct()
-    game_engine.place_tile(moving_tile)
+
+    # Places some tiles
+    for x in range(1,11):
+        if x == 5:
+            pass
+        else:
+            game_engine.place_tile(TileBuilder().add_position(x,1).add_color('red').construct())
+
 
     def gameloop():
         fps = 30
+        moving_tile = TileBuilder().add_position(5,10).add_color('red').construct()
+        game_engine.place_tile(moving_tile)
         while not ex_env.quit:
+            
             try:
+                matched = game_engine.match_tiles(game_board.num_cols,1, row_match)
+                if matched or moving_tile.position.y == 1:
+                    moving_tile = TileBuilder().add_position(5,4).add_color('red').construct()
+                    game_engine.place_tile(moving_tile)
                 user_event = view.key_event
                 if user_event == "w":
                     game_engine.move_tile(moving_tile, simple_up_movement)
                 elif user_event == "s":
                     game_engine.move_tile(moving_tile, simple_down_movement)
-            except:
+          
+            except queue.Empty:
                 pass
+            except Exception as e:
+                print(e)
             view.update_game_state(game_state)
             view2.update_game_state(game_state)
 

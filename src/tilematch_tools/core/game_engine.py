@@ -6,6 +6,7 @@
 
 import logging
 from abc import ABC
+import time
 
 from .game_state import GameState
 from .tile_builder import TileBuilder
@@ -45,17 +46,27 @@ class GameEngine(ABC):
 
 
     # TODO Implement aftermath of a match
-    def match_tiles(self, start_x: int, start_y: int, match_condition: MatchCondition):
+    def match_tiles(self, start_x: int, start_y: int, match_condition: MatchCondition) -> bool:
         """Checks if tiles match, then awards for match accordingly
 
         Args:
             start_x (int): the x position the match scans for
             start_y (int): the y position the match scans for
             match_condition (MatchCondition): the match condition that awards points
+        Returns:
+            True if match found, false otherwise
         """
         match_found = match_condition.check_match(self.game_state.game_board,start_x, start_y)
         if match_found is not None:
             self.game_state.game_score.award_for_match(match_found)
+            time.sleep(.25)
+            for tile in match_found.matching_tiles:
+                self.place_tile( TileBuilder() \
+                            .add_position(tile.position.x, tile.position.y) \
+                            .add_color('#D3D3D3') \
+                            .construct(tile_type=NullTile))
+            return True
+        return False
     
     def place_tile(self, tile: Tile):
         """Propogated place_tile from game_board 
