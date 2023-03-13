@@ -30,28 +30,14 @@ class View:
         self._event_manager = EventManager()
         self._init_screen()
         self._draw_board()
-        self._quit = False
 
-    def launch_container(self, func_name: types.FunctionType=None):
-        """
-            Launches window and a thread of func_name 500 ms later
-            :arg func_name: Name of the function to run side by side View
-            :arg type: FunctionType
-            :returns: nothing
-            :rtype: None
-        """
-   
-        while not self.quit:
-            self._update_container()
-
-    
-    def _update_container(self):
+    def update_container(self):
         updated_game_state = self._event_manager.get_game_state()
         self._update_board_view(updated_game_state.game_board)
         self._update_score_view(updated_game_state.game_score)
         self._board_canvas.update()
 
-    def update(self, updated_game_state: GameState):
+    def update_game_state(self, updated_game_state: GameState):
         """Puts gamestate to queues for the main_loop() to read
 
         Args:
@@ -69,7 +55,6 @@ class View:
 
         # Init main container
         self.main_container = tkinter.Frame(self._root)
-        self.main_container.pack(side="left", fill="both")
 
         # Init canvas for board
         self._board_canvas = tkinter.Canvas(self.main_container, \
@@ -205,16 +190,3 @@ class View:
         x = math.floor(((x_coord - ViewConstants.window_padding) / ViewConstants.tile_size) + 1)
         y = self._game_board.num_rows - math.floor(((y_coord - ViewConstants.window_padding) / ViewConstants.tile_size) )
         return (x, y)
-
-    @property
-    def quit(self):
-        """ Keeps track of Tkinter Window protocol
-        
-        Returns:
-            _bool_: Returns True if window's been closed
-
-        """
-        return self._quit
-    @quit.setter
-    def quit(self, quit_status: bool):
-        self.quit = quit_status
