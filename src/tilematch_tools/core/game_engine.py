@@ -31,7 +31,7 @@ class GameEngine(ABC):
         origin_y = tile_to_move.position.y
         try:
             tile_to_move.move(rule)
-        except IllegalMovementException:
+        except IllegalTileMovementException:
             LOGGER.error('Could not apply movement rule %s', str(type(rule)))
         else:
             self.place_tile(tile_to_move)
