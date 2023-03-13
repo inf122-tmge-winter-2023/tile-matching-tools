@@ -7,14 +7,10 @@
 import logging
 from abc import ABC
 
-from ..core.game_state import GameState
-
-from ..model import GameBoard
-from ..model import Scoring
-from ..model import MatchCondition
-
-from ..model import MovementRule
-from ..model import Tile
+from .game_state import GameState
+from .tile_builder import TileBuilder
+from ..model import GameBoard, Scoring, MatchCondition, MovementRule, Tile, NullTile
+from ..model.exceptions import IllegalTileMovementException
 
 LOGGER=logging.getLogger(__name__)
 
@@ -31,8 +27,22 @@ class GameEngine(ABC):
             col (int): col of tile
             rule (MovementRule): Concrete MovementRule
         """
-        tile_to_move.move(rule)
-        self.place_tile(tile_to_move)
+        origin_x = tile_to_move.position.x
+        origin_y = tile_to_move.position.y
+        try:
+            tile_to_move.move(rule)
+        except IllegalMovementException:
+            LOGGER.error('Could not apply movement rule %s', str(type(rule)))
+        else:
+            self.place_tile(tile_to_move)
+            self.place_tile(
+                    TileBuilder() \
+                            .add_position(origin_x, origin_y) \
+                            .add_color('#D3D3D3') \
+                            .construct(tile_type=NullTile)
+            )
+                    
+
 
     # TODO Implement aftermath of a match
     def match_tiles(self, start_x: int, start_y: int, match_condition: MatchCondition):
