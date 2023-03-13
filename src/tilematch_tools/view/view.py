@@ -10,7 +10,10 @@ import tkinter
 import types
 import typing
 
+from ..core.game_state import GameState
+
 from ..model import GameBoard
+from ..model import Scoring
 from .view_constants import ViewConstants
 from .event_manager import EventManager
 
@@ -18,44 +21,29 @@ class View:
     """
         A class that represents the view of the TMGE
     """
-    def __init__(self, game_board: GameBoard):
-        self._game_board = deepcopy(game_board)
-        ViewConstants.num_rows = game_board.num_rows
-        ViewConstants.num_cols = game_board.num_cols
+    def __init__(self, game_state: GameState, root: tkinter.Tk):
+        self._game_board = deepcopy(game_state.game_board)
+        self._root = root
+        ViewConstants.num_rows = self._game_board.num_rows
+        ViewConstants.num_cols = self._game_board.num_cols
 
         self._event_manager = EventManager()
         self._init_screen()
         self._draw_board()
-        self._quit = False
 
-    def launch_view(self, func_name: types.FunctionType=None):
+    def update_container(self):
+        updated_game_state = self._event_manager.get_game_state()
+        self._update_board_view(updated_game_state.game_board)
+        self._update_score_view(updated_game_state.game_score)
+        self._board_canvas.update()
+
+    def update_game_state(self, updated_game_state: GameState):
+        """Puts gamestate to queues for the main_loop() to read
+
+        Args:
+            updated_game_state (GameBoard): altered_board
         """
-            Launches window and a thread of func_name 500 ms later
-            :arg func_name: Name of the function to run side by side View
-            :arg type: FunctionType
-            :returns: nothing
-            :rtype: None
-        """
-        thread = None  # Initialize thread variable
-
-        if func_name:
-            thread = Thread(target=func_name)
-            self._root.after(500, thread.start())
-
-        def on_close():
-            self._quit = True
-            if thread is not None:
-                thread.join()  # Wait for thread to finish
-            self._root.destroy()
-
-        # Close on exit
-        self._root.protocol("WM_DELETE_WINDOW", on_close)
-
-        # self._root.mainloop()
-        while not self._quit:
-            self._update_board_view(self._event_manager.get_board())
-            self._update_score(self._event_manager.get_score())
-            self._board_canvas.update()
+        self._event_manager.put_game_state(updated_game_state)
 
     def _init_screen(self):
         """
@@ -63,17 +51,10 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        # Initialize empty window
-        self._root = tkinter.Tk()
 
-        # Setting window size: Needs to be in this format '600x800'
-        self._root.geometry(f"{ViewConstants.window_width()}x{ViewConstants.window_height()}")
-        self._root.title(ViewConstants.window_title)
-        self._root.resizable(False, False)
 
         # Init main container
         self.main_container = tkinter.Frame(self._root)
-        self.main_container.pack(side="left", fill="both")
 
         # Init canvas for board
         self._board_canvas = tkinter.Canvas(self.main_container, \
@@ -153,15 +134,7 @@ class View:
 
         self._set_board(updated_board)
 
-    def update(self, updated_board: GameBoard, updated_score: int):
-        """Puts board and score to queues for the main_loop() to read
-
-        Args:
-            updated_board (GameBoard): altered_board
-            updated_score (int): altered score
-        """
-        self._event_manager.put_board(updated_board)
-        self._event_manager.put_score(updated_score)
+    
 
     def add_event_listener(self, event_name: str):
         """
@@ -202,13 +175,13 @@ class View:
         """
         return self._event_manager.get_mouse_event()
 
-    def _update_score(self, score: int):
+    def _update_score_view(self, score: Scoring):
         """
             Updates the Score label
             :returns:  Returns the queue of events storing the latest event at the first position
             :rtype: queue.Queue
         """
-        self._score_label.config(text=f"{score}")
+        self._score_label.config(text=f"{score.score}")
 
     def _map_mouse(self, x_coord: int, y_coord: int) -> typing.Tuple:
         """Maps Event Coordinates to Board Coordinates"""
@@ -217,16 +190,3 @@ class View:
         x = math.floor(((x_coord - ViewConstants.window_padding) / ViewConstants.tile_size) + 1)
         y = self._game_board.num_rows - math.floor(((y_coord - ViewConstants.window_padding) / ViewConstants.tile_size) )
         return (x, y)
-
-    @property
-    def quit(self):
-        """ Keeps track of Tkinter Window protocol
-        
-        Returns:
-            _bool_: Returns True if window's been closed
-
-        """
-        return self._quit
-    @quit.setter
-    def quit(self, quit_status: bool):
-        self.quit = quit_status
