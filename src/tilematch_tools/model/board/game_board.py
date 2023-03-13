@@ -69,9 +69,10 @@ class GameBoard(ABC):
             :throws IllegalBoardContentException if the given tile is not a Tile
         """
         if not isinstance(tile, Tile):
+            LOGGER.error('Attempted to place a non-tile type on the board')
             raise IllegalBoardContentException(
                     f"tile must be of type Tile, not {type(tile)}"
-                )
+                    )
         x = tile.position.x
         y = tile.position.y
         if not self.__board_position_is_valid(x, y):
@@ -79,16 +80,17 @@ class GameBoard(ABC):
             raise InvalidBoardPositionError(
                     f"The position ({x}, {y}) is invalid for the given board"
                     )
+        if type(tile) == NullTile:
+            LOGGER.info('Placing a null tile at (%d, %d) -- skipping availablity checks', x, y)
+            self._board[x - 1][y - 1] = tile
+            return
+
         if not self.__board_position_is_available(x, y):
             LOGGER.error('(%d, %d) is already occupied by another tile', x, y)
             raise InvalidBoardPositionError(
                     f"The position ({x}, {y}) is already occupied by another tile"
                     )
-        if not isinstance(tile, Tile):
-            LOGGER.error('Attempted to place a non-tile type on the board')
-            raise IllegalBoardContentException(
-                    f"tile must be of type Tile, not {type(tile)}"
-                    )
+
         self._board[x - 1][y - 1] = tile
             
 
