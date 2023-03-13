@@ -46,7 +46,7 @@ class GameEngine(ABC):
 
 
     # TODO Implement aftermath of a match
-    def match_tiles(self, start_x: int, start_y: int, match_condition: MatchCondition) -> True:
+    def match_tiles(self, start_x: int, start_y: int, match_condition: MatchCondition) -> bool:
         """Checks if tiles match, then awards for match accordingly
 
         Args:
