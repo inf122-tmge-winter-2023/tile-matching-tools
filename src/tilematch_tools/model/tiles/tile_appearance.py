@@ -34,3 +34,4 @@ class TileAppearance(ABC):
     """
     color: TileColor
     shape: TileShape
+    border: TileColor
