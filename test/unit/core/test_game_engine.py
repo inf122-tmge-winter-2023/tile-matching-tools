@@ -1,6 +1,6 @@
 import pytest
 from tilematch_tools.core import GameEngine, BoardFactory, TileBuilder
-from tilematch_tools.model import Scoring, MovementRule, MatchCondition, TileColor
+from tilematch_tools.model import Scoring, MovementRule, MatchCondition, TileColor, GameBoard
 from tilematch_tools.model.exceptions import IllegalTileMovementException, InvalidBoardPositionError
 from tilematch_tools.model.tiles.tile import NullTile
 
@@ -54,7 +54,7 @@ class TestGameEngine:
         """
             Testing tile movement
         """
-        game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
+        game_engine = GameEngine(BoardFactory.create_board(GameBoard, 10, 24), simple_score)
 
         test_tile = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
         game_engine.game_state.game_board.place_tile(test_tile)
@@ -62,7 +62,7 @@ class TestGameEngine:
         assert game_engine.tile_at(1,4) == test_tile
     
     def test_cant_move_immovable(self, simple_down_movement, simple_score):
-        game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
+        game_engine = GameEngine(BoardFactory.create_board(GameBoard, 10, 24), simple_score)
 
         test_tile = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
         test_tile._movable = False
@@ -74,7 +74,7 @@ class TestGameEngine:
         """
             Testing match tile updates score
         """
-        game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
+        game_engine = GameEngine(BoardFactory.create_board(GameBoard, 10, 24), simple_score)
         tile_1 = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
         tile_2 = TileBuilder().add_position(1,2).add_color(TileColor.RED).construct()
         game_engine.place_tile(tile_1)
@@ -88,7 +88,7 @@ class TestGameEngine:
         """
             Testing match tile updates score
         """
-        game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
+        game_engine = GameEngine(BoardFactory.create_board(GameBoard, 10, 24), simple_score)
         tile_1 = TileBuilder().add_position(5,3).add_color(TileColor.RED).construct()
         tile_2 = TileBuilder().add_position(1,2).add_color(TileColor.RED).construct()
         game_engine.place_tile(tile_1)
@@ -97,7 +97,7 @@ class TestGameEngine:
         assert game_engine.match_tiles(1,3,two_match) == False
 
     def test_swap_tiles(self, simple_score):
-        game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
+        game_engine = GameEngine(BoardFactory.create_board(GameBoard, 10, 24), simple_score)
         tile_1 = TileBuilder().add_position(1,3).add_color(TileColor.BLUE).construct()
         tile_2 = TileBuilder().add_position(1,2).add_color(TileColor.RED).construct()
         game_engine.place_tile(tile_1)

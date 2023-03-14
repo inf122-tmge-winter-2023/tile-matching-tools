@@ -15,6 +15,7 @@ from tilematch_tools.model.score import Scoring
 from tilematch_tools.model.tiles.movement_rule import MovementRule
 from tilematch_tools.model.tiles.tile import NullTile
 from tilematch_tools.model.tiles.tile_appearance import TileColor
+from tilematch_tools.model.board import GameBoard
 from tilematch_tools.view.view import View
 from tilematch_tools import LOG_HANDLER
 from tilematch_tools import LOGGER
@@ -112,7 +113,7 @@ def simple_down_movement():
 def test_demo(simple_up_movement, simple_down_movement, simple_score : Scoring, row_match : MatchCondition):
     """Demo test"""
     ex_env = ExecutionEnviornment()
-    game_board = BoardFactory.create_board('default', 10, 24)
+    game_board = BoardFactory.create_board(GameBoard, 10, 24)
     game_score = simple_score
     game_state = GameState(game_board, game_score)
     view = View(game_state, ex_env.root) 
@@ -164,7 +165,7 @@ def test_demo(simple_up_movement, simple_down_movement, simple_score : Scoring, 
 def test_swap( simple_score : Scoring, row_match : MatchCondition):
     """Demo test"""
     ex_env = ExecutionEnviornment()
-    game_board = BoardFactory.create_board('default', 10, 24)
+    game_board = BoardFactory.create_board(GameBoard, 10, 24)
     game_score = simple_score
     game_state = GameState(game_board, game_score)
     view = View(game_state, ex_env.root) 

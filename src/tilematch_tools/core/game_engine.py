@@ -11,7 +11,7 @@ import time
 from .game_state import GameState
 from .tile_builder import TileBuilder
 from ..model import GameBoard, Scoring, MatchCondition, MovementRule, Tile, NullTile
-from ..model.exceptions import IllegalTileMovementException
+from ..model.exceptions import IllegalTileMovementException, InvalidBoardPositionError
 
 LOGGER=logging.getLogger(__name__)
 
@@ -19,7 +19,6 @@ class GameEngine(ABC):
     def __init__(self, board: GameBoard, score : Scoring):
         self.game_state = GameState(game_board=board, game_score=score)
 
-    # TODO: Handle exceptions, possibly chain exceptions
     def move_tile(self, tile_to_move: Tile, rule: MovementRule):
         """Applies movement rule to tile at (row, col)
 
@@ -32,10 +31,15 @@ class GameEngine(ABC):
         origin_y = tile_to_move.position.y
         try:
             tile_to_move.move(rule)
-        except IllegalTileMovementException:
-            LOGGER.error('Could not apply movement rule %s', str(type(rule)))
-        else:
             self.place_tile(tile_to_move)
+        except (IllegalTileMovementException, InvalidBoardPositionError):
+            # Handling both exceptions as the sequence of events in try would imply invalid move
+            LOGGER.error('Could not apply movement rule %s. Reverting tile state', str(type(rule)))
+            # Restore tile's original position so its board position is correctly reflected
+            tile_to_move.position = (origin_x, origin_y)
+            # Movement failed, so actual tile was never moved
+        else:
+            # Replace origin tile position with a null tile
             self.place_tile(
                     TileBuilder() \
                             .add_position(origin_x, origin_y) \
@@ -80,11 +84,9 @@ class GameEngine(ABC):
         temp_x = tile1.position.x
         temp_y = tile1.position.y
 
-        tile1.position.x = tile2.position.x
-        tile1.position.y = tile2.position.y 
-
-        tile2.position.x = temp_x
-        tile2.position.y = temp_y
+        tile1.position = (tile2.position.x, tile2.position.y)
+        tile2.position = (temp_x, temp_y)
+        
         self.place_tile(tile1)
         self.place_tile(tile2)
     
