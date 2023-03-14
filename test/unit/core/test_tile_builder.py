@@ -46,3 +46,10 @@ class TestTileBuilder:
 
         assert the_tile.color == color
         assert the_tile.shape == shape
+
+    def test_tile_border(self):
+        the_tile = self._builder \
+            .add_position(1, 1) \
+            .add_border(TileColor.BLUE) \
+            .construct()
+        assert the_tile.border == TileColor.BLUE
