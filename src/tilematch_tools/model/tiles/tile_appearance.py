@@ -24,6 +24,8 @@ class TileColor(StrEnum):
     BLUE = '#0000FF'
     INDIGO = '#4B0082'
     VIOLET = '#9400D3'
+    GRAY = '#808080'
+    LIGHT_GRAY = '#D3D3D3'
 
 @dataclass
 class TileAppearance(ABC):
@@ -32,3 +34,4 @@ class TileAppearance(ABC):
     """
     color: TileColor
     shape: TileShape
+    border: TileColor

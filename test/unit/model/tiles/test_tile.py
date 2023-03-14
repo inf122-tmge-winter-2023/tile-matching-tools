@@ -85,3 +85,9 @@ class TestTiles:
         with pytest.raises(IllegalTileMovementException):
             the_tile = frozen_tile
             the_tile.move(simple_down_movement)
+
+    @pytest.mark.parametrize("x, y", test_positions)
+    def test_border_getter_setter(self, x, y):
+        the_tile = Tile(**{'position': (x, y)})
+        the_tile.border = "blue"
+        assert the_tile.border == "blue"
