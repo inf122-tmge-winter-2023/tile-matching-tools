@@ -5,10 +5,12 @@
 """
 from copy import deepcopy
 import math
-from threading import Thread
 import tkinter
-import types
 import typing
+
+from ..model.tiles.tile_appearance import TileColor
+
+from ..model.tiles.tile import Tile
 
 from ..core.game_state import GameState
 
@@ -77,9 +79,10 @@ class View:
         self._score_label = tkinter.Label(score_container, text="0", font=("Roboto", 14))
         self._score_label.pack(side="top")
 
-    def _draw_tile(self, x: int, y: int, color: str):
+    def _draw_tile(self,tile: Tile):
         """
             Draws a singular tile on the board
+            Use for initial board render
             :arg row: Row number on the board (1-based)
             :arg col: Column number on the board (1-based)
             :arg color: color
@@ -89,15 +92,26 @@ class View:
             :returns: nothing
             :rtype: None
         """
-        x =  x -1
-        y = y - 1
-        tile_start_x = x * ViewConstants.tile_size + ViewConstants.board_padding
-        tile_end_x = tile_start_x + ViewConstants.tile_size
+        x =  tile.position.x -1
+        y = self._game_board.num_rows - tile.position.y 
+        tile_start_x = x * ViewConstants.tile_size + ViewConstants.board_padding - 1.5
+        tile_end_x = tile_start_x + ViewConstants.tile_size - 1.5
 
-        tile_start_y = y *  ViewConstants.tile_size + ViewConstants.board_padding
-        tile_end_y = tile_start_y + ViewConstants.tile_size
-        self._board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, \
-                                             tile_end_y, fill=color, outline='gray', width=2)
+        tile_start_y = y *  ViewConstants.tile_size + ViewConstants.board_padding - 1.5
+        tile_end_y = tile_start_y + ViewConstants.tile_size - 1.5
+        return self._board_canvas.create_rectangle(tile_start_x, tile_start_y, tile_end_x, \
+                                             tile_end_y, fill=tile.color, outline=tile.border, width=1)
+    
+    def _update_tile(self, tile : Tile):
+        """Used to update tile on view after being drawn
+
+        Args:
+            tile (Tile): tile to update on view
+        """
+        self._board_canvas.itemconfig(self._tiles[tile.position.x-1][tile.position.y-1], fill=tile.color, outline=tile.border,width=1)
+        if(tile.border != TileColor.GRAY):
+            self._board_canvas.itemconfig(self._tiles[tile.position.x-1][tile.position.y-1], width=2)
+
         
     def _draw_board(self):
         """
@@ -105,10 +119,13 @@ class View:
             :returns: nothing
             :rtype: None
         """
+        self._tiles = []
         for x in range(1, self._game_board.num_cols + 1):
+            tile_cols = []
             for y in range(1,self._game_board.num_rows + 1):
-                self._draw_tile(x, self._game_board.num_rows - y + 1, self._game_board.tile_at(x, y).color)
-
+                tile_cols.append(self._draw_tile(self._game_board.tile_at(x, y)))
+            self._tiles.append(tile_cols)
+        
     def _set_board(self, board: GameBoard):
         """
             Sets the board
@@ -129,12 +146,11 @@ class View:
         """
         for row in range(1, self._game_board.num_cols + 1):
             for col in range(1, self._game_board.num_rows + 1):
-                if self._game_board.tile_at(row, col) != updated_board.tile_at(row, col):
-                    self._draw_tile(row, self._game_board.num_rows - col + 1, updated_board.tile_at(row, col).color)
-
+                old_tile = self._game_board.tile_at(row, col)
+                updated_tile = updated_board.tile_at(row, col)
+                if  old_tile != updated_tile or old_tile.border != updated_tile.border:
+                    self._update_tile(updated_tile)
         self._set_board(updated_board)
-
-    
 
     def add_event_listener(self, event_name: str):
         """

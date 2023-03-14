@@ -36,7 +36,8 @@ class Tile(ABC):
         self._position = Position(*properties.get('position'))
         self._appearance = TileAppearance(
                     properties.get('color', TileColor.RED),
-                    properties.get('shape', TileShape.SQUARE)
+                    properties.get('shape', TileShape.SQUARE),
+                    properties.get('border', TileColor.GRAY)
                 )
         self._movable = True
 
@@ -111,6 +112,21 @@ class Tile(ABC):
     def shape(self):
         LOGGER.debug('Requested read of tile shape is: %s', str(self._appearance.shape))
         return self._appearance.shape
+    @property
+    def border(self):
+        LOGGER.debug('Requested read of tile border is: %s', str(self._appearance.border))
+        return self._appearance.border
+    
+    @border.setter
+    def border(self, color: TileColor):
+        """Sets the border color
+
+        Args:
+            color (TileColor): border color to set to
+        """
+        LOGGER.debug('Requested read of tile border is: %s', str(self._appearance.border))
+        self._appearance.border = color
+
 
 class NullTile(Tile):
     """
