@@ -14,6 +14,7 @@ from tilematch_tools.model.match import MatchCondition
 from tilematch_tools.model.score import Scoring
 from tilematch_tools.model.tiles.movement_rule import MovementRule
 from tilematch_tools.model.tiles.tile import NullTile
+from tilematch_tools.model.tiles.tile_appearance import TileColor
 from tilematch_tools.view.view import View
 from tilematch_tools import LOG_HANDLER
 from tilematch_tools import LOGGER
@@ -197,10 +198,12 @@ def test_swap( simple_score : Scoring, row_match : MatchCondition):
                     if second_click is not None:
                         game_engine.swap_tiles(game_engine.tile_at(first_click[0], first_click[1]),
                                                game_engine.tile_at(second_click[0], second_click[1])) 
+                        first_tile.border = TileColor.GRAY
                         first_click = None
                 else:
                     first_click = view.mouse_event 
-                
+                    first_tile = game_engine.tile_at(first_click[0], first_click[1])
+                    first_tile.border = "green"
             except queue.Empty:
                 pass
             except Exception as e:
