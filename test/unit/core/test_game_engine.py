@@ -75,3 +75,14 @@ class TestGameEngine:
         assert isinstance(game_engine.tile_at(1, 3), NullTile)
         assert isinstance(game_engine.tile_at(1, 2), NullTile)
 
+    def test_swap_tiles(self, simple_score):
+        game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
+        tile_1 = TileBuilder().add_position(1,3).add_color(TileColor.BLUE).construct()
+        tile_2 = TileBuilder().add_position(1,2).add_color(TileColor.RED).construct()
+        game_engine.place_tile(tile_1)
+        game_engine.place_tile(tile_2)
+        game_engine.swap_tiles(tile_1, tile_2)
+        assert tile_1.position.y == 2
+        assert tile_2.position.y == 3
+        assert game_engine.tile_at(1,3).color == TileColor.RED
+        assert game_engine.tile_at(1,2).color == TileColor.BLUE
