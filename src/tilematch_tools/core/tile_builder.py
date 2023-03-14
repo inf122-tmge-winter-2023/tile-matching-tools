@@ -35,7 +35,7 @@ class TileBuilder(ABC):
     
     def add_color(self, color: TileColor):
         """
-            Specify the position of the tile to create
+            Specify the color of the tile to add
             :arg color: color of the tile
             :arg type: str
             :returns: updated tile builder
@@ -43,6 +43,18 @@ class TileBuilder(ABC):
         """
         LOGGER.debug('Adding %s as the color property to tile attributes', str(color))
         self._tile_attrs['color'] = color
+        return self
+
+    def add_border(self, color : TileColor):
+        """
+            Specify the color of the border to add
+            :arg color: color of the tile's border
+            :arg type: str
+            :returns: updated tile builder
+            :rtype: TileBuilder
+        """
+        LOGGER.debug('Adding %s as the color property to tile attributes', str(color))
+        self._tile_attrs['border'] = color
         return self
 
     def add_shape(self, shape: TileShape):
