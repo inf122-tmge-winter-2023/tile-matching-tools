@@ -1,7 +1,7 @@
 import pytest
 from tilematch_tools.core import GameEngine, BoardFactory, TileBuilder
 from tilematch_tools.model import Scoring, MovementRule, MatchCondition, TileColor
-from tilematch_tools.model.exceptions import InvalidBoardPositionError
+from tilematch_tools.model.exceptions import IllegalTileMovementException, InvalidBoardPositionError
 from tilematch_tools.model.tiles.tile import NullTile
 
 @pytest.fixture
@@ -61,6 +61,15 @@ class TestGameEngine:
         game_engine.move_tile(test_tile, simple_down_movement)
         assert game_engine.tile_at(1,4) == test_tile
     
+    def test_cant_move_immovable(self, simple_down_movement, simple_score):
+        game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
+
+        test_tile = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
+        test_tile._movable = False
+        game_engine.game_state.game_board.place_tile(test_tile)
+        game_engine.move_tile(test_tile, simple_down_movement)
+        assert test_tile.position.y == 3
+
     def test_match_tiles(self, simple_score, two_match):
         """
             Testing match tile updates score
@@ -74,6 +83,18 @@ class TestGameEngine:
         assert game_engine.score == 4
         assert isinstance(game_engine.tile_at(1, 3), NullTile)
         assert isinstance(game_engine.tile_at(1, 2), NullTile)
+
+    def test_tiles_dont_match(self, simple_score, two_match):
+        """
+            Testing match tile updates score
+        """
+        game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
+        tile_1 = TileBuilder().add_position(5,3).add_color(TileColor.RED).construct()
+        tile_2 = TileBuilder().add_position(1,2).add_color(TileColor.RED).construct()
+        game_engine.place_tile(tile_1)
+        game_engine.place_tile(tile_2)
+        
+        assert game_engine.match_tiles(1,3,two_match) == False
 
     def test_swap_tiles(self, simple_score):
         game_engine = GameEngine(BoardFactory.create_board('default', 10, 24), simple_score)
