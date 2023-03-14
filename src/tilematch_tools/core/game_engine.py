@@ -68,6 +68,26 @@ class GameEngine(ABC):
             return True
         return False
     
+    def swap_tiles(self, tile1: Tile, tile2: Tile):
+        self.place_tile(TileBuilder() \
+                            .add_position(tile1.position.x, tile1.position.y) \
+                            .add_color(tile1.color) \
+                            .construct(tile_type=NullTile))
+        self.place_tile(TileBuilder() \
+                            .add_position(tile2.position.x, tile2.position.y) \
+                            .add_color(tile2.color) \
+                            .construct(tile_type=NullTile))
+        temp_x = tile1.position.x
+        temp_y = tile1.position.y
+
+        tile1.position.x = tile2.position.x
+        tile1.position.y = tile2.position.y 
+
+        tile2.position.x = temp_x
+        tile2.position.y = temp_y
+        self.place_tile(tile1)
+        self.place_tile(tile2)
+    
     def place_tile(self, tile: Tile):
         """Propogated place_tile from game_board 
 
