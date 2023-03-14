@@ -84,11 +84,9 @@ class GameEngine(ABC):
         temp_x = tile1.position.x
         temp_y = tile1.position.y
 
-        tile1.position.x = tile2.position.x
-        tile1.position.y = tile2.position.y 
-
-        tile2.position.x = temp_x
-        tile2.position.y = temp_y
+        tile1.position = (tile2.position.x, tile2.position.y)
+        tile2.position = (temp_x, temp_y)
+        
         self.place_tile(tile1)
         self.place_tile(tile2)
     
