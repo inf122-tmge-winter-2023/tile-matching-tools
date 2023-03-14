@@ -159,3 +159,59 @@ def test_demo(simple_up_movement, simple_down_movement, simple_score : Scoring, 
     ex_env.set_view2(view2)
 
     ex_env.launch(gameloop)
+
+@pytest.mark.integration
+def test_swap( simple_score : Scoring, row_match : MatchCondition):
+    """Demo test"""
+    ex_env = ExecutionEnviornment()
+    game_board = BoardFactory.create_board(GameBoard, 10, 24)
+    game_score = simple_score
+    game_state = GameState(game_board, game_score)
+    view = View(game_state, ex_env.root) 
+    view2 = View(game_state, ex_env.root)
+
+    view.add_event_listener("ButtonRelease")
+    view2.add_event_listener("ButtonRelease")
+    game_engine = GameEngine(game_board,game_score)
+
+    # Places some tiles
+    for x in range(1,11):
+        if x == 5:
+            pass
+        else:
+            game_engine.place_tile(TileBuilder().add_position(x,1).add_color('red').construct())
+
+
+    def gameloop():
+        fps = 30
+        moving_tile = TileBuilder().add_position(5,10).add_color('red').construct()
+        game_engine.place_tile(moving_tile)
+        first_click = None
+        while not ex_env.quit:  
+            try:
+                matched = game_engine.match_tiles(game_board.num_cols,1, row_match)
+                if matched or moving_tile.position.y == 1:
+                    moving_tile = TileBuilder().add_position(5,4).add_color('red').construct()
+                    game_engine.place_tile(moving_tile)
+                if first_click is not None:
+                    second_click = view.mouse_event
+                    if second_click is not None:
+                        game_engine.swap_tiles(game_engine.tile_at(first_click[0], first_click[1]),
+                                               game_engine.tile_at(second_click[0], second_click[1])) 
+                        first_click = None
+                else:
+                    first_click = view.mouse_event 
+                
+            except queue.Empty:
+                pass
+            except Exception as e:
+                print(e)
+            view.update_game_state(game_state)
+            view2.update_game_state(game_state)
+
+            time.sleep(1/fps)
+
+    ex_env.set_view(view)
+    ex_env.set_view2(view2)
+
+    ex_env.launch(gameloop)
