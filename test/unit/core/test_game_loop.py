@@ -37,6 +37,9 @@ def simple_game_loop():
         def update_view(self):
             super().update_view()
 
+        def gameover(self):
+            super().gameover()
+
     return SimpleGameLoop(GameState, 'GameView', 2_000_000_000)
 
 def test_game_loop_subclass_implements_template():

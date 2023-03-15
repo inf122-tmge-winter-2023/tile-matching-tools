@@ -11,6 +11,7 @@ from abc import ABC, abstractmethod
 from enum import IntEnum
 
 from .game_state import GameState
+from .exceptions import GameEndedException
 from ..view import View
 from ..model.match import MatchCondition
 
@@ -35,6 +36,10 @@ class GameLoop(ABC):
 
     def __call__(self):
         """Go thru one iteration of the game loop"""
+        if self.gameover():
+            raise GameEndedException(
+                    'The game has already ended. No further loop iterations are allowed'
+                    )
         self.await_delay()
         self.handle_input()
         while matches := self.find_matches(self._state.match_rules):
@@ -79,6 +84,14 @@ class GameLoop(ABC):
             :rtype: None
         """
         self._view.update_game_state(self._state)
+
+    @abstractmethod
+    def gameover(self) -> bool:
+        """Check if the game has ended
+            :returns: true if game over, false otherwise
+            :rtype: bool
+        """
+        return False
 
     def await_delay(self):
         """
