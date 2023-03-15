@@ -2,9 +2,11 @@
 
 import pytest
 import time
+from unittest.mock import Mock
 
 from tilematch_tools.model import Scoring, GameBoard
 from tilematch_tools.core import GameLoop, GameState, BoardFactory
+from tilematch_tools.core.exceptions import GameEndedException
 from tilematch_tools.view import View
 
 @pytest.fixture
@@ -59,3 +61,9 @@ def test_delay_between_loop_interations(simple_game_loop):
 def test_game_loop_is_callable(simple_game_loop):
     loop = simple_game_loop
     loop()
+
+def test_game_loop_cannot_be_run_if_game_is_over(simple_game_loop):
+    loop = simple_game_loop
+    loop.gameover = Mock(return_value=True)
+    with pytest.raises(GameEndedException):
+        loop()
