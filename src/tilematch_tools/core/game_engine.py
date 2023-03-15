@@ -4,6 +4,10 @@
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
 
+########################
+# Deprecrated!!!       #
+########################
+
 import logging
 from abc import ABC
 import time
