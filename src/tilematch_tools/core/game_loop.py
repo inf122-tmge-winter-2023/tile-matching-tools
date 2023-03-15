@@ -67,7 +67,10 @@ class GameLoop(ABC):
             :returns: nothing
             :rtype: None
         """
-        pass
+        for match in matches_found:
+            self._state.clear_match(match)
+            time.sleep(self._loop_delay)
+            self._state.adjust_score(match)
 
     @abstractmethod
     def update_view(self) -> None:
@@ -75,7 +78,7 @@ class GameLoop(ABC):
             :returns: nothing
             :rtype: None
         """
-        pass
+        self._view.update_game_state(self._state)
 
     def await_delay(self):
         """
