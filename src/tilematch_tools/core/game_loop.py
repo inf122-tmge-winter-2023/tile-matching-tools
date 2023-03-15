@@ -89,3 +89,21 @@ class GameLoop(ABC):
         while time.time_ns() <= self._last_call + self._loop_delay:
             pass
         self._last_call = time.time_ns()
+
+    @property
+    def state(self) -> GameState:
+        """
+            Return reference to current game state
+            :returns: game state snapshot
+            :rtype: GameState
+        """
+        return self._state
+
+    @property
+    def view(self) -> View:
+        """
+            Return a reference to current game view
+            :returns: game view
+            :rtype: View
+        """
+        return self._view
