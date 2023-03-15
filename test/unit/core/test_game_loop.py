@@ -3,8 +3,24 @@
 import pytest
 import time
 
-from tilematch_tools.core import GameLoop, GameState
+from tilematch_tools.model import Scoring, GameBoard
+from tilematch_tools.core import GameLoop, GameState, BoardFactory
 from tilematch_tools.view import View
+
+@pytest.fixture
+def simple_game_state():
+    class SimpleScore(Scoring):
+        def __init__(self):
+            super().__init__()
+
+        def award_for_match(self, match):
+            self._points += 4
+
+    return GameState(
+            BoardFactory.create(GameBoard, 3, 3),
+            SimpleScore()
+            )
+
 
 @pytest.fixture
 def simple_game_loop():
@@ -21,7 +37,7 @@ def simple_game_loop():
         def update_view(self):
             super().update_view()
 
-    return SimpleGameLoop('GameState', 'GameView', 2_000_000_000)
+    return SimpleGameLoop(GameState, 'GameView', 2_000_000_000)
 
 def test_game_loop_subclass_implements_template():
     class InvalidGameLoop(GameLoop):
@@ -36,3 +52,7 @@ def test_delay_between_loop_interations(simple_game_loop):
     simple_game_loop()
     end = time.time_ns()
     assert end - start > 1_000_000_000
+
+def test_game_loop_is_callable(simple_game_loop):
+    loop = simple_game_loop
+    loop()
