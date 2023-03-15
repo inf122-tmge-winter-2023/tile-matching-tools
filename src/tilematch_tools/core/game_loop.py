@@ -37,7 +37,7 @@ class GameLoop(ABC):
         """Go thru one iteration of the game loop"""
         self.await_delay()
         self.handle_input()
-        while matches := self.find_matches():
+        while matches := self.find_matches(self._state.match_rules):
             self.clear_matches(matches)
             self.update_view()
 
