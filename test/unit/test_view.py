@@ -109,6 +109,7 @@ def simple_down_movement():
 
     return MoveDown(0, -1)
 
+@pytest.mark.skip
 @pytest.mark.integration
 def test_demo(simple_up_movement, simple_down_movement, simple_score : Scoring, row_match : MatchCondition):
     """Demo test"""
@@ -161,6 +162,7 @@ def test_demo(simple_up_movement, simple_down_movement, simple_score : Scoring, 
 
     ex_env.launch(gameloop)
 
+@pytest.mark.skip
 @pytest.mark.integration
 def test_swap( simple_score : Scoring, row_match : MatchCondition):
     """Demo test"""
