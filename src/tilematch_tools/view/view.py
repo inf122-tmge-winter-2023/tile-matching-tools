@@ -15,7 +15,6 @@ from ..model.tiles.tile import Tile
 from ..core.game_state import GameState
 
 from ..model import GameBoard
-from ..model import Scoring
 from .view_constants import ViewConstants
 from .event_manager import EventManager
 
@@ -35,8 +34,8 @@ class View:
 
     def update_container(self):
         updated_game_state = self._event_manager.get_game_state()
-        self._update_board_view(updated_game_state.game_board)
-        self._update_score_view(updated_game_state.game_score)
+        self._update_board_view(updated_game_state.board)
+        self._update_score_view(updated_game_state.score)
         self._board_canvas.update()
 
     def update_game_state(self, updated_game_state: GameState):
@@ -191,13 +190,13 @@ class View:
         """
         return self._event_manager.get_mouse_event()
 
-    def _update_score_view(self, score: Scoring):
+    def _update_score_view(self, score: int):
         """
             Updates the Score label
             :returns:  Returns the queue of events storing the latest event at the first position
             :rtype: queue.Queue
         """
-        self._score_label.config(text=f"{score.score}")
+        self._score_label.config(text=f"{score}")
 
     def _map_mouse(self, x_coord: int, y_coord: int) -> typing.Tuple:
         """Maps Event Coordinates to Board Coordinates"""
