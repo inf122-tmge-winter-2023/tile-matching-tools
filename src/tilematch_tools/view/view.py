@@ -4,6 +4,7 @@
     :module_author: Matthew Isayan
 """
 from copy import deepcopy
+import logging
 import math
 import tkinter
 import typing
@@ -17,6 +18,8 @@ from ..core.game_state import GameState
 from ..model import GameBoard
 from .view_constants import ViewConstants
 from .event_manager import EventManager
+
+LOGGER=logging.getLogger(__name__)
 
 class View:
     """
@@ -34,9 +37,12 @@ class View:
 
     def update_container(self):
         updated_game_state = self._event_manager.get_game_state()
-        self._update_board_view(updated_game_state.board)
-        self._update_score_view(updated_game_state.score)
-        self._board_canvas.update()
+        try:
+            self._update_board_view(updated_game_state.board)
+            self._update_score_view(updated_game_state.score)
+            self._board_canvas.update()
+        except tkinter.TclError:
+            LOGGER.error("Trying to access tkinter widgets after destruction.")
 
     def update_game_state(self, updated_game_state: GameState):
         """Puts gamestate to queues for the main_loop() to read
