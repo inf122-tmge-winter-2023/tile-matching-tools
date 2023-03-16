@@ -2,6 +2,7 @@
 
 import pytest
 import time
+import tkinter
 from unittest.mock import Mock
 
 from tilematch_tools.model import Scoring, GameBoard
@@ -19,13 +20,13 @@ def simple_game_state():
             self._points += 4
 
     return GameState(
-            BoardFactory.create(GameBoard, 3, 3),
+            BoardFactory.create_board(GameBoard, 3, 3),
             SimpleScore()
             )
 
 
 @pytest.fixture
-def simple_game_loop():
+def simple_game_loop(simple_game_state):
     class SimpleGameLoop(GameLoop):
         def handle_input(self):
             super().handle_input()
@@ -42,7 +43,7 @@ def simple_game_loop():
         def gameover(self):
             super().gameover()
 
-    return SimpleGameLoop(GameState, 'GameView', 2_000_000_000)
+    return SimpleGameLoop(simple_game_state, View(simple_game_state, tkinter.Tk()), 2_000_000_000)
 
 def test_game_loop_subclass_implements_template():
     class InvalidGameLoop(GameLoop):
