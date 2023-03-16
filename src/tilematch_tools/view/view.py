@@ -24,7 +24,7 @@ class View:
         A class that represents the view of the TMGE
     """
     def __init__(self, game_state: GameState, root: tkinter.Tk):
-        self._game_board = deepcopy(game_state.game_board)
+        self._game_board = deepcopy(game_state.board)
         self._root = root
         ViewConstants.num_rows = self._game_board.num_rows
         ViewConstants.num_cols = self._game_board.num_cols
