@@ -6,7 +6,6 @@
 
 import logging
 import time
-import tkinter as tk
 from abc import ABC, abstractmethod
 from enum import IntEnum
 
@@ -42,6 +41,7 @@ class GameLoop(ABC):
                     )
         self.await_delay()
         self.handle_input()
+        self.update_view()
         while matches := self.find_matches(self._state.match_rules):
             self.clear_matches(matches)
         self.update_view()

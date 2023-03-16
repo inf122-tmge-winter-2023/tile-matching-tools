@@ -37,7 +37,7 @@ def simple_game_loop(simple_game_state):
             super().clear_matches(matches_found)
 
         def update_view(self):
-            super().update_view()
+            pass
 
         def gameover(self):
             super().gameover()
