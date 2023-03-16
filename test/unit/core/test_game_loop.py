@@ -2,7 +2,6 @@
 
 import pytest
 import time
-import tkinter
 from unittest.mock import Mock
 
 from tilematch_tools.model import Scoring, GameBoard
@@ -38,12 +37,12 @@ def simple_game_loop(simple_game_state):
             super().clear_matches(matches_found)
 
         def update_view(self):
-            super().update_view()
+            pass
 
         def gameover(self):
             super().gameover()
 
-    return SimpleGameLoop(simple_game_state, View(simple_game_state, tkinter.Tk()), 2_000_000_000)
+    return SimpleGameLoop(simple_game_state, 'View', 2_000_000_000)
 
 def test_game_loop_subclass_implements_template():
     class InvalidGameLoop(GameLoop):
