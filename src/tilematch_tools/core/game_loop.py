@@ -44,7 +44,7 @@ class GameLoop(ABC):
         self.handle_input()
         while matches := self.find_matches(self._state.match_rules):
             self.clear_matches(matches)
-            self.update_view()
+        self.update_view()
 
     @abstractmethod
     def handle_input(self) -> None:
