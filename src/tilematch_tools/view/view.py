@@ -4,6 +4,7 @@
     :module_author: Matthew Isayan
 """
 from copy import deepcopy
+import logging
 import math
 import tkinter
 import typing
@@ -18,25 +19,40 @@ from ..model import GameBoard
 from .view_constants import ViewConstants
 from .event_manager import EventManager
 
+LOGGER=logging.getLogger(__name__)
+
 class View:
     """
         A class that represents the view of the TMGE
     """
-    def __init__(self, game_state: GameState, root: tkinter.Tk):
+    def __init__(self, game_state: GameState):
         self._game_board = deepcopy(game_state.board)
-        self._root = root
+        self._event_manager = EventManager()
+
+
         ViewConstants.num_rows = self._game_board.num_rows
         ViewConstants.num_cols = self._game_board.num_cols
 
-        self._event_manager = EventManager()
-        self._init_screen()
+
+    def set_root(self, root: tkinter.Tk):
+        """
+            Sets root and inits container
+
+        Args:
+            root (tkinter.Tk): _description_
+        """
+        self._root = root
+        self._init_container()
         self._draw_board()
 
     def update_container(self):
         updated_game_state = self._event_manager.get_game_state()
-        self._update_board_view(updated_game_state.board)
-        self._update_score_view(updated_game_state.score)
-        self._board_canvas.update()
+        try:
+            self._update_board_view(updated_game_state.board)
+            self._update_score_view(updated_game_state.score)
+            self._board_canvas.update()
+        except tkinter.TclError:
+            LOGGER.error("Trying to access tkinter widgets after destruction.")
 
     def update_game_state(self, updated_game_state: GameState):
         """Puts gamestate to queues for the main_loop() to read
@@ -46,16 +62,15 @@ class View:
         """
         self._event_manager.put_game_state(updated_game_state)
 
-    def _init_screen(self):
+    def _init_container(self):
         """
             Initializes screen, main container and canvas for the board 
             :returns: nothing
             :rtype: None
         """
-
-
         # Init main container
         self.main_container = tkinter.Frame(self._root)
+        self.main_container.pack(side="left", fill="both")
 
         # Init canvas for board
         self._board_canvas = tkinter.Canvas(self.main_container, \

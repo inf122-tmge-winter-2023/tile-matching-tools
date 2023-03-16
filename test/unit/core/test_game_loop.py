@@ -42,7 +42,7 @@ def simple_game_loop(simple_game_state):
         def gameover(self):
             super().gameover()
 
-    return SimpleGameLoop(simple_game_state, 'View', 2_000_000_000)
+    return SimpleGameLoop(simple_game_state, View(simple_game_state), 2_000_000_000)
 
 def test_game_loop_subclass_implements_template():
     class InvalidGameLoop(GameLoop):
