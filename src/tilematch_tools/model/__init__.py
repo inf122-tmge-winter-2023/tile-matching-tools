@@ -6,5 +6,6 @@
 
 from .score import Scoring
 from .match import MatchCondition
+from .movement import MovementRule
 from .tiles import *
 from .board import *

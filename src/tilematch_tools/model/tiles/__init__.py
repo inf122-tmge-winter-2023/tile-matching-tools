@@ -5,6 +5,5 @@
 """
 
 from .tile_appearance import TileAppearance, TileShape, TileColor
-from .movement_rule import MovementRule
 from .tile import Tile, NullTile
 from .tile_group import TileGroup

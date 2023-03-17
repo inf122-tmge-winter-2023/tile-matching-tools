@@ -1,5 +1,5 @@
 """
-    :module_name: movement_rule
+    :module_name: movement
     :module_summary: a class the controls how a tile is allowed to move
     :module_author: Nathan Mendoza (nathancm@uci.edu)
 """
@@ -7,7 +7,7 @@
 import logging
 from abc import ABC, abstractmethod
 
-from .tile import Tile, NullTile
+from ..tiles import Tile, NullTile
 from ..board import GameBoard
 from ..exceptions import IllegalTileMovementException, InvalidBoardPositionError
 
@@ -46,13 +46,13 @@ class MovementRule(ABC):
             self.apply(board, tile_to_move)
         except (IllegalTileMovementException, InvalidBoardPositionError):
             LOGGER.error('Could not apply movement rule %s. Reverting tile state', str(self))
-            self.revert()
+            self.revert(board, tile_to_move)
         else:
             LOGGER.info(
                     'Tile successfully moved from (%d, %d) -> (%d, %d)',
                     self._origin_x,
                     self._origin_y,
-                    tile_to_move.position.x
+                    tile_to_move.position.x,
                     tile_to_move.position.y
                     )
             self._mark_null(board)
@@ -81,16 +81,16 @@ class MovementRule(ABC):
             :arg type: GameBoard
             :arg type: Tile
         """
+        LOGGER.info('Reverting tile to position (%d, %d)', self._origin_x, self._origin_y)
         tile_to_move.position = (self._origin_x, self._origin_y)
 
     def _mark_null(self, board: GameBoard):
-            board.place_tile(
-                    NullTile(
-                        **{
-                            'position': (self._origin_x, self._origin_y),
-                            'color': '#D3D3D3'
-                        }
-                    )
-            )
-
-
+        LOGGER.info('Marking (%d, %d) with a null tile', self._origin_x, self._origin_y)
+        board.place_tile(
+                NullTile(
+                    **{
+                        'position': (self._origin_x, self._origin_y),
+                        'color': '#D3D3D3'
+                    }
+                )
+        )

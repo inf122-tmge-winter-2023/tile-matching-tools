@@ -7,9 +7,8 @@
 import logging
 from dataclasses import dataclass
 
-from ..exceptions import TileGroupPositionOccupiedError, \
-                         TileGroupDisbandedException 
 from .tile import Tile, Position
+from ..exceptions import TileGroupDisbandedException, TileGroupPositionOccupiedError
 
 LOGGER = logging.getLogger(__name__)
 

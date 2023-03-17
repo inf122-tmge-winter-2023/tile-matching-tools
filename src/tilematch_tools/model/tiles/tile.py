@@ -8,8 +8,8 @@ import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from ..exceptions import MissingTilePropertyException, IllegalTileMovementException
 from .tile_appearance import TileAppearance, TileShape, TileColor
+from ..exceptions import MissingTilePropertyException
 
 LOGGER = logging.getLogger(__name__)
 

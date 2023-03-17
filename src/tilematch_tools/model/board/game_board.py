@@ -7,7 +7,7 @@
 import logging
 from abc import ABC
 
-from ..tiles import Tile, NullTile, MovementRule
+from ..tiles import Tile, NullTile
 from ..exceptions import InvalidBoardPositionError, IllegalBoardContentException
 
 LOGGER = logging.getLogger(__name__)

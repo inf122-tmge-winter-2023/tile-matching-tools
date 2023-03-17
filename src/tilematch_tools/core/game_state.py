@@ -7,8 +7,8 @@
 import logging
 
 from .tile_builder import TileBuilder
-from ..model import GameBoard, Scoring, MatchCondition
-from ..model.tiles import Tile, MovementRule, NullTile
+from ..model import GameBoard, Scoring, MatchCondition, MovementRule
+from ..model.tiles import Tile, NullTile
 from ..model.exceptions import IllegalTileMovementException, InvalidBoardPositionError
 
 LOGGER = logging.getLogger(__name__)
@@ -21,7 +21,8 @@ class GameState:
         self._board = board
         self._score = score
         self._match_conditions = []
-
+    
+    #TODO: update to use new movement rule interface
     def move_tile(self, tile_to_move: Tile, rule: MovementRule):
         """Applies movement rule to tile at (row, col)
 
