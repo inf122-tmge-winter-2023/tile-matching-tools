@@ -31,31 +31,7 @@ class GameState:
             col (int): col of tile
             rule (MovementRule): Concrete MovementRule
         """
-        origin_x = tile_to_move.position.x
-        origin_y = tile_to_move.position.y
-        try:
-            LOGGER.info('Attempting to move tile at (%d, %d)', origin_x, origin_y)
-            tile_to_move.move(rule)
-            self.board.place_tile(tile_to_move)
-        except (IllegalTileMovementException, InvalidBoardPositionError):
-            # Handling both exceptions as the sequence of events in try would imply invalid move
-            LOGGER.error('Could not apply movement rule %s. Reverting tile state', str(type(rule)))
-            # Restore tile's original position so its board position is correctly reflected
-            tile_to_move.position = (origin_x, origin_y)
-            # Movement failed, so actual tile was never moved
-        else:
-            # Replace origin tile position with a null tile
-            LOGGER.info(
-                    'Movement successfully applied. Declaring (%d, %d) on the board to be null',
-                    origin_x,
-                    origin_y
-                    )
-            self.board.place_tile(
-                    TileBuilder() \
-                            .add_position(origin_x, origin_y) \
-                            .add_color('#D3D3D3') \
-                            .construct(tile_type=NullTile)
-            )
+        rule.move(self.board, tile_to_move) 
 
     def find_match(
             self, 
@@ -106,7 +82,7 @@ class GameState:
                     tile.position.y
                     )
             self.board.place_tile( TileBuilder() \
-                         .add_position(tile.position.x, tile.position.y) \
+                        .add_position(tile.position.x, tile.position.y) \
                         .add_color('#D3D3D3') \
                         .construct(tile_type=NullTile)
             )

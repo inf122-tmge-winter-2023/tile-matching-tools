@@ -35,6 +35,13 @@ class MovementRule(ABC):
             :arg type: Tile
             :arg type: tuple
         """
+        if not tile_to_move.mobile:
+            LOGGER.error(
+                    'Attempting to move immovable tile at (%d, %d)',
+                    tile_to_move.position.x,
+                    tile_to_move.position.y
+                    )
+            return
         self._origin_x = tile_to_move.position.x
         self._origin_y = tile_to_move.position.y
         try:
