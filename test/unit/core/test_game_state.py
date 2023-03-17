@@ -7,10 +7,11 @@ from tilematch_tools.model.tiles.tile import NullTile
 @pytest.fixture
 def simple_down_movement():
     class MoveDown(MovementRule):
-        def exec(self, x, y):
-            return (x + self._dx, y + self._dy)
+        def apply(self, board, tile):
+            tile.position = (tile.position.x, tile.position.y - 1)
+            board.place_tile(tile)
 
-    return MoveDown(0, 1)
+    return MoveDown()
 
 @pytest.fixture
 def two_match():
@@ -62,7 +63,7 @@ class TestGameState:
         test_tile = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
         self.state.board.place_tile(test_tile)
         self.state.move_tile(test_tile, simple_down_movement)
-        assert self.state.board.tile_at(1,4) == test_tile
+        assert self.state.board.tile_at(1,2) == test_tile
     
     def test_cant_move_immovable(self, simple_down_movement):
         test_tile = TileBuilder().add_position(1,3).add_color(TileColor.RED).construct()
