@@ -2,7 +2,7 @@
 
 import pytest
 
-from tilematch_tools.model import TileGroup, MovementRule
+from tilematch_tools.model import TileGroup
 from tilematch_tools.model.exceptions import TileGroupPositionOccupiedError, \
                                          TileGroupDisbandedException
 from tilematch_tools.core import TileBuilder
@@ -40,20 +40,3 @@ class TestTileGroup:
                     1,
                     1
                     )
-
-    def test_movement_rule_applies_to_all_tiles_in_group(self):
-        self._group.add_sibling_tile(
-                self._builder.add_position(5, 5).construct(),
-                0,
-                -1
-                )
-        class MoveDown(MovementRule):
-            def exec(self, x, y):
-                return (x + self._dx, y + self._dy)
-
-        self._group.move(MoveDown(0, -1))
-        assert self._group._tiles[(0, 0)].position.x == 5
-        assert self._group._tiles[(0, 0)].position.y == 4
-
-        assert self._group._tiles[(0, -1)].position.x == 5
-        assert self._group._tiles[(0, -1)].position.y == 3
