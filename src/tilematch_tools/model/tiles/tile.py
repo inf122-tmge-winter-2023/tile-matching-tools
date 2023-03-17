@@ -10,7 +10,6 @@ from dataclasses import dataclass
 
 from ..exceptions import MissingTilePropertyException, IllegalTileMovementException
 from .tile_appearance import TileAppearance, TileShape, TileColor
-from .movement_rule import MovementRule
 
 LOGGER = logging.getLogger(__name__)
 
@@ -41,14 +40,13 @@ class Tile(ABC):
                 )
         self._movable = True
 
+    """Deprecated
     def move(self, rule: MovementRule):
-        """
             Apply the given movement rule to this tile
             :arg rule: the rule specifying how to modify position
             :arg type: Movement rule
             :returns: nothing
             :rtype: None
-        """
         if not self.mobile:
             LOGGER.error('Attempted to move an immovable tile')
             raise IllegalTileMovementException("Can't apply a movement to an inmovable tile")
@@ -56,7 +54,7 @@ class Tile(ABC):
                 self.position.x,
                 self.position.y
                 )
-
+    """
 
     def __eq__(self, other):
         """Allows for checking tile equality with =="""
