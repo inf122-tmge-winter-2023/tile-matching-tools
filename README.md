@@ -1,5 +1,7 @@
 # INF122-TMGE
 
+![Tests](https://github.com/inf122-tmge-winter-2023/tile-matching-tools/actions/workflows/package-test.yml/badge.svg)
+
 ## Description 
 
 - Design and implement an extensible Tile-Matching Game Environment (TMGE).  We will adhere to the definition of a tile-matching game as used in this Wikipedia article Links to an external site.
