@@ -16,12 +16,12 @@ LOG_HANDLER = logging.StreamHandler()
 LOG_FORMAT = logging.Formatter('[%(asctime)s|%(name)s|%(levelname)s] - %(message)s')
 
 log_level_map = {
-    'release': logging.CRITICAL
+    'release': logging.CRITICAL,
     'develop': logging.DEBUG
 }
 
-LOGGER.setLevel(log_level_map.get(os.getenv('logconf', 'release'), 'release'])
-LOG_HANDLER.setLevel(log_level_map.get(os.getenv('logconf', 'release'), 'release'])
+LOGGER.setLevel(log_level_map.get(os.getenv('logconf', 'release'), 'release'))
+LOG_HANDLER.setLevel(log_level_map.get(os.getenv('logconf', 'release'), 'release'))
 
 LOG_HANDLER.setFormatter(LOG_FORMAT)
 LOGGER.addHandler(LOG_HANDLER)
