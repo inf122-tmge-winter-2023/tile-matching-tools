@@ -44,9 +44,9 @@ class GameEngine(ABC):
                     if not game_loop.gameover():
                         # Iterate through game_loop for games that are not over
                         game_loop()
-                except GameEndedException as e:
-                    # Not sure if this exception will be thrown
-                    LOGGER.error(str(e))
+                except GameEndedException as err:
+                    LOGGER.error('%s', str(err))
+                    game_loop.await_delay()
 
 
     def _init_root(self):
