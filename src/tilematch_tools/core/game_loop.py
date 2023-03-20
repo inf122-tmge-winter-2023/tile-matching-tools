@@ -93,13 +93,15 @@ class GameLoop(ABC):
         """
         return False
 
-    def await_delay(self):
+    def await_delay(self, delay = None):
         """
             Await the delay necessary to achieve a target FPS
             :returns: nothing
             :rtype: None
         """
-        while time.time_ns() <= self._last_call + self._loop_delay:
+        if not delay:
+            delay = self._loop_delay
+        while time.time_ns() <= self._last_call + delay:
             pass
         self._last_call = time.time_ns()
 
