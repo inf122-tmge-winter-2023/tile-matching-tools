@@ -4,6 +4,4 @@
     :module_author: Matthew Isayan
 """
 
-from .view import View
-from .view import ViewConstants
-from .view import EventManager
+from .score_view import ScoreView
