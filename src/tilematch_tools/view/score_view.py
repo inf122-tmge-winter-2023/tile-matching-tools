@@ -5,6 +5,7 @@
 """
 
 import tkinter as tk
+import tkinter.font as tkFont
 
 from ..model.score import Scoring
 
@@ -17,13 +18,15 @@ class ScoreView(tk.Frame):
         :arg **oprtions: configuration
     """
     
-    font = tk.Font(family='Helvetica', size=16)
-
     def __init__(self, parent, score_to_watch, **options):
         super().__init__(parent, **options)
         self._watching = score_to_watch,
         self._create_widgets()
         self._place_widgets()
+
+    @property
+    def font(self):
+        return tkFont.Font(family='Helvetica', size=16)
 
     def _create_widgets(self):
         self._showing = tk.StringVar()
