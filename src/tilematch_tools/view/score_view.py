@@ -20,7 +20,7 @@ class ScoreView(tk.Frame):
     
     def __init__(self, parent, score_to_watch, **options):
         super().__init__(parent, **options)
-        self._watching = score_to_watch,
+        self._watching = score_to_watch
         self._create_widgets()
         self._place_widgets()
 
