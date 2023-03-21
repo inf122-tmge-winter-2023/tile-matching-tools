@@ -5,3 +5,6 @@
 """
 
 from .score_view import ScoreView
+
+class View:
+    pass
