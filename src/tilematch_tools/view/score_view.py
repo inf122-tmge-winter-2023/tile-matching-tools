@@ -5,12 +5,12 @@
 """
 
 import tkinter as tk
-import tkinter.font as tkFont
 
 from ..model.score import Scoring
+from .game_widgets import GameInfo
 
 
-class ScoreView(tk.Frame):
+class ScoreView(GameInfo):
     """
         GUI widget for displaying a game score
         :arg parent: GUI widget
@@ -21,12 +21,6 @@ class ScoreView(tk.Frame):
     def __init__(self, parent, score_to_watch, **options):
         super().__init__(parent, **options)
         self._watching = score_to_watch
-        self._create_widgets()
-        self._place_widgets()
-
-    @property
-    def font(self):
-        return tkFont.Font(family='Helvetica', size=16)
 
     @property
     def watching(self):
@@ -47,10 +41,10 @@ class ScoreView(tk.Frame):
         elif current_display > self.watching:
             self.showing.set(str(current_display - 1))
 
-    def _create_widgets(self):
+    def create_widgets(self):
         self._score_label = tk.Label(self, text='Score: ', font=self.font, width=10, anchor=tk.W)
         self._score_display = tk.Label(self, textvariable=self.showing, font=self.font, width=4, anchor=tk.E)
 
-    def _place_widgets(self):
+    def place_widgets(self):
         self._score_label.grid(row=0, column=0)
         self._score_display.grid(row=0, column=1)

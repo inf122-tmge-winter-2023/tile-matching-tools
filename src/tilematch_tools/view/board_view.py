@@ -8,6 +8,7 @@ import tkinter as tk
 from dataclasses import dataclass
 
 from ..model import GameBoard
+from .game_widgets import GameInfo
 
 @dataclass
 class BoundingBox:
@@ -16,15 +17,13 @@ class BoundingBox:
     end_x: int
     end_y: int
 
-class BoardView(tk.Frame):
+class BoardView(GameInfo):
     """GUI widget for displaying a tilematching game board"""
     tile_side_length = 30
 
     def __init__(self, parent, board_to_watch: GameBoard, **options):
-        super().__init__(parent, **options)
         self._watching = board_to_watch
-        self._create_widgets()
-        self._place_widgets()
+        super().__init__(parent, **options)
 
     def update(self):
         for tile in self.watching:
@@ -50,11 +49,11 @@ class BoardView(tk.Frame):
 
         return self._tiles_map
 
-    def _create_widgets(self):
+    def create_widgets(self):
         self._board_display = tk.Canvas(self, width=self.board_width, height=self.board_height)
         self._init_board()
 
-    def _place_widgets(self):
+    def place_widgets(self):
         self._board_display.pack(side="left", fill="y")
 
     def _init_board(self):
