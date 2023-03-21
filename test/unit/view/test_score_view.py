@@ -35,8 +35,8 @@ def test_simple_score_update(simple_score):
     root = tk.Tk()
     score_view = ScoreView(root, score_to_watch=simple_score)
     score_view.pack()
-    root.bind_all('<KeyRelease-a>', add_score)
-    root.bind_all('<KeyRelease-l>', lose_score)
+    score_view.bind_all('<KeyRelease-a>', add_score)
+    score_view.bind_all('<KeyRelease-l>', lose_score)
 
     def update_score():
         print(f'Updating score to {simple_score.score}')
