@@ -40,7 +40,7 @@ def test_simple_score_update(simple_score):
 
     def update_score():
         print(f'Updating score to {simple_score.score}')
-        score_view.update_score_display()
+        score_view.update()
         score_view.after(100, update_score)
 
     score_view.after(100, update_score)
