@@ -5,6 +5,7 @@
 """
 
 from .score_view import ScoreView
+from .board_view import BoardView
 
 class View:
     pass
