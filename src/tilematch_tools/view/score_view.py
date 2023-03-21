@@ -40,7 +40,7 @@ class ScoreView(tk.Frame):
             
         return self._showing
 
-    def update_score_display(self):
+    def update(self):
         current_display = int(self.showing.get())
         if current_display < self.watching:
             self.showing.set(str(current_display + 1))
