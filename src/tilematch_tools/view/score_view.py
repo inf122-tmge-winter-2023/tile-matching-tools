@@ -28,10 +28,28 @@ class ScoreView(tk.Frame):
     def font(self):
         return tkFont.Font(family='Helvetica', size=16)
 
+    @property
+    def watching(self):
+        return self._watching.score
+
+    @property
+    def showing(self):
+        if not hasattr(self, '_showing'):
+            self._showing = tk.StringVar()
+            self._showing.set('0')
+            
+        return self._showing
+
+    def update_score_display(self):
+        current_display = int(self.showing.get())
+        if current_display < self.watching:
+            self.showing.set(str(current_display + 1))
+        elif current_display > self.watching:
+            self.showing.set(str(current_display - 1))
+
     def _create_widgets(self):
-        self._showing = tk.StringVar()
         self._score_label = tk.Label(self, text='Score: ', font=self.font, width=10, anchor=tk.W)
-        self._score_display = tk.Label(self, textvariable=self._showing, font=self.font, width=4, anchor=tk.E)
+        self._score_display = tk.Label(self, textvariable=self.showing, font=self.font, width=4, anchor=tk.E)
 
     def _place_widgets(self):
         self._score_label.grid(row=0, column=0)
