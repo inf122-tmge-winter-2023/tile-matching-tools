@@ -117,3 +117,12 @@ class GameBoard(ABC):
             :rtype: bool
         """
         return self.__board_position_is_valid(x, y) and type(self._board[x - 1][y - 1]) == NullTile
+
+    def __iter__(self):
+        """
+            Return a generator that iterate over the board in column-major order
+            :rtype: generator
+        """
+        for x in range(1, self._num_cols + 1):
+            for y in range(1, self._num_rows + 1):
+                yield self.tile_at(x, y)
