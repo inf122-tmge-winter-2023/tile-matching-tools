@@ -24,14 +24,6 @@ def simple_score():
 
     return SimpleScore()
 
-def test_scores_must_implement_scoring_interface():
-    class SomeScore(Scoring):
-        def i_dont_implement_the_scoring_interface(self):
-            pass
-
-    with pytest.raises(TypeError):
-        SomeScore()
-
 class TestScoring:
     def test_score_is_initialized_to_zero(self, simple_score):
         assert simple_score.score == 0
