@@ -5,9 +5,9 @@ from abc import ABC
 from collections.abc import Iterable
 import logging
 from threading import Thread
-from tilematch_tools.core.exceptions import GameEndedException
+from .exceptions import GameEndedException
 
-from tilematch_tools.core.game_loop import GameLoop
+from .game_loop import GameLoop
 
 import tkinter as tk
 
