@@ -58,3 +58,6 @@ class GameEngine(ABC):
                 LOGGER.error('%s', str(err))
 
 
+        self._root.after(self.REFRESH_LATENCY, self.update_games)
+
+
