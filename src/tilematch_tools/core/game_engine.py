@@ -51,7 +51,7 @@ class GameEngine(ABC):
 
         for game in self._games:
             try:
-                if not game.gameover():
+                if not game.loop.gameover():
                     game()
             #TODO: find simpler mechanic to handle gameover
             except GameEndedException as err:
