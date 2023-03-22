@@ -27,7 +27,7 @@ class GameEngine(ABC):
 
     def __init__(self, games: Iterable[Game]):
         self._root = tk.Tk()
-        self._games = game_loops
+        self._games = games
 
 
     def run(self) -> None:
