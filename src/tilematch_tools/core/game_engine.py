@@ -21,6 +21,7 @@ class Game:
     state: GameState #Should be an instance
     loop: GameLoop #Should be a class to create
     view: GameView #Should be a class to create
+    tick_speed: int
 
 class GameEngine(ABC):
     REFRESH_LATENCY = 100
@@ -36,7 +37,7 @@ class GameEngine(ABC):
             Executes game engine
         """
         for slot, game in enumerate(self._games):
-            loop = game.loop(game.state, game.view(self._root, game.state))
+            loop = game.loop(game.state, game.view(self._root, game.state), game.tick_speed)
             self._active.append(loop)
             loop.view.grid(row=0, column=slot)
         self._root.after(self.REFRESH_LATENCY, self.update_games)

@@ -16,18 +16,11 @@ from ..model.match import MatchCondition
 
 LOGGER = logging.getLogger(__name__)
 
-class FPSDelay(IntEnum):
-    """Enumeration of delays used of achieve a target FPS in nanoseconds"""
-    FPS15 = 66_666_666
-    FPS30 = 33_333_333
-    FPS60 = 16_666_666
-    FPS120 = 8_333_333
-
 
 class GameLoop(ABC):
     """A class that template a game loop"""
 
-    def __init__(self, state: GameState, view: GameView, delay: FPSDelay = FPSDelay.FPS30):
+    def __init__(self, state: GameState, view: GameView, delay: int = 1_000_000_000):
         self._state = state
         self._view = view
         self._loop_delay = delay
