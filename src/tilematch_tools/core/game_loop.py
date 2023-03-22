@@ -11,7 +11,7 @@ from enum import IntEnum
 
 from .game_state import GameState
 from .exceptions import GameEndedException
-from ..view import View
+from ..view import GameView
 from ..model.match import MatchCondition
 
 LOGGER = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class FPSDelay(IntEnum):
 class GameLoop(ABC):
     """A class that template a game loop"""
 
-    def __init__(self, state: GameState, view: View, delay: FPSDelay = FPSDelay.FPS30):
+    def __init__(self, state: GameState, view: GameView, delay: FPSDelay = FPSDelay.FPS30):
         self._state = state
         self._view = view
         self._loop_delay = delay
@@ -115,10 +115,10 @@ class GameLoop(ABC):
         return self._state
 
     @property
-    def view(self) -> View:
+    def view(self) -> GameView:
         """
             Return a reference to current game view
             :returns: game view
-            :rtype: View
+            :rtype: GameView
         """
         return self._view

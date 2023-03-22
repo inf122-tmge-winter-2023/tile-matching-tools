@@ -7,7 +7,7 @@ from unittest.mock import Mock
 from tilematch_tools.model import Scoring, GameBoard
 from tilematch_tools.core import GameLoop, GameState, BoardFactory
 from tilematch_tools.core.exceptions import GameEndedException
-from tilematch_tools.view import View
+from tilematch_tools.view import GameView
 
 @pytest.fixture
 def simple_game_state():
@@ -42,7 +42,7 @@ def simple_game_loop(simple_game_state):
         def gameover(self):
             super().gameover()
 
-    return SimpleGameLoop(simple_game_state, View(simple_game_state), 2_000_000_000)
+    return SimpleGameLoop(simple_game_state, Mock(), 2_000_000_000)
 
 def test_game_loop_subclass_implements_template():
     class InvalidGameLoop(GameLoop):
