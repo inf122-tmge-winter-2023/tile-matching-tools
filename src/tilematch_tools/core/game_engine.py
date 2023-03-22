@@ -58,8 +58,10 @@ class GameEngine(ABC):
             #TODO: find simpler mechanic to handle gameover
             except GameEndedException as err:
                 LOGGER.error('%s', str(err))
+                game.view.update()
 
 
         self._root.after(self.REFRESH_LATENCY, self.update_games)
+
 
 

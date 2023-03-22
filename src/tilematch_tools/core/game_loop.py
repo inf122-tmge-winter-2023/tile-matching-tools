@@ -36,6 +36,8 @@ class GameLoop(ABC):
             self.tick()
             while matches := self.find_matches(self._state.match_rules):
                 self.clear_matches(matches)
+                time.sleep(1)
+                self.clean_up_matches()
 
     @abstractmethod
     def tick(self) -> None:
@@ -67,6 +69,14 @@ class GameLoop(ABC):
             self._state.clear_match(match)
             time.sleep(self._loop_delay)
             self._state.adjust_score(match)
+
+    @abstractmethod
+    def clean_up_state(self):
+        """Clean up the game state after match discovery and removal
+            :returns: nothing
+            :rtype: None
+        """
+        pass
 
     @abstractmethod
     def gameover(self) -> bool:
