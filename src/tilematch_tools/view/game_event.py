@@ -8,6 +8,7 @@ import tkinter as tk
 
 
 from ..core import GameState
+from .board_view import BoardView
 
 class GameEvent:
     """
@@ -35,3 +36,16 @@ class GameEvent:
             :rtype: None
         """
         pass
+
+class MouseEvent(GameEvent):
+    def __init__(self, listener: GameState, board_clicked_on: BoardView):
+        super().__init__(listener)
+        self.board_display = board_clicked_on
+
+    def __call__(self, event):
+        object_clicked_on = event.widget.find_closest(event.x, event.y)
+        if object_clicked_on:
+            for tile, drawing in self.board_display.tiles_map.items():
+                if drawing == object_clicked_on[0]:
+                    return tile
+             
