@@ -7,7 +7,7 @@ import pytest
 
 from tilematch_tools.core import GameState, BoardFactory, TileBuilder
 from tilematch_tools.model import Scoring, GameBoard, MovementRule, Tile, TileColor, MatchCondition
-from tilematch_tools.view import GameView, GameEvent
+from tilematch_tools.view import GameView, GameEvent, MouseEvent
 
 @pytest.fixture
 def simple_game_state():
@@ -188,18 +188,76 @@ def test_independent_game_view_bindings(move_rule_up, move_rule_down, move_rule_
     root.after(100, update)
     root.mainloop()
 
-
-
-@pytest.mark.skip
+@pytest.mark.integration
 def test_mouse_click_events(simple_game_state):
-    moving_tile = TileBuilder() \
-            .add_position(random.randint(1, simple_game_state.board.num_cols), random.randint(1, simple_game_state.board.num_rows)) \
-            .add_color(random.choice(list(TileColor))) \
-            .construct()
-    simple_game_state.board.place_tile(moving_tile)
-
 
     root = tk.Tk()
     game_view = GameView(root, simple_game_state)
     game_view.pack()
+
+    class ClickDetector(MouseEvent):
+        def __init__(self, listener, board_view):
+            super().__init__(listener, board_view)
+            self.board_display = board_view
+
+        def __call__(self, event):
+            clicked_on = super().__call__(event)
+            new_tile = TileBuilder() \
+                    .add_position(*clicked_on) \
+                    .add_color(random.choice(list(TileColor))) \
+                    .construct()
+            self.listener.board.place_tile(new_tile)
+
+    game_view.bind_click('<Button-1>', ClickDetector(simple_game_state, game_view.board_view))
+    
+    def update():
+        game_view.update()
+        root.after(100, update)
+
+    root.after(100, update)
+    root.mainloop()
+
+@pytest.mark.integration
+def test_independent_mouse_click_events():
+    
+    gs1 = GameState(
+        BoardFactory.create_board(GameBoard, 10, 24),
+        Scoring()
+    )
+    gs2 = GameState(
+        BoardFactory.create_board(GameBoard, 10, 24),
+        Scoring()
+    )
+
+
+    root = tk.Tk()
+    gv1 = GameView(root, gs1)
+    gv2 = GameView(root, gs2)
+    gv1.grid(row=0, column=0)
+    gv2.grid(row=0, column=1)
+
+
+    class ClickDetector(MouseEvent):
+        def __init__(self, listener, board_view):
+            super().__init__(listener, board_view)
+            self.board_display = board_view
+
+        def __call__(self, event):
+            clicked_on = super().__call__(event)
+            new_tile = TileBuilder() \
+                    .add_position(*clicked_on) \
+                    .add_color(random.choice(list(TileColor))) \
+                    .construct()
+            self.listener.board.place_tile(new_tile)
+
+    gv1.bind_click('<Button-1>', ClickDetector(gs1, gv1.board_view))
+    gv2.bind_click('<Button-1>', ClickDetector(gs2, gv2.board_view))
+    
+    def update():
+        gv1.update()
+        gv2.update()
+        root.after(100, update)
+
+    root.after(100, update)
+    root.mainloop()
 
