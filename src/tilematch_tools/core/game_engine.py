@@ -8,20 +8,12 @@ import logging
 import tkinter as tk
 
 from .exceptions import GameEndedException
-from .game_loop import GameLoop
-from .game_state import GameState
-from ..view import GameView
+from .game_factory import Game
 
 
 LOGGER=logging.getLogger(__name__)
 
 
-@dataclass
-class Game:
-    state: GameState #Should be an instance
-    loop: GameLoop #Should be a class to create
-    view: GameView #Should be a class to create
-    tick_speed: int
 
 class GameEngine(ABC):
     REFRESH_LATENCY = 100
