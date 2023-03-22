@@ -144,10 +144,10 @@ class GameState:
         return self._board
 
     @property
-    def score(self) -> int:
+    def score(self) -> Scoring:
         """
             Return a snapshot of the score at the time of request
             :returns: the score
-            :rtype: int
+            :rtype: Scoring
         """
-        return self._score.score
+        return self._score
