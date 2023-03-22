@@ -39,7 +39,7 @@ class GameEngine(ABC):
             loop = game.loop(game.state, game.view(self._root, game.state))
             self._active.append(loop)
             loop.view.grid(row=0, column=slot)
-        self._root.after(REFRESH_LATENCY, self.update_games)
+        self._root.after(self.REFRESH_LATENCY, self.update_games)
         self._root.mainloop()
 
 
