@@ -59,9 +59,9 @@ uml:
 	pyreverse ./src/tilematch_tools -d ./uml -o png -p tilematch_tools 
 
 .PHONY: docs
-## Run docs-init, then cd into ./docs and run `make singlehtml` (`make help` for more options) 
-docs-init: ## Initialize sphinx,  rebuild venv to reinitialize
-	sphinx-apidoc -F -A "INF 122 Winter 2023 Group 15" -V "0.1" -D html_theme=sphinx_rtd_theme -o ./docs ./src/tilematch_tools
+## Run docs-init, then cd into /docs and run `make singlehtml` (`make help` for more options) 
+docs: ## Initialize sphinx based off a customized template. Rebuild venv and delete /docs to reinitialize
+	sphinx-apidoc -F -t ./docs_templates -o ./docs ./src/tilematch_tools 
 
 docs-ow: ## Overwrite docs, rebuild venv for significant changes
 	sphinx-apidoc -f -o ./docs ./src/tilematch_tools
