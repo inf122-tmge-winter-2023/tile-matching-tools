@@ -28,6 +28,7 @@ class GameEngine(ABC):
     def __init__(self, games: Iterable[Game]):
         self._root = tk.Tk()
         self._games = games
+        self._active = []
 
 
     def run(self) -> None:
@@ -35,8 +36,9 @@ class GameEngine(ABC):
             Executes game engine
         """
         for slot, game in enumerate(self._games):
-            widget = game.loop(game.state, game.view(self._root, game.state))
-            widget.grid(row=0, column=slot)
+            loop = game.loop(game.state, game.view(self._root, game.state))
+            self._active.append(loop)
+            loop.view.grid(row=0, column=slot)
         self._root.after(REFRESH_LATENCY, self.update_games)
         self._root.mainloop()
 
