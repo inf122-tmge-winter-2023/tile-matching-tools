@@ -36,6 +36,9 @@ def simple_game_loop(simple_game_state):
         def tick(self):
             pass
 
+        def clean_up_state(self):
+            pass
+
         def gameover(self):
             super().gameover()
 
