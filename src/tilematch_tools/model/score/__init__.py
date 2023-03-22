@@ -49,7 +49,6 @@ class Scoring(ABC):
         LOGGER.debug('Updated multiplier value: %d -> %d', self._multiplier, new_multiplier)
         self._multiplier = new_multiplier
 
-    @abstractmethod
     def award_for_match(self, match: MatchCondition.MatchFound) -> None:
         """
             award the points specified by a given match condition to the score
