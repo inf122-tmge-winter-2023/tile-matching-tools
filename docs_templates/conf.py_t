@@ -1,5 +1,6 @@
 # THIS IS A TEMPLATE FILE
-# Use this to initialize sphinx
+#
+# Use this to initialize sphinx and overwrite settings
 # Made to overwrite theme settings in conf.py and add github pages ext.
 # Configuration file template for the Sphinx documentation builder.
 #
@@ -13,8 +14,8 @@ project = 'tilematch_tools'
 copyright = '2023, INF 122 Winter 2023 Group 15'
 author = 'INF 122 Winter 2023 Group 15'
 
-version = '0.1'
-release = '0.1'
+version = '1.0'
+release = '1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
