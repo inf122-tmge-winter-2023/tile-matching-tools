@@ -54,6 +54,7 @@ class GameEngine(ABC):
             try:
                 if not game.gameover():
                     game()
+                    game.view.update()
             #TODO: find simpler mechanic to handle gameover
             except GameEndedException as err:
                 LOGGER.error('%s', str(err))
