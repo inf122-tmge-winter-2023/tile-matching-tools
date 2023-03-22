@@ -88,10 +88,10 @@ def test_game_view_update_cycle(simple_game_state, move_rule_up, move_rule_down,
         move_rule_right.move(simple_game_state.board, moving_tile)
         simple_game_state.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
 
-    game_view.bind_all('<KeyRelease-w>', move_up)
-    game_view.bind_all('<KeyRelease-s>', move_dn)
-    game_view.bind_all('<KeyRelease-a>', move_left)
-    game_view.bind_all('<KeyRelease-d>', move_right)
+    game_view.bind_key('<KeyRelease-w>', move_up)
+    game_view.bind_key('<KeyRelease-s>', move_dn)
+    game_view.bind_key('<KeyRelease-a>', move_left)
+    game_view.bind_key('<KeyRelease-d>', move_right)
 
     def update():
         game_view.update()
@@ -145,10 +145,10 @@ def test_independent_game_view_bindings(move_rule_up, move_rule_down, move_rule_
         move_rule_right.move(gs1.board, moving_tile1)
         gs1.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
 
-    gv1.bind_all('<KeyRelease-w>', move_up1)
-    gv1.bind_all('<KeyRelease-s>', move_dn1)
-    gv1.bind_all('<KeyRelease-a>', move_left1)
-    gv1.bind_all('<KeyRelease-d>', move_right1)
+    gv1.bind_key('<KeyRelease-w>', move_up1)
+    gv1.bind_key('<KeyRelease-s>', move_dn1)
+    gv1.bind_key('<KeyRelease-a>', move_left1)
+    gv1.bind_key('<KeyRelease-d>', move_right1)
 
     def move_up2(event):
         move_rule_up.move(gs2.board, moving_tile2)
@@ -166,10 +166,10 @@ def test_independent_game_view_bindings(move_rule_up, move_rule_down, move_rule_
         move_rule_right.move(gs2.board, moving_tile2)
         gs2.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
 
-    gv2.bind_all('<KeyRelease-i>', move_up2)
-    gv2.bind_all('<KeyRelease-k>', move_dn2)
-    gv2.bind_all('<KeyRelease-j>', move_left2)
-    gv2.bind_all('<KeyRelease-l>', move_right2)
+    gv2.bind_key('<KeyRelease-i>', move_up2)
+    gv2.bind_key('<KeyRelease-k>', move_dn2)
+    gv2.bind_key('<KeyRelease-j>', move_left2)
+    gv2.bind_key('<KeyRelease-l>', move_right2)
 
     def update():
         gv1.update()
