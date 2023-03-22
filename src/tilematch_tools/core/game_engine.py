@@ -49,9 +49,9 @@ class GameEngine(ABC):
             Update all the games
         """
 
-        for game in self._games:
+        for game in self._active:
             try:
-                if not game.loop.gameover():
+                if not game.gameover():
                     game()
             #TODO: find simpler mechanic to handle gameover
             except GameEndedException as err:
