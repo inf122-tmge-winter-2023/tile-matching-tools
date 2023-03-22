@@ -7,7 +7,7 @@ import pytest
 
 from tilematch_tools.core import GameState, BoardFactory, TileBuilder
 from tilematch_tools.model import Scoring, GameBoard, MovementRule, Tile, TileColor, MatchCondition
-from tilematch_tools.view import GameView
+from tilematch_tools.view import GameView, GameEvent
 
 @pytest.fixture
 def simple_game_state():
@@ -71,27 +71,31 @@ def test_game_view_update_cycle(simple_game_state, move_rule_up, move_rule_down,
     root = tk.Tk()
     game_view = GameView(root, simple_game_state)
     game_view.pack()
-    
-    def move_up(event):
-        move_rule_up.move(simple_game_state.board, moving_tile)
-        simple_game_state.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
 
-    def move_dn(event):
-        move_rule_down.move(simple_game_state.board, moving_tile)
-        simple_game_state.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+    class MoveUp(GameEvent):
+        def __call__(self, event):
+            move_rule_up.move(self.listener.board, moving_tile)
+            self.listener.adjust_score(MatchCondition.MatchFound(random.randint(5, 10), []))
+ 
+    class MoveDown(GameEvent):
+        def __call__(self, event):
+            move_rule_down.move(self.listener.board, moving_tile)
+            self.listener.adjust_score(MatchCondition.MatchFound(random.randint(5, 10), []))
 
-    def move_left(event):
-        move_rule_left.move(simple_game_state.board, moving_tile)
-        simple_game_state.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+    class MoveLeft(GameEvent):
+        def __call__(self, event):
+            move_rule_left.move(self.listener.board, moving_tile)
+            self.listener.adjust_score(MatchCondition.MatchFound(random.randint(5, 10), []))
 
-    def move_right(event):
-        move_rule_right.move(simple_game_state.board, moving_tile)
-        simple_game_state.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
-
-    game_view.bind_key('<KeyRelease-w>', move_up)
-    game_view.bind_key('<KeyRelease-s>', move_dn)
-    game_view.bind_key('<KeyRelease-a>', move_left)
-    game_view.bind_key('<KeyRelease-d>', move_right)
+    class MoveRight(GameEvent):
+        def __call__(self, event):
+            move_rule_right.move(self.listener.board, moving_tile)
+            self.listener.adjust_score(MatchCondition.MatchFound(random.randint(5, 10), []))   
+   
+    game_view.bind_key('<KeyRelease-w>', MoveUp(simple_game_state))
+    game_view.bind_key('<KeyRelease-s>', MoveDown(simple_game_state))
+    game_view.bind_key('<KeyRelease-a>', MoveLeft(simple_game_state))
+    game_view.bind_key('<KeyRelease-d>', MoveRight(simple_game_state))
 
     def update():
         game_view.update()
@@ -129,47 +133,52 @@ def test_independent_game_view_bindings(move_rule_up, move_rule_down, move_rule_
     gv1.grid(row=0, column=0)
     gv2.grid(row=0, column=1)
     
-    def move_up1(event):
-        move_rule_up.move(gs1.board, moving_tile1)
-        gs1.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+    class MoveUp(GameEvent):
+        def __init__(self, listener, tile):
+            super().__init__(listener)
+            self.tile = tile
 
-    def move_dn1(event):
-        move_rule_down.move(gs1.board, moving_tile1)
-        gs1.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+        def __call__(self, event):
+            move_rule_up.move(self.listener.board, self.tile)
+            self.listener.adjust_score(MatchCondition.MatchFound(random.randint(5, 10), []))
+ 
+    class MoveDown(GameEvent):
+        def __init__(self, listener, tile):
+            super().__init__(listener)
+            self.tile = tile
 
-    def move_left1(event):
-        move_rule_left.move(gs1.board, moving_tile1)
-        gs1.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+        def __call__(self, event):
+            move_rule_down.move(self.listener.board, self.tile)
+            self.listener.adjust_score(MatchCondition.MatchFound(random.randint(5, 10), []))
 
-    def move_right1(event):
-        move_rule_right.move(gs1.board, moving_tile1)
-        gs1.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+    class MoveLeft(GameEvent):
+        def __init__(self, listener, tile):
+            super().__init__(listener)
+            self.tile = tile
 
-    gv1.bind_key('<KeyRelease-w>', move_up1)
-    gv1.bind_key('<KeyRelease-s>', move_dn1)
-    gv1.bind_key('<KeyRelease-a>', move_left1)
-    gv1.bind_key('<KeyRelease-d>', move_right1)
+        def __call__(self, event):
+            move_rule_left.move(self.listener.board, self.tile)
+            self.listener.adjust_score(MatchCondition.MatchFound(random.randint(5, 10), []))
 
-    def move_up2(event):
-        move_rule_up.move(gs2.board, moving_tile2)
-        gs2.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+    class MoveRight(GameEvent):
+        def __init__(self, listener, tile):
+            super().__init__(listener)
+            self.tile = tile
 
-    def move_dn2(event):
-        move_rule_down.move(gs2.board, moving_tile2)
-        gs2.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+        def __call__(self, event):
+            move_rule_right.move(self.listener.board, self.tile)
+            self.listener.adjust_score(MatchCondition.MatchFound(random.randint(5, 10), []))   
+    
 
-    def move_left2(event):
-        move_rule_left.move(gs2.board, moving_tile2)
-        gs2.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
+    gv1.bind_key('<KeyRelease-w>', MoveUp(gs1, moving_tile1))
+    gv1.bind_key('<KeyRelease-s>', MoveDown(gs1, moving_tile1))
+    gv1.bind_key('<KeyRelease-a>', MoveLeft(gs1, moving_tile1))
+    gv1.bind_key('<KeyRelease-d>', MoveRight(gs1, moving_tile1))
 
-    def move_right2(event):
-        move_rule_right.move(gs2.board, moving_tile2)
-        gs2.adjust_score(MatchCondition.MatchFound(random.randint(10, 50), []))
-
-    gv2.bind_key('<KeyRelease-i>', move_up2)
-    gv2.bind_key('<KeyRelease-k>', move_dn2)
-    gv2.bind_key('<KeyRelease-j>', move_left2)
-    gv2.bind_key('<KeyRelease-l>', move_right2)
+    gv2.bind_key('<KeyRelease-i>', MoveUp(gs2, moving_tile2))
+    gv2.bind_key('<KeyRelease-k>', MoveDown(gs2, moving_tile2))
+    gv2.bind_key('<KeyRelease-j>', MoveLeft(gs2, moving_tile2))
+    gv2.bind_key('<KeyRelease-l>', MoveRight(gs2, moving_tile2))
 
     def update():
         gv1.update()
@@ -178,4 +187,19 @@ def test_independent_game_view_bindings(move_rule_up, move_rule_down, move_rule_
 
     root.after(100, update)
     root.mainloop()
+
+
+
+@pytest.mark.skip
+def test_mouse_click_events(simple_game_state):
+    moving_tile = TileBuilder() \
+            .add_position(random.randint(1, simple_game_state.board.num_cols), random.randint(1, simple_game_state.board.num_rows)) \
+            .add_color(random.choice(list(TileColor))) \
+            .construct()
+    simple_game_state.board.place_tile(moving_tile)
+
+
+    root = tk.Tk()
+    game_view = GameView(root, simple_game_state)
+    game_view.pack()
 
