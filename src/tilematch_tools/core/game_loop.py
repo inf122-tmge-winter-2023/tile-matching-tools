@@ -39,21 +39,19 @@ class GameLoop(ABC):
             raise GameEndedException(
                     'The game has already ended. No further loop iterations are allowed'
                     )
-        self.await_delay()
-        self.handle_input()
-        self.update_view()
-        while matches := self.find_matches(self._state.match_rules):
-            self.clear_matches(matches)
-        self.update_view()
+        if self.can_advance():
+            self.tick()
+            while matches := self.find_matches(self._state.match_rules):
+                self.clear_matches(matches)
 
     @abstractmethod
-    def handle_input(self) -> None:
-        """Handle the next input available
+    def tick(self) -> None:
+        """Execute any logic necessary to idly advance the game state
             :returns: nothing
             :rtype: None
         """
         pass
-
+    
     @abstractmethod
     def find_matches(self, match_rules: [MatchCondition]) -> [MatchCondition.MatchFound]:
         """Look for matches that satisfy the given match conditions
@@ -78,14 +76,6 @@ class GameLoop(ABC):
             self._state.adjust_score(match)
 
     @abstractmethod
-    def update_view(self) -> None:
-        """Update the view of the game
-            :returns: nothing
-            :rtype: None
-        """
-        self._view.update_game_state(self._state)
-
-    @abstractmethod
     def gameover(self) -> bool:
         """Check if the game has ended
             :returns: true if game over, false otherwise
@@ -93,17 +83,19 @@ class GameLoop(ABC):
         """
         return False
 
-    def await_delay(self, delay = None):
+    def can_advance(self, delay = None) -> bool:
         """
-            Await the delay necessary to achieve a target FPS
-            :returns: nothing
+            Guard the loop from excessive calls
+            :returns: true if the loop can advance, false otherwise
             :rtype: None
         """
         if not delay:
             delay = self._loop_delay
-        while time.time_ns() <= self._last_call + delay:
-            pass
+        if time.time_ns() <= self._last_call + delay:
+            return False
+
         self._last_call = time.time_ns()
+        return True
 
     @property
     def state(self) -> GameState:

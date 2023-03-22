@@ -27,16 +27,13 @@ def simple_game_state():
 @pytest.fixture
 def simple_game_loop(simple_game_state):
     class SimpleGameLoop(GameLoop):
-        def handle_input(self):
-            super().handle_input()
-
         def find_matches(self, match_conditions):
             super().find_matches(match_conditions)
 
         def clear_matches(self, matches_found):
             super().clear_matches(matches_found)
 
-        def update_view(self):
+        def tick(self):
             pass
 
         def gameover(self):
@@ -51,12 +48,6 @@ def test_game_loop_subclass_implements_template():
 
     with pytest.raises(TypeError):
         InvalidGameLoop()
-
-def test_delay_between_loop_interations(simple_game_loop):
-    start = time.time_ns()
-    simple_game_loop()
-    end = time.time_ns()
-    assert end - start > 1_000_000_000
 
 def test_game_loop_is_callable(simple_game_loop):
     loop = simple_game_loop
