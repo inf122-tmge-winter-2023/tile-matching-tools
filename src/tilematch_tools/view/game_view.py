@@ -35,6 +35,14 @@ class GameView(GameWidget):
         for w in self._game_widgets.values():
             w.update()
 
+    @property
+    def board_view(self):
+        return self._game_widgets['board']
+
+    @property
+    def score_view(self):
+        return self._game_widgets['score']
+
     def bind_key(self, key_sequence: str, handler: GameEvent) -> None:
         self.bind_all(key_sequence, handler)
 
