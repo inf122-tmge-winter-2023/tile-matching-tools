@@ -1,9 +1,10 @@
 """
     :module_name: view
     :module_summary: a module responsible for the view of the tile game
-    :module_author: Matthew Isayan
+    :module_author: Matthew Isayan, Nathan Mendoza
 """
 
+from .game_event import GameEvent
 from .game_widgets import GameWidget, GameInfo
 from .score_view import ScoreView
 from .board_view import BoardView

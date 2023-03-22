@@ -10,6 +10,7 @@ from ..core import GameState
 from .score_view import ScoreView
 from .board_view import BoardView
 from .game_widgets import GameWidget
+from .game_event import GameEvent
 
 class GameView(GameWidget):
     """
@@ -34,9 +35,9 @@ class GameView(GameWidget):
         for w in self._game_widgets.values():
             w.update()
 
-    def bind_key(self, key_sequence: str, handler: callable) -> None:
+    def bind_key(self, key_sequence: str, handler: GameEvent) -> None:
         self.bind_all(key_sequence, handler)
 
-    def bind_click(self, mouse_button: str, handler: callable) -> None:
+    def bind_click(self, mouse_button: str, handler: GameEvent) -> None:
         self._game_widgets['board'].showing.bind(mouse_button, handler)
         
