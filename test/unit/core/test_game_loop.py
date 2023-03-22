@@ -57,7 +57,6 @@ def test_game_loop_is_callable(simple_game_loop):
     loop()
 
 def test_game_loop_cannot_be_run_if_game_is_over(simple_game_loop):
-    loop = simple_game_loop
-    loop.gameover = Mock(return_value=True)
+    simple_game_loop.state.gameover = Mock(return_value=True)
     with pytest.raises(GameEndedException):
-        loop()
+        simple_game_loop()

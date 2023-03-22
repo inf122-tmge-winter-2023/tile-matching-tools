@@ -28,7 +28,7 @@ class GameLoop(ABC):
 
     def __call__(self):
         """Go thru one iteration of the game loop"""
-        if self.gameover():
+        if self.state.gameover():
             raise GameEndedException(
                     'The game has already ended. No further loop iterations are allowed'
                     )
@@ -78,14 +78,7 @@ class GameLoop(ABC):
         """
         pass
 
-    @abstractmethod
-    def gameover(self) -> bool:
-        """Check if the game has ended
-            :returns: true if game over, false otherwise
-            :rtype: bool
-        """
-        return False
-
+   
     def can_advance(self, delay = None) -> bool:
         """
             Guard the loop from excessive calls
