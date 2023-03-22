@@ -91,7 +91,7 @@ class TestGameState:
         match = self.state.find_match(1,3,two_match)
         self.state.clear_match(match)
         self.state.adjust_score(match)
-        assert self.state.score == 4
+        assert self.state.score.score == 4
         assert isinstance(self.state.board.tile_at(1, 3), NullTile)
         assert isinstance(self.state.board.tile_at(1, 2), NullTile)
 
