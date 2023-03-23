@@ -2,66 +2,58 @@
 
 
 from abc import ABC
+from dataclasses import dataclass
 from collections.abc import Iterable
 import logging
-from threading import Thread
-from .exceptions import GameEndedException
-
-from .game_loop import GameLoop
-
 import tkinter as tk
+
+from .exceptions import GameEndedException
+from .game_factory import Game
+
 
 LOGGER=logging.getLogger(__name__)
 
+
+
 class GameEngine(ABC):
-    def __init__(self, game_loops : Iterable[GameLoop]):
-        self._game_loops = game_loops
-        self._exit = False
-        self._init_root()
-        self._set_root()
+    REFRESH_LATENCY = 100
+
+    def __init__(self, games: Iterable[Game]):
+        self._root = tk.Tk()
+        self._games = games
+        self._active = []
 
 
     def run(self) -> None:
         """
             Executes game engine
-            Runs on main thread
         """
-        Thread(target=self._game_thread).start()
-        while not self._exit:
-            for game_loop in self._game_loops:
-                if not game_loop.gameover():
-                    # Render for games that are not over
-                    game_loop.view.update_container()
+        for slot, game in enumerate(self._games):
+            loop = game.loop(game.state, game.view(self._root, game.state), game.tick_speed)
+            self._active.append(loop)
+            loop.view.grid(row=0, column=slot)
+        self._root.after(self.REFRESH_LATENCY, self.update_games)
+        self._root.mainloop()
 
 
-    def _game_thread(self) -> None:
+
+    def update_games(self) -> None:
         """
-            Runs on a worker thread
+            Update all the games
         """
-        while not self._exit:
-            for game_loop in self._game_loops:
-                try:
-                    if not game_loop.gameover():
-                        # Iterate through game_loop for games that are not over
-                        game_loop()
-                except GameEndedException as err:
-                    LOGGER.error('%s', str(err))
-                    game_loop.await_delay()
+
+        for game in self._active:
+            try:
+                if not game.state.gameover():
+                    game()
+                    game.view.update()
+            #TODO: find simpler mechanic to handle gameover
+            except GameEndedException as err:
+                LOGGER.error('%s', str(err))
+                game.view.update()
 
 
-    def _init_root(self):
-        """
-            Initializes Tkinter root
-        """
-        self._root = tk.Tk()
-        self._root.protocol("WM_DELETE_WINDOW", self._on_exit)
+        self._root.after(self.REFRESH_LATENCY, self.update_games)
 
-    def _set_root(self):
-        """
-            Sets reference to root in views
-        """
-        for game_loop in self._game_loops:
-            game_loop.view.set_root(self._root)
-    
-    def _on_exit(self):
-        self._exit = True
+
+

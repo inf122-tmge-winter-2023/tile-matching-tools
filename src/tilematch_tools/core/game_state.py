@@ -22,7 +22,6 @@ class GameState:
         self._score = score
         self._match_conditions = []
     
-    #TODO: update to use new movement rule interface
     def move_tile(self, tile_to_move: Tile, rule: MovementRule):
         """Applies movement rule to tile at (row, col)
 
@@ -113,6 +112,12 @@ class GameState:
         self.board.place_tile(tile2)
     
  
+    def gameover(self) -> bool:
+        """Check if the game has ended
+            :returns: true if game over, false otherwise
+            :rtype: bool
+        """
+        return False
 
     def add_match_condition(self, match_cond):
         """

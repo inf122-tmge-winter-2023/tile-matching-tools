@@ -35,6 +35,10 @@ class BoardView(GameInfo):
         return self._watching
 
     @property
+    def showing(self):
+        return self._board_display
+
+    @property
     def board_height(self):
         return self.tile_side_length * self.watching.num_rows
 

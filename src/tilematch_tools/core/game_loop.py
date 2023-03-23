@@ -16,18 +16,11 @@ from ..model.match import MatchCondition
 
 LOGGER = logging.getLogger(__name__)
 
-class FPSDelay(IntEnum):
-    """Enumeration of delays used of achieve a target FPS in nanoseconds"""
-    FPS15 = 66_666_666
-    FPS30 = 33_333_333
-    FPS60 = 16_666_666
-    FPS120 = 8_333_333
-
 
 class GameLoop(ABC):
     """A class that template a game loop"""
 
-    def __init__(self, state: GameState, view: GameView, delay: FPSDelay = FPSDelay.FPS30):
+    def __init__(self, state: GameState, view: GameView, delay: int = 1_000_000_000):
         self._state = state
         self._view = view
         self._loop_delay = delay
@@ -35,25 +28,25 @@ class GameLoop(ABC):
 
     def __call__(self):
         """Go thru one iteration of the game loop"""
-        if self.gameover():
+        if self.state.gameover():
             raise GameEndedException(
                     'The game has already ended. No further loop iterations are allowed'
                     )
-        self.await_delay()
-        self.handle_input()
-        self.update_view()
-        while matches := self.find_matches(self._state.match_rules):
-            self.clear_matches(matches)
-        self.update_view()
+        if self.can_advance():
+            self.tick()
+            while matches := self.find_matches(self._state.match_rules):
+                self.clear_matches(matches)
+                time.sleep(1)
+                self.clean_up_state()
 
     @abstractmethod
-    def handle_input(self) -> None:
-        """Handle the next input available
+    def tick(self) -> None:
+        """Execute any logic necessary to idly advance the game state
             :returns: nothing
             :rtype: None
         """
         pass
-
+    
     @abstractmethod
     def find_matches(self, match_rules: [MatchCondition]) -> [MatchCondition.MatchFound]:
         """Look for matches that satisfy the given match conditions
@@ -74,36 +67,30 @@ class GameLoop(ABC):
         """
         for match in matches_found:
             self._state.clear_match(match)
-            time.sleep(self._loop_delay)
             self._state.adjust_score(match)
 
     @abstractmethod
-    def update_view(self) -> None:
-        """Update the view of the game
+    def clean_up_state(self):
+        """Clean up the game state after match discovery and removal
             :returns: nothing
             :rtype: None
         """
-        self._view.update_game_state(self._state)
+        pass
 
-    @abstractmethod
-    def gameover(self) -> bool:
-        """Check if the game has ended
-            :returns: true if game over, false otherwise
-            :rtype: bool
+   
+    def can_advance(self, delay = None) -> bool:
         """
-        return False
-
-    def await_delay(self, delay = None):
-        """
-            Await the delay necessary to achieve a target FPS
-            :returns: nothing
+            Guard the loop from excessive calls
+            :returns: true if the loop can advance, false otherwise
             :rtype: None
         """
         if not delay:
             delay = self._loop_delay
-        while time.time_ns() <= self._last_call + delay:
-            pass
+        if time.time_ns() <= self._last_call + delay:
+            return False
+
         self._last_call = time.time_ns()
+        return True
 
     @property
     def state(self) -> GameState:
