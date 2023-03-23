@@ -21,13 +21,14 @@ class GameView(GameWidget):
 
     def __init__(self, parent, game_to_watch: GameState, game_title=None):
         self._game = game_to_watch
+        self._title = game_title
         super().__init__(parent)
 
     def create_widgets(self):
         self._game_widgets  = {
                 'score': ScoreView(self, self._game.score),
                 'board': BoardView(self, self._game.board),
-                'title': GameTitle(self, game_title if game_title else 'A Game')
+                'title': GameTitle(self, self._title if self._title else 'A Game')
             }
 
     def place_widgets(self):
