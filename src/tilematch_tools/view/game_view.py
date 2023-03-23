@@ -5,6 +5,7 @@
 """
 
 import tkinter as tk
+import tkinter.font as tkFont
 
 from ..core import GameState
 from .score_view import ScoreView
@@ -32,6 +33,9 @@ class GameView(GameWidget):
         self._game_widgets['score'].grid(column=6, row=4, padx=30)
 
     def update(self):
+        if self._game.gameover():
+            self._block_board()
+            return
         for w in self._game_widgets.values():
             w.update()
 
@@ -48,4 +52,15 @@ class GameView(GameWidget):
 
     def bind_click(self, mouse_button: str, handler: GameEvent) -> None:
         self._game_widgets['board'].showing.bind(mouse_button, handler)
+
+    def _block_board(self):
+        board = self._game_widgets['board']
+        board.showing.create_rectangle(0, 0, board.board_width + 1, board.board_height + 1, fill='#000000')
+        board.showing.create_text(
+                board.board_width // 2, 
+                board.board_width // 2,
+                text='Game Over!',
+                fill='#ff0000',
+                font=tkFont.Font(family='Helvetica', size=16)
+            )
         
