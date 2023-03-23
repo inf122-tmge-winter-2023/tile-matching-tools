@@ -37,7 +37,7 @@ class GameLoop(ABC):
             while matches := self.find_matches(self._state.match_rules):
                 self.clear_matches(matches)
                 time.sleep(1)
-                self.clean_up_matches()
+                self.clean_up_state()
 
     @abstractmethod
     def tick(self) -> None:
@@ -67,7 +67,6 @@ class GameLoop(ABC):
         """
         for match in matches_found:
             self._state.clear_match(match)
-            time.sleep(self._loop_delay)
             self._state.adjust_score(match)
 
     @abstractmethod
