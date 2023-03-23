@@ -30,12 +30,6 @@ class GameFactory(ABC):
     @abstractmethod
     def create_game() -> Game:
         """Creates a packaged game that's ready to execute
-
-        Args:
-            board_height (int): number of rows on the board
-            board_width (int):  number of cols on the board
-            tick_speed (int): time in nanoseconds between each update
-
         Returns:
             Game:  Initialized game that's ready to execute
         """
