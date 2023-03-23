@@ -15,6 +15,7 @@ class Game(ABC):
         self.view = view_class
         self.tick_speed = tick_speed
 
+    @staticmethod
     def setup():
         """
             Initial setup of a game and should be called after creation.
