@@ -19,7 +19,7 @@ class GameView(GameWidget):
         GUI widget for displaying a game's widgets
     """
 
-    def __init__(self, parent, game_to_watch: GameState):
+    def __init__(self, parent, game_to_watch: GameState, game_title=None):
         self._game = game_to_watch
         super().__init__(parent)
 
@@ -27,11 +27,11 @@ class GameView(GameWidget):
         self._game_widgets  = {
                 'score': ScoreView(self, self._game.score),
                 'board': BoardView(self, self._game.board),
-                'title': GameTitle(self, 'A Game')
+                'title': GameTitle(self, game_title if game_title else 'A Game')
             }
 
     def place_widgets(self):
-        self._game_widgets['title'].grid(column=1, row=0, columnspan=2)
+        self._game_widgets['title'].grid(column=1, row=0, columnspan=2, padx=30)
         self._game_widgets['board'].grid(column=1, row=1, columnspan=3, rowspan=4, padx=30, pady=30)
         self._game_widgets['score'].grid(column=6, row=4, padx=30)
 
