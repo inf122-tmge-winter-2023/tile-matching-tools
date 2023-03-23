@@ -2,6 +2,7 @@
 
 import tkinter as tk
 import random
+from unittest.mock import Mock
 
 import pytest
 
@@ -260,4 +261,25 @@ def test_independent_mouse_click_events():
 
     root.after(100, update)
     root.mainloop()
+
+@pytest.mark.integration
+def test_board_blocked_by_gameover_screen_when_game_ended(simple_game_state):
+    root = tk.Tk()
+    game_view = GameView(root, simple_game_state)
+    game_view.pack()
+
+    class EndGame(GameEvent):
+        def __call__(self, event):
+            self.listener.gameover = Mock(return_value=True)
+
+    game_view.bind_key('<KeyRelease-q>', EndGame(simple_game_state))
+
+    
+    def update():
+        game_view.update()
+        root.after(100, update)
+
+    root.after(100, update)
+    root.mainloop()
+
 
