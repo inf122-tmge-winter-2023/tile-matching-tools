@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import logging
+from typing import Type
 
 from .game_state import GameState
 from .game_loop import GameLoop
@@ -8,26 +9,34 @@ from ..view import GameView
 LOGGER = logging.getLogger(__name__)
 
 class Game(ABC):
-    state: GameState #Should be an instance
-    loop: GameLoop #Should be a class to create
-    view: GameView #Should be a class to create
-    tick_speed: int
+    def __init__(self, state: GameState, loop_class: Type[GameLoop], view_class: Type[GameView], tick_speed: int):
+        self.state = state
+        self.loop = loop_class
+        self.view = view_class
+        self.tick_speed = tick_speed
 
-    @abstractmethod
     def setup():
         """
-            Initial setup of a game and will be called after creation.
+            Initial setup of a game and should be called after creation.
         """
         LOGGER.warning('Using default implementation in setup(). This is meant to be overridden!')
-        pass
             
 
 class GameFactory(ABC):
     """
         Responsible for creating a game ready to run.
     """
+    @staticmethod
     @abstractmethod
-    def create_game(state: GameState, loop : GameLoop, view: GameView, tick_speed: int):
-        game =  Game(state, loop, view, tick_speed)
-        game.setup()
-        return game
+    def create_game(board_width: int, board_height: int, tick_speed: int) -> Game:
+        """Creates a packaged game that's ready to execute
+
+        Args:
+            board_height (int): number of rows on the board
+            board_width (int):  number of cols on the board
+            tick_speed (int): time in nanoseconds between each update
+
+        Returns:
+            Game:  Initialized game that's ready to execute
+        """
+        LOGGER.warning('Using default implementation in create_game(). This is meant to be overridden!')
