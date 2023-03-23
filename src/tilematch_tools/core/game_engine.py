@@ -52,7 +52,7 @@ class GameEngine(ABC):
 
         for game in self._active:
             try:
-                if not game.gameover():
+                if not game.state.gameover():
                     game()
                     game.view.update()
             #TODO: find simpler mechanic to handle gameover
