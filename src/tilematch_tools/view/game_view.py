@@ -12,6 +12,7 @@ from .score_view import ScoreView
 from .board_view import BoardView
 from .game_widgets import GameWidget
 from .game_event import GameEvent
+from .game_title import GameTitle
 
 class GameView(GameWidget):
     """
@@ -25,10 +26,12 @@ class GameView(GameWidget):
     def create_widgets(self):
         self._game_widgets  = {
                 'score': ScoreView(self, self._game.score),
-                'board': BoardView(self, self._game.board)
+                'board': BoardView(self, self._game.board),
+                'title': GameTitle(self, 'A Game')
             }
 
     def place_widgets(self):
+        self._game_widgets['title'].grid(column=1, row=0, columnspan=2)
         self._game_widgets['board'].grid(column=1, row=1, columnspan=3, rowspan=4, padx=30, pady=30)
         self._game_widgets['score'].grid(column=6, row=4, padx=30)
 
