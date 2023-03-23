@@ -1,10 +1,7 @@
 from unittest.mock import Mock
 import pytest
-from tilematch_tools.core.board_factory import BoardFactory
-from tilematch_tools.core.game_factory import Game, GameFactory
-from tilematch_tools.core.game_state import GameState
-from tilematch_tools.model.board.game_board import GameBoard
-from tilematch_tools.model.tiles import Tile
+from tilematch_tools.core import Game, GameFactory, GameState, BoardFactory
+from tilematch_tools.model import GameBoard, Tile
 
 def game_state(width, height):
     return GameState(BoardFactory.create_board(GameBoard, width, height), Mock())
