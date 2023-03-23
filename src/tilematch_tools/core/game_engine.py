@@ -29,7 +29,7 @@ class GameEngine(ABC):
             Executes game engine
         """
         for slot, game in enumerate(self._games):
-            loop = game.loop(game.state, game.view(self._root, game.state), game.tick_speed)
+            loop = game.loop_class(game.state, game.view_class(self._root, game.state), game.tick_speed)
             self._active.append(loop)
             loop.view.grid(row=0, column=slot)
         self._root.after(self.REFRESH_LATENCY, self.update_games)
