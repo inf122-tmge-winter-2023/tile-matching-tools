@@ -33,10 +33,10 @@ class TestGameFactory:
 
         class MyGameFactoryClass(GameFactory):
             @staticmethod
-            def create_game(board_width: int, board_height: int, tick_speed: int) -> Game:
-                return TestGame(game_state(board_width, board_height), Mock(), Mock(), tick_speed)
+            def create_game() -> Game:
+                return TestGame(game_state(10, 15), Mock(), Mock(), 200)
 
-        test_game = MyGameFactoryClass.create_game(10, 15, 200)
+        test_game = MyGameFactoryClass.create_game()
 
         assert isinstance(test_game, TestGame)
         assert test_game.tick_speed == 200

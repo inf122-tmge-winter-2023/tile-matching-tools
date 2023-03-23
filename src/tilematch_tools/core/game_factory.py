@@ -28,7 +28,7 @@ class GameFactory(ABC):
     """
     @staticmethod
     @abstractmethod
-    def create_game(board_width: int, board_height: int, tick_speed: int) -> Game:
+    def create_game() -> Game:
         """Creates a packaged game that's ready to execute
 
         Args:
