@@ -27,6 +27,10 @@ tilematch_tools@git+https://github.com/inf122-tmge-winter-2023/tile-matching-too
 - Python 3.11 or newer is required, so update your freakin Python already
 - GUI depends on the `tkinter` module. On unix machines, it may be installed separately from your python install
 
+## Known issues
+
+View them [here](https://github.com/inf122-tmge-winter-2023/tile-matching-tools/issues)
+
 ## Contributers
 
 - Nathan Mendoza (nathancm@uci.edu)
