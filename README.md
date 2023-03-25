@@ -1,65 +1,37 @@
-# INF122-TMGE
+# Tile matching tools
 
 ![Tests](https://github.com/inf122-tmge-winter-2023/tile-matching-tools/actions/workflows/package-test.yml/badge.svg)
 
-## Description 
+## About
 
-- Design and implement an extensible Tile-Matching Game Environment (TMGE).  We will adhere to the definition of a tile-matching game as used in this Wikipedia article Links to an external site.
-- Work in teams of 4-5 students
-- We will spend time in class to help everyone find a team in a timely manner. If you have excessive difficulty finding a team, we will assign you to one.
+A python package providing a set of extensible tools that simplify the process of building you very own tile-matching game. The package breaks down the components of a tile-matching game into its `model`, `view` and `core` components. A minimal game will only utilize or extend classes from the `core` and `view` submodules. For more features, extend classes in the `model` submodule. For more information on the the submodules and individual classes, view the docs [here](https://inf122-tmge-winter-2023.github.io/tilematch-tools-docs/)
 
-## Requirements 
+## Getting started
 
-1) The TMGE should accommodate any tile-matching game that involves a grid layout and game elements on this layout, including games such as Tetris, Klax, Bejeweled, Bust-a-Move, Puzzle Bobble, Candy Crush, Dr. Mario, Puzzle Fighter, etc.
-2) The TMGE should make it as easy as possible to create implementations of new games.
-3) The TMGE should provide a defined interface that all games built on top of the environment must follow.
-4) The TMGE should support two players running on the same local machine.
-5) The TMGE should support personal player profiles (the specifics of which are up to you). Login can be very simple and does not have to be secure.
-6) The TMGE need only support 2-player games (but you can support more players if you want to).
-7) The TMGE should work by providing players with a list of games they can play and allowing them to choose which one to start.
+### Installation
 
-## Deliverables
+It is recommended to install this package (along with any others) in its own virtual environment to best ensure capatiblity amongst all dependencies. Once you've set up a virtual environment, run the following command 
 
-- The TMGE itself
-- Two or more tile-matching games (e.g., from the list above) that are "built on top of" the TMGE.
-- Documentation
-- Instructions for running the game
-- Runnable code via a CM repository like GitHub (e.g., add a runnable jar to your GitHub repo)
-- Peer evaluations (will be made available to you)
+```bash
+pip install tilematch_tools@git+https://github.com/inf122-tmge-winter-2023/tile-matching-tools
+```
 
-## Reuse 
+If you have other dependecies, you can add the following line the your `requirements.txt` file in your project
 
-- Cannot pick up an existing game environment implementation
-- You can reuse other components, but first, double-check with the professor
+```bash
+tilematch_tools@git+https://github.com/inf122-tmge-winter-2023/tile-matching-tools
+```
 
+### Caveats
 
-## Grading Criteria 
+- Python 3.11 or newer is required, so update your freakin Python already
+- GUI depends on the `tkinter` module. On unix machines, it may be installed separately from your python install
 
-- Stakeholder: the player (how is the experience of playing a game?)
-- Stakeholder: future developers of the TMGE (how is the understandability and quality of the code and design?)
-- Stakeholder: game developers (how is the extensibility of the TMGE in supporting new board games? how well do you hide parts of TMGE that should not be exposed to game developers? how is the experience of building in a new game using your TMGE?)
-- Stakeholder: you (what are your contributions to the project?)
-- A GUI is not required but may actually make your project easier to implement.
+## Known issues
 
-## Miscellaneous 
+View them [here](https://github.com/inf122-tmge-winter-2023/tile-matching-tools/issues)
 
-- Mark clearly in your design/architecture the places that are variant (variable per game) and which are fixed
-- Use a configuration management repository (this is good practice, but we will also use it to verify who wrote which code -- check in your own code!). Give the professor and the TA/Reader access via email.
-- All group members do not have to present each time. You can split up the presentation work however you want.
+## Contributers
 
-## Design, Implementation, and Team Meetups in Class:
-
-- We will have several weeks of in-class sessions where you can meet with the team, the professor, or the TA to discuss your design and implementation. Please come to class and make use of these sessions.
-
-## Last Two Weeks of the Quarter:
-
-- Final demo: Run your TMGE and implemented games in front of instructors (max 10 minutes per team)
-- Final (updated) design document and a retrospective on your design, including UML with description/explanation, and step-by-step instructions for how to make a new game using TMGE. Also, include a description of how and why this updated design evolved from your original design. Include high points, low points, and major challenges you experienced in this phase and in the project as a whole. Turn this document into THIS assignment on Canvas.
-- Peer evaluations will be made available to you
-
-## Suggestions
-
-- Split your team into sub-teams. Because teams are large, it will be most efficient if you divide your team up based on the parts of the problem. Also, consider appointing a team lead (or two?) to make things more efficient. Be sure one of these sub-teams is dedicated to architecture/interface management between the separate parts.
-- Use a group communication/coordination tool. e.g., Slack or something like it.
-- Think about what every game will have in common, then build abstractions for the commonality or variability (e.g., interfaces/abstract classes).
-
+- Nathan Mendoza (nathancm@uci.edu)
+- Matthew Isayan

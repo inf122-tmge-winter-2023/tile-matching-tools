@@ -44,10 +44,8 @@ class GameEngine(ABC):
 
         for game in self._active:
             try:
-                if not game.state.gameover():
-                    game()
-                    game.view.update()
-            #TODO: find simpler mechanic to handle gameover
+                game()
+                game.view.update()
             except GameEndedException as err:
                 LOGGER.error('%s', str(err))
                 game.view.update()
